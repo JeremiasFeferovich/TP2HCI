@@ -1,11 +1,11 @@
+<script setup>
+  import Navigation from '@/components/Navigation.vue'
+  import { RouterView } from 'vue-router'
+</script>
+
 <template>
-  <v-app>
-    <v-main>
-      <HelloWorld />
-    </v-main>
-  </v-app>
+  <Navigation/>
+  <RouterView/>
 </template>
 
-<script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
-</script>
+
