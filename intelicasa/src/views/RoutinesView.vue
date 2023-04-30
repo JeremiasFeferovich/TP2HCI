@@ -1,3 +1,7 @@
 <template>
-    <h1>Devices</h1>
+    <TitleComponent title="Routines"/>
 </template>
+
+<script setup>
+    import TitleComponent from '@/components/TitleComponent.vue';
+</script>

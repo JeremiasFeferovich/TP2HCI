@@ -1,5 +1,5 @@
 <template>
-    <h1>Devices</h1>
+    <TitleComponent title="Devices"/>
     <v-container fluid>
         <v-row no-gutters>
             <v-col v-for="n in 5" :key="n" cols="12" sm="6" lg="3">
@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
-import DeviceCard from '@/components/DeviceCard.vue';
+    import TitleComponent from '@/components/TitleComponent.vue';
+    import DeviceCard from '@/components/DeviceCard.vue';
 
 </script>

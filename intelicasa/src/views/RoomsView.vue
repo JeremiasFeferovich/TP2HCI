@@ -1,3 +1,8 @@
 <template>
-    <h1>Rooms</h1>
+    <TitleComponent title="Rooms"/>
 </template>
+
+
+<script setup>
+    import TitleComponent from '@/components/TitleComponent.vue';
+</script>
