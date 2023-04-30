@@ -1,6 +1,6 @@
 <template>
     <TitleComponent title="Devices"/>
-    <v-container fluid>
+    <v-container fluid >
         <v-row no-gutters>
             <v-col v-for="n in 5" :key="n" cols="12" sm="6" lg="3">
                 <DeviceCard />
