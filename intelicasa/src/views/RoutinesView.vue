@@ -1,3 +1,3 @@
 <template>
-    <h1>Devices</h1>
+    <h1>Routines</h1>
 </template>
