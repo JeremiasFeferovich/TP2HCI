@@ -1,6 +1,6 @@
 <template>
-    <v-card class="ma-2 pa-3" >
-        <v-row align="center" style="height: 100%;" justify="space-between">
+    <v-card class="ma-2 pa-3">
+        <v-row align="center">
             <v-col cols="3">
                 <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
             </v-col>
@@ -8,10 +8,8 @@
                 <v-card-title>Title</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-btn class="ma-2 pa-3" toggle variant="plain" rounded="xl" :ripple="false" size="large"
-                    v-model="buttonState" :loading="loading" @click="toggleButtonState"
-                    style="display: flex; justify-content: center; align-items: center;">
-                    <img :src="powerBtnImg" alt="powerState" style="max-height: 100%; max-width: 100%;" />
+                <v-btn v-model="buttonState" @click="toggleButtonState" toggle :ripple="false" size="large" variant="plain" :loading="loading" rounded="xl">
+                    <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
             </v-col>
         </v-row>
@@ -41,3 +39,18 @@ function toggleButtonState() {
 }
 
 </script>
+
+<style scoped>
+    .v-row {
+        height: 100%;
+    }
+    .v-btn {
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+    }
+    .v-btn img {
+        max-height: 100%; 
+        max-width: 100%;
+    }
+</style>
