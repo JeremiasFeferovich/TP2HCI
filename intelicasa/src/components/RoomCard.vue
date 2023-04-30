@@ -1,7 +1,6 @@
 <template>
     <v-card id="room-card"
         class="mx-auto"
-        width="600"
         prepend-icon="mdi-home"
       >
         <template v-slot:title>
@@ -15,29 +14,29 @@
     </v-card>
 </template>
 
-<script >
-    
-    export default{
-        name: 'RoomCard',
-        props:{
-            roomText: String,
-        }
-    }
+<script setup>
+    import { defineProps } from 'vue';
+
+    const prop = defineProps({
+        roomText: String
+    })
 </script>
+
 
 <style scoped>
     #room-card {
         margin-top: 20px;
         margin-bottom: 15px;
+        width: 600px;
     }
 
     #room-card:hover {
-        background-color: rgba(176, 176, 176, 0.445);
+        background-color: rgba(220, 220, 220, 0.892);
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     }
 
     .room-title {
-        font-size: 24px;
+        font-size: 30px;
         color: #333;
         display: flex;
         align-items: center;    
