@@ -1,6 +1,6 @@
 <template>
-    <v-card class="ma-2 pa-3" >
-        <v-row align="center" style="height: 100%;" justify="space-between">
+    <v-card class="ma-2 pa-3">
+        <v-row align="center">
             <v-col cols="3">
                 <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
             </v-col>
@@ -8,10 +8,8 @@
                 <v-card-title>{{ deviceTitle }}</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-btn class="ma-2 pa-3" toggle variant="plain" rounded="xl" :ripple="false" size="large"
-                    v-model="buttonState" :loading="loading" @click="toggleButtonState"
-                    style="display: flex; justify-content: center; align-items: center;">
-                    <img :src="powerBtnImg" alt="powerState" style="max-height: 100%; max-width: 100%;" />
+                <v-btn v-model="buttonState" @click="toggleButtonState" toggle :ripple="false" size="large" variant="plain" :loading="loading" rounded="xl">
+                    <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
             </v-col>
         </v-row>
@@ -20,14 +18,14 @@
 
 <script setup>
 
-    import { defineProps, ref, computed } from 'vue';
-    import powerOn from '@/assets/powerOn.svg';
-    import powerOff from '@/assets/powerOff.svg'
-    import lightbulb from '@/assets/lightbulb.svg'
+import { ref, computed, defineProps } from 'vue';
+import powerOn from '@/assets/powerOn.svg';
+import powerOff from '@/assets/powerOff.svg'
+import lightbulb from '@/assets/lightbulb.svg'
 
     const buttonState = ref(false);
     const loading = ref(false);
-
+    
     const powerBtnImg = computed(() => {
         return buttonState.value ? powerOn : powerOff;
     })
@@ -45,3 +43,18 @@
     })
 
 </script>
+
+<style scoped>
+    .v-row {
+        height: 100%;
+    }
+    .v-btn {
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+    }
+    .v-btn img {
+        max-height: 100%; 
+        max-width: 100%;
+    }
+</style>

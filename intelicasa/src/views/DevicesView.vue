@@ -3,8 +3,8 @@
     
     <v-container fluid >
         <v-row no-gutters>
-            <v-col v-for="device in devices" :key="device.id" cols="12" sm="6" lg="3">
-                <DeviceCard :deviceTitle="device.title"/>
+            <v-col v-for="(device, index) in devices" :key="index" cols="12" sm="6" lg="3">
+                <DeviceCard :title="device.title"/>
             </v-col>
         </v-row>
     </v-container>
@@ -15,11 +15,11 @@
     import DeviceCard from '@/components/DeviceCard.vue';
     import { ref } from 'vue';
 
-    const devices = ref([
-        { id:1, title: 'Device 2'},
-        { id:2, title: 'Device 2'},
-        { id:3, title: 'Device 3'},
-        { id:4, title: 'Device 4'}])
+    const devices = ref([{title: "disp 1"}, 
+                        {title: "disp 2"}, 
+                        {title: "disp 3"}, 
+                        {title: "disp 4"},
+                        {title: "disp 5"}]);
 
 </script>
 

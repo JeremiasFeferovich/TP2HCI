@@ -1,82 +1,59 @@
 <template>
-    <div id="nav">
-      <div class="nav-content">
-        <div class="logo">
-          <RouterLink :to="{ name: 'home' }">Intelicasa</RouterLink>
-        </div>
-        <ul class="nav-links">
-          <li class="links">
-            <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-          </li>
-          <li class="links">
-            <RouterLink :to="{ name: 'rooms' }">Rooms</RouterLink>
-          </li>
-          <li class="links">
-            <RouterLink :to="{ name: 'devices' }">Devices</RouterLink>
-          </li>
-          <li class="links">
-            <RouterLink :to="{ name: 'routines' }">Routines</RouterLink>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </template>
+  <v-container fluid class="nav ma-0 pa-0 pl-10 pt-1" >
+    <router-link class="logo ma-0 pa-0" :to="{ name: 'home' }">Intelicasa</router-link>
+    <v-container fluid class="nav-content ma-0 pa-0">
+      <v-tabs v-model="tab" background-color="primary">
+        <v-tab class="tab px-5" :to="{ name: 'home' }" value="home">Home</v-tab>
+        <v-tab class="tab px-5" :to="{ name: 'rooms' }"  value="rooms">Rooms</v-tab>
+        <v-tab class="tab px-5" :to="{ name: 'devices' }"  value="devices">Devices</v-tab>
+        <v-tab class="tab px-5" :to="{ name: 'routines' }" value="routines">Routines</v-tab>
+      </v-tabs> 
+    </v-container>
+  </v-container>
+</template>
   
-  <script setup>
-  import { RouterLink } from 'vue-router';
-  </script>
+<script setup>
+import { RouterLink } from 'vue-router';
+import { ref } from 'vue';
+
+const tab = ref('home');
+
+</script>
+
+<style scoped>
+
+.nav{
+  background-color: rgb(211, 211, 211);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+.nav-content {
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  font-size: 40px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.tabs {
+  align-self: center;
   
-  <style scoped>
-  #nav {
-    background-color: rgb(154, 154, 154);
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .nav-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    height: 80px;
-  }
-  
-  .logo {
-    font-size: 32px;
-    font-weight: bold;
-    color: #333;
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo a {
-    color: #333;
-    text-decoration: none;
-  }
-  
-  .nav-links {
-    display: flex;
-    justify-content: cener;
-    align-items: center;
-  }
-  
-  .links {
-    margin-left: 20px;
-    list-style: none;
-    font-size: 24px;
-  }
-  
-  .links a {
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
-    display: flex;
-    padding: 25px;
-  }
-  
-  .links a:hover {
-    text-decoration: underline;
-  }
+}
+
+.tab {
+  font-size: 20px;
+  text-decoration: none;
+  color: #333;
+  align-items: center;
+  padding: 0 10px;
+}
 
 </style>
-  
