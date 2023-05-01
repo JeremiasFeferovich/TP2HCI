@@ -1,15 +1,15 @@
 <template>
-    <v-card id="room-card"
-        class="mx-auto"
+    <v-card 
+        class="mx-auto room-card"
         prepend-icon="mdi-home"
       >
         <template v-slot:title>
-            <p class="room-title">{{ roomText }}</p>
+            <p class="text-h4">{{ roomText }}</p>
         </template>
 
         <v-card-text class="room-info">
-          <p class="text-data">5 dispositivos conectados</p>
-          <p class="text-data">3 dispositivos encendidos</p>
+          <p class="text-data text-body-1">5 dispositivos conectados</p>
+          <p class="text-data text-body-1">3 dispositivos encendidos</p>
         </v-card-text>
     </v-card>
 </template>
@@ -24,26 +24,18 @@
 
 
 <style scoped>
-    #room-card {
-        margin-top: 20px;
-        margin-bottom: 15px;
-        width: 600px;
+    .room-card {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        width: 100%;
     }
 
-    #room-card:hover {
+    .room-card:hover {
         background-color: rgba(220, 220, 220, 0.892);
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .room-title {
-        font-size: 30px;
-        color: #333;
-        display: flex;
-        align-items: center;    
-    }
-
     .room-info {
-        font-size: 18px;
         display: flex;
         flex-direction: column;
         align-items: end;
