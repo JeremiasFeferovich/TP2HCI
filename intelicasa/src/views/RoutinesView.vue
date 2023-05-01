@@ -4,13 +4,14 @@
         <RoutineCard />
         <RoutineCard />
         <RoutineCard />
-        <RoutineCard />
-        <RoutineCard />
     </v-container>
+    <RoutineDialog objectTitle="Add Routine"/>
+
     
 </template>
 
 <script setup>
     import TitleComponent from '@/components/TitleComponent.vue';
     import RoutineCard from '@/components/RoutineCard.vue';
+    import RoutineDialog from '@/components/RoutineDialog.vue';
 </script>
