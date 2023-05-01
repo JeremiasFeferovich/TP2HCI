@@ -1,6 +1,6 @@
 <template>
     <TitleComponent title="Devices"/>
-    <input v-model="searchText" /> 
+    <input v-model="searchText" />   
     <v-container fluid >
         <input v-model.trim="search" type="text" placeholder="Search">
         <v-row no-gutters>
@@ -28,7 +28,7 @@
 
 
     watch(search, () => {
-    devices.value = d.filter(device => device.title.toLowerCase().includes(search.value.toLowerCase()))
+        devices.value = d.filter(device => device.title.toLowerCase().includes(search.value.toLowerCase()))
     })
 
 </script>

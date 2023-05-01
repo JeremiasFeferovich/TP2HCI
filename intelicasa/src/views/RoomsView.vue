@@ -5,20 +5,27 @@
                 <RoomCard :roomText="room.name" />
             </v-row>
     </v-container>
-    <AddBtn />    
+    <RoomDialog :objectTitle="'New Room'" @saveRoom="addRoom" />    
 </template>
 
 
 <script setup>
     import TitleComponent from '@/components/TitleComponent.vue';
     import RoomCard from '@/components/RoomCard.vue';
-    import AddBtn from '@/components/AddBtn.vue';
+    import RoomDialog from '@/components/RoomDialog.vue';
     import { ref } from 'vue';
 
     const rooms = ref([
-        { id:1, name: 'Living Room'},
-        { id:2, name: 'Kitchen'},
-        { id:3, name: 'Bedroom'}])
+        { id:1, name: 'Living Room', device1: "TV", device2: "Lights", type: "Living Room"},
+        { id:2, name: 'Kitchen', device1: "Fridge", device2: "Lights", type: "Kitchen"},
+        { id:3, name: 'Bedroom', device1: "Lights", device2: "TV", type: "Bedroom"},
+        { id:4, name: 'Bathroom', device1: "Lights", device2: "Shower", type: "Bathroom"},
+        { id:5, name: 'Garden', device1: "Lights", device2: "Sprinklers", type: "Garden"}])
+
+    function addRoom(newRoom) {
+        rooms.value.push(newRoom);
+    }
+
 </script>
   
 
