@@ -1,14 +1,18 @@
 <template>
   <v-container fluid class="nav ma-0 pa-0 pl-10 pt-1" >
-    <router-link class="logo ma-0 pa-0" :to="{ name: 'home' }">Intelicasa</router-link>
-    <v-container fluid class="nav-content ma-0 pa-0">
-      <v-tabs v-model="tab" background-color="primary">
-        <v-tab class="tab px-5" :to="{ name: 'home' }" value="home">Home</v-tab>
-        <v-tab class="tab px-5" :to="{ name: 'rooms' }"  value="rooms">Rooms</v-tab>
-        <v-tab class="tab px-5" :to="{ name: 'devices' }"  value="devices">Devices</v-tab>
-        <v-tab class="tab px-5" :to="{ name: 'routines' }" value="routines">Routines</v-tab>
-      </v-tabs> 
-    </v-container>
+    <div class="nav-container">
+      <router-link class="logo ma-0 pa-0 pr-10" :to="{ name: 'home' }">Intelicasa</router-link>
+      <v-container fluid class="nav-content ma-0 pa-0">
+        <v-tabs v-model="tab" background-color="primary">
+          <v-tab class="tab px-5" :to="{ name: 'home' }" value="home">Home</v-tab>
+          <v-tab class="tab px-5" :to="{ name: 'rooms' }"  value="rooms">Rooms</v-tab>
+          <v-tab class="tab px-5" :to="{ name: 'devices' }"  value="devices">Devices</v-tab>
+          <v-tab class="tab px-5" :to="{ name: 'routines' }" value="routines">Routines</v-tab>
+        </v-tabs> 
+      </v-container>
+    </div>
+    
+    
   </v-container>
 </template>
   
@@ -32,6 +36,12 @@ const tab = ref('home');
 .nav-content {
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.nav-container{
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .logo {

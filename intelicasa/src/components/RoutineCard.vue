@@ -1,5 +1,5 @@
 <template>
-    <v-card class="ma-2 pa-3">
+    <v-card class="ma-2 pa-3 routine-card">
         <v-row align="center" style="height: 100%;" justify="space-between">
             <v-col cols="9">
                 <v-card-title class="text-h3">Title</v-card-title>
@@ -38,3 +38,15 @@ function toggleButtonState() {
 }
 
 </script>
+
+<style scoped>
+    .routine-card{
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+    .routine-card:hover {
+        background-color: rgba(220, 220, 220, 0.892);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
