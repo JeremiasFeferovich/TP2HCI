@@ -1,6 +1,6 @@
 <template>
     <TitleComponent title="Devices"/>
-    
+    <input v-model="searchText" /> 
     <v-container fluid >
         <v-row no-gutters>
             <v-col v-for="(device, index) in devices" :key="index" cols="12" sm="6" lg="3">

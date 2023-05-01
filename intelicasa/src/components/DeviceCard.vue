@@ -5,7 +5,7 @@
                 <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
             </v-col>
             <v-col cols="6" class="text-center" align-self="center">
-                <v-card-title>{{ deviceTitle }}</v-card-title>
+                <v-card-title>{{ title }}</v-card-title>
             </v-col>
             <v-col cols="3">
                 <v-btn v-model="buttonState" @click="toggleButtonState" toggle :ripple="false" size="large" variant="plain" :loading="loading" rounded="xl">
@@ -25,7 +25,7 @@ import lightbulb from '@/assets/lightbulb.svg'
 
     const buttonState = ref(false);
     const loading = ref(false);
-    
+
     const powerBtnImg = computed(() => {
         return buttonState.value ? powerOn : powerOff;
     })
@@ -39,7 +39,7 @@ import lightbulb from '@/assets/lightbulb.svg'
     }
 
     const prop = defineProps({
-        deviceTitle: String
+        title: String
     })
 
 </script>

@@ -5,12 +5,14 @@
                 <RoomCard :roomText="room.name" />
             </v-row>
     </v-container>
+    <AddBtn />    
 </template>
 
 
 <script setup>
     import TitleComponent from '@/components/TitleComponent.vue';
     import RoomCard from '@/components/RoomCard.vue';
+    import AddBtn from '@/components/AddBtn.vue';
     import { ref } from 'vue';
 
     const rooms = ref([
@@ -25,9 +27,10 @@
         background-color: rgba(173, 216, 230, 0.605);
         margin-top: 35px;
         border-radius: 10px;
-        max-width: 1000px;
+        width: 50%;
         margin: 0 auto;
-        padding: 10px;
+        padding: 25px 50px;
         margin-top: 15px;
+        
     }
 </style>
