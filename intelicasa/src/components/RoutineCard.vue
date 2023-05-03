@@ -6,8 +6,8 @@
             </v-col>
             <v-col cols="6">
                 <div class="image-container">
-                    <img v-for="(device, index) in devices" :key="index" :src="categoryImg(device)" alt="categoryImg"
-                        style="max-height: 100%; max-width: 100%;" />
+                    <v-img v-for="(device, index) in devices" :key="index" :src="categoryImg(device)" alt="categoryImg"
+                        contain height="40px" width="40px" />
                 </div>
             </v-col>
 
