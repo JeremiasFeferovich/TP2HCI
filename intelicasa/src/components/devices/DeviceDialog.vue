@@ -17,7 +17,7 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <v-row align="center" justify="space-evenly">
+            <v-row v-if="device.category !== 'blinds'" align="center" justify="space-evenly">
                 <v-card-title>Estado</v-card-title>
                 <v-btn v-model="device.isOn" @click="toggleButtonState" toggle :ripple="false" size="large" variant="plain"
                     :loading="loadingState" rounded="xl">
@@ -28,6 +28,7 @@
             <ACDeviceInfo v-else-if="device.category === 'airConditioner'" :device="device" />
             <OvenDeviceInfo v-else-if="device.category === 'oven'" :device="device" />
             <SpeakerInfo v-else-if="device.category === 'speaker'" :device="device" />
+            <BlindsDeviceInfo v-else-if="device.category === 'blinds'" :device="device" />
         </v-card-text>
 
     </v-card>
@@ -35,11 +36,6 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-
-import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
 
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
@@ -50,23 +46,9 @@ import LightDeviceInfo from './LightDeviceInfo.vue';
 import OvenDeviceInfo from './OvenDeviceInfo.vue';
 import ACDeviceInfo from './ACDeviceInfo.vue';
 import SpeakerInfo from './SpeakerInfo.vue';
+import BlindsDeviceInfo from './BlindsDeviceInfo.vue';
 
 const loadingFav = ref(false);
-
-const categoryImg = computed(() => {
-    switch (device.category) {
-        case 'light':
-            return lightbulb;
-        case 'oven':
-            return oven;
-        case 'speaker':
-            return speaker;
-        case 'airConditioner':
-            return airConditioner;
-        default:
-            return lightbulb;
-    }
-});
 
 const powerBtnImg = computed(() => {
     return device.isOn ? powerOn : powerOff;
@@ -86,6 +68,7 @@ const { device, toggleButtonState, loadingState } = defineProps({
     device: Object,
     toggleButtonState: Function,
     loadingState: Boolean,
+    categoryImg: Object
 })
 
 </script>

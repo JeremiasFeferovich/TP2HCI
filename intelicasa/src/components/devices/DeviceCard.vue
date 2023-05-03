@@ -8,14 +8,14 @@
                 <v-card-title>{{ device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-btn class="square-btn rounded-circle" v-model="device.isOn" @click.stop="toggleButtonState" 
+                <v-btn class="square-btn rounded-circle" v-model="device.isOn" @click.stop="toggleButtonState"
                     variant="plain" :loading="loadingState">
                     <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
             </v-col>
         </v-row>
         <v-dialog v-model="openDialog" width="30%">
-            <DeviceDialog :device="device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" />
+            <DeviceDialog :device="device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" :categoryImg="categoryImg"/>
         </v-dialog>
     </v-card>
 </template>
@@ -32,6 +32,8 @@ import lightbulb from '@/assets/lightbulb.svg'
 import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
+import blinds from '@/assets/blinds.svg'
+
 import DeviceDialog from './DeviceDialog.vue'
 
 const loadingState = ref(false);
@@ -51,6 +53,8 @@ const categoryImg = computed(() => {
             return speaker;
         case 'airConditioner':
             return airConditioner;
+        case 'blinds':
+            return blinds;
         default:
             return lightbulb;
     }
@@ -92,11 +96,11 @@ function toggleButtonState() {
 }
 
 .square-btn {
-  min-width: 45px;
-  max-width: 45px;
-  padding: 0;
-  width: 45px;
-  height: 45px;
+    min-width: 45px;
+    max-width: 45px;
+    padding: 0;
+    width: 45px;
+    height: 45px;
 }
 </style>
   

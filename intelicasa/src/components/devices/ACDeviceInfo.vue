@@ -131,8 +131,4 @@ const { device} = defineProps({
     width: 70%;
     display: inline-flex;
 }
-
-.centeredSelect :deep(.v-field__input) {
-    justify-content: center;
-}
 </style>

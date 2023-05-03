@@ -27,3 +27,10 @@
   });
     
   </script>
+
+
+<style scoped>
+.centeredSelect :deep(.v-field__input) {
+    justify-content: center;
+}
+</style>

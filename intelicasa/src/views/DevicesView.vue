@@ -42,11 +42,12 @@ function resume(){
     return;
 }
 
-const d = [ { name: "disp 1", category: "airConditioner", isOn: false, favorite: false, temperature: 0, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-            { name: "disp 2", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-            { name: "disp 3", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFBBB0" },
-            { name: "disp 4", category: "oven", isOn: false, favorite: false, temperature: 0, heatSource: "Convencional", grillMode:"Apagado", convectionMode:"Convencional" },
-            { name: "disp 5", category: "speaker", isOn: false, favorite: false, volume: 5, genres: ["clasica", "country"], genre: "clasica" , song: "Alguna cancion" ,state: "stop", next: next, previous: previous, play: play, stop: stop, pause: pause, resume: resume }];
+
+const d = [ { name: "Aire", category: "airConditioner", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
+            { name: "Luces", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
+            { name: "Persiana", category: "blinds", isOn: false, favorite: false, position: 0, open:()=>position=100, close:()=>position=0},
+            { name: "Horno", category: "oven", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode:"Apagado", convectionMode:"Convencional" },
+            { name: "Parlante", category: "speaker", isOn: false, favorite: false, volume: 5, genres: ["clasica", "country"], genre: "clasica" , song: "Alguna cancion" ,state: "stop", next: next, previous: previous, play: play, stop: stop, pause: pause, resume: resume }];
 const devices = ref(d)
 
 watch(search, () => {
