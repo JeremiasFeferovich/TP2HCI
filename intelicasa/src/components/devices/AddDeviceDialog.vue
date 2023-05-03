@@ -63,6 +63,8 @@ function handleSave () {
         category: selectedCategory.value
     }
     emit('addDevice', device);
+    selectedCategory.value = ''
+    deviceName.value = ''
     dialog.value = false
 }
 

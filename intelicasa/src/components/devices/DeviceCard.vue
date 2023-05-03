@@ -15,7 +15,7 @@
             </v-col>
         </v-row>
         <v-dialog v-model="openDialog" width="30%">
-            <DeviceDialog :device="props.device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" :categoryImg="categoryImg" @delete="deleteDevice"/>
+            <DeviceDialog :device="props.device" :loadingState="loadingState" @changeState="toggleButtonState" :categoryImg="categoryImg" @delete="deleteDevice"/>
         </v-dialog>
     </v-card>
 </template>
