@@ -1,21 +1,21 @@
 <template>
-    <v-card class="ma-2 py-2 px-5" height="75px" @click.stop="openDialog = true">
+    <v-card class="ma-2 py-2 px-5" @click.stop="openDialog = true">
         <v-row align="center">
             <v-col cols="3" align="center">
                 <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
             </v-col>
             <v-col cols="6" class="text-center" align-self="center">
-                <v-card-title>{{ device.name }}</v-card-title>
+                <v-card-title>{{ props.device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-btn class="square-btn rounded-circle" v-model="device.isOn" @click.stop="toggleButtonState"
+                <v-btn class="square-btn rounded-circle" v-model="props.device.isOn" @click.stop="toggleButtonState"
                     variant="plain" :loading="loadingState">
                     <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
             </v-col>
         </v-row>
         <v-dialog v-model="openDialog" width="30%">
-            <DeviceDialog :device="device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" :categoryImg="categoryImg" @delete="deleteDevice"/>
+            <DeviceDialog :device="props.device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" :categoryImg="categoryImg" @delete="deleteDevice"/>
         </v-dialog>
     </v-card>
 </template>
@@ -39,21 +39,21 @@ import DeviceDialog from './DeviceDialog.vue'
 const loadingState = ref(false);
 const openDialog = ref(false);
 
-const { device } = defineProps({
+const props = defineProps({
     device: Object,
 })
 
 const categoryImg = computed(() => {
-    switch (device.category) {
-        case 'light':
+    switch (props.device.category) {
+        case 'Luces':
             return lightbulb;
-        case 'oven':
+        case 'Horno':
             return oven;
-        case 'speaker':
+        case 'Parlante':
             return speaker;
-        case 'airConditioner':
+        case 'Aire Acondicionado':
             return airConditioner;
-        case 'blinds':
+        case 'Persiana':
             return blinds;
         default:
             return lightbulb;
@@ -61,13 +61,13 @@ const categoryImg = computed(() => {
 });
 
 const powerBtnImg = computed(() => {
-    return device.isOn ? powerOn : powerOff;
+    return props.device.isOn ? powerOn : powerOff;
 })
 
 function toggleButtonState() {
     loadingState.value = true
     setTimeout(() => (loadingState.value = false), 1000)
-    device.isOn = !device.isOn;
+    props.device.isOn = !props.device.isOn;
 }
 
 const emit = defineEmits(['delete']);

@@ -24,11 +24,11 @@
                     <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
             </v-row>
-            <LightDeviceInfo v-if="device.category === 'light'" :device="device" />
-            <ACDeviceInfo v-else-if="device.category === 'airConditioner'" :device="device" />
-            <OvenDeviceInfo v-else-if="device.category === 'oven'" :device="device" />
-            <SpeakerInfo v-else-if="device.category === 'speaker'" :device="device" />
-            <BlindsDeviceInfo v-else-if="device.category === 'blinds'" :device="device" />
+            <LightDeviceInfo v-if="device.category === 'Luces'" :device="device" />
+            <ACDeviceInfo v-else-if="device.category === 'Aire Acondicionado'" :device="device" />
+            <OvenDeviceInfo v-else-if="device.category === 'Horno'" :device="device" />
+            <SpeakerInfo v-else-if="device.category === 'Parlante'" :device="device" />
+            <BlindsDeviceInfo v-else-if="device.category === 'Persiana'" :device="device" />
             <v-row justify="end" class="mr-1">
                 <v-btn icon="mdi-delete" variant="text" @click="$emit('delete')"></v-btn>
             </v-row>
