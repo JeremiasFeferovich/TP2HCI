@@ -16,11 +16,11 @@
                 <span class="text-h5 font-italic"> {{ device.song }}</span>
             </v-row>
             <v-row align="center" class="mt-4" display="flex" justify="center">
-                <v-btn density="compact" variant="flat" icon="mdi-skip-previous" @click="device.previous" />
+                <v-btn density="compact" variant="flat" icon="mdi-skip-previous" @click="device.previous()" />
                 <v-btn v-if="device.state === 'stop' || device.state === 'pause'" class="mx-5" density="compact"
-                    variant="flat" icon="mdi-play" @click="device.play; device.state = 'play'" />
+                    variant="flat" icon="mdi-play" @click="device.play();" />
                 <v-btn v-else class="mx-5" density="compact" variant="flat" icon="mdi-pause"
-                    @click=" device.pause;; device.state = 'pause' " />
+                    @click="device.pause(); " />
                 <v-btn density="compact" variant="flat" icon="mdi-skip-next" @click=" device.next " />
             </v-row>
         </v-sheet>

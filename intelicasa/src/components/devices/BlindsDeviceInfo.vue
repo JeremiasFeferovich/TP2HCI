@@ -1,10 +1,9 @@
 <template>
     <v-row align="center" justify="center">
-        <v-icon v-if="device.position < 3" class="mr-6" icon="mdi-window-shutter"/>
-        <v-icon v-else class="mr-6" icon="mdi-window-shutter-open"/>
-
+        <v-icon v-if="device.position < 40" class="mr-6" icon="mdi-window-shutter-open"/>
+        <v-icon v-else class="mr-6" icon="mdi-window-shutter"/>
         <v-sheet >
-            <v-slider class="sliderVertCont" hide-details direction="vertical" min="0" max="10" v-model="device.position" />
+            <v-slider class="sliderVertCont" hide-details direction="vertical" v-model="device.position" />
         </v-sheet>
     </v-row>
 </template>

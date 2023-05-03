@@ -68,7 +68,7 @@ const { device, toggleButtonState, loadingState } = defineProps({
     device: Object,
     toggleButtonState: Function,
     loadingState: Boolean,
-    categoryImg: Object
+    categoryImg: String
 })
 
 </script>
