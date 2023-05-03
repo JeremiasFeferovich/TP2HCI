@@ -50,6 +50,8 @@ const selectedCategory = ref('')
 
 const deviceName = ref('')
 
+const emit = defineEmits(['addDevice']);
+
 function handleSave () {
     if (selectedCategory.value === '' || deviceName.value === '') {
         showRequired.value = true;
@@ -59,12 +61,11 @@ function handleSave () {
         name: deviceName.value,
         category: selectedCategory.value
     }
-    prop.addDevice(device);
+    emit('addDevice', device);
     dialog.value = false
 }
 
 const prop = defineProps({
-    addDevice: Function,
     objectTitle: String,
     categories: Array
 })

@@ -6,7 +6,7 @@
             </v-img>
         </template>
         <template v-slot:item="{ item }">
-            <v-list-item @click="() => {selectedItem = item.raw.name; $emit('update', selectedItem)}">
+            <v-list-item @click="update(item.raw.name)">
                 <v-row no-gutters align="center">
                     <span>{{ item.raw.name }}</span>
                     <v-spacer></v-spacer>
@@ -16,17 +16,23 @@
             </v-list-item>
         </template>
     </v-select>
-  </template>
+</template>
   
-  <script setup>
-  
-  const props = defineProps({
+<script setup>
+
+const emit = defineEmits(['update'])
+
+function update(selectedItem) {
+    emit('update', selectedItem);
+}
+
+const props = defineProps({
     items: Array,
     selectedItem: String,
     label: String,
-  });
-    
-  </script>
+});
+
+</script>
 
 
 <style scoped>

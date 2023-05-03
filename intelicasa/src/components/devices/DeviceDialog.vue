@@ -29,6 +29,9 @@
             <OvenDeviceInfo v-else-if="device.category === 'oven'" :device="device" />
             <SpeakerInfo v-else-if="device.category === 'speaker'" :device="device" />
             <BlindsDeviceInfo v-else-if="device.category === 'blinds'" :device="device" />
+            <v-row justify="end" class="mr-1">
+                <v-btn icon="mdi-delete" variant="text" @click="$emit('delete')"></v-btn>
+            </v-row>
         </v-card-text>
 
     </v-card>
@@ -68,7 +71,7 @@ const { device, toggleButtonState, loadingState } = defineProps({
     device: Object,
     toggleButtonState: Function,
     loadingState: Boolean,
-    categoryImg: String
+    categoryImg: String,
 })
 
 </script>
