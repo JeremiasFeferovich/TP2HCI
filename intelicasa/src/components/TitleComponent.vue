@@ -20,7 +20,7 @@ const props = defineProps({
       width="100%"
       margin-bottom="20px"
   >
-        <h3 class="text-h3 font-weight-black">{{ props.title }}</h3>
+        <h3 class="text-h3 font-weight-black" >{{ props.title }}</h3>
   </v-sheet>
 </template>
 
