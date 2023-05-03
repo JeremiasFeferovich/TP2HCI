@@ -18,7 +18,7 @@ const myCustomLightTheme = {
   dark: false,
   colors: {
     background: colors.blue.lighten5,
-    surface: colors.blue.lighten4,
+    surface: colors.shades.white,
     primary: colors.blue.darken2,
     'primary-darken-1': colors.blue.darken4,
     secondary: colors.blue.lighten3,

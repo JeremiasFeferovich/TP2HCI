@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" width="50%">
             <template v-slot:activator="{ props }">
                 <v-btn color="primary" v-bind="props">
-                    Add
+                    Agregar
                     <v-icon end icon="mdi-plus-circle"></v-icon>
                 </v-btn>
             </template>
