@@ -1,16 +1,16 @@
 <template>
     <v-card class="ma-2 pa-3 routine-card">
-        <v-row align="center" style="height: 100%;" justify="space-between">
-            <v-col cols="9">
-                <v-card-title class="text-h3">Title</v-card-title>
+        <v-row align="center">
+            <v-col cols="6" align="left" class="pl-5">
+                <p class="text-h4">{{ prop.name }}</p>
             </v-col>
-            <v-col cols="3">
-                <v-btn class="ma-2 pa-3" toggle variant="plain" rounded="xl" :ripple="false" size="large"
-                    v-model="buttonState" :loading="loading" @click="toggleButtonState"
-                    style="display: flex; justify-content: center; align-items: center;">
-                    <img :src="powerBtnImg" alt="powerState" style="max-height: 100%; max-width: 100%;" />
-                </v-btn>
+            <v-col cols="6">
+                <div class="image-container">
+                    <v-img v-for="(device, index) in devices" :key="index" :src="categoryImg(device)" alt="categoryImg"
+                        contain height="40px" width="40px" />
+                </div>
             </v-col>
+
         </v-row>
     </v-card>
 </template>
@@ -21,6 +21,11 @@ import { ref, computed } from 'vue';
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 import lightbulb from '@/assets/lightbulb.svg'
+import speaker from '@/assets/speaker.svg'
+import oven from '@/assets/oven.svg'
+import airConditioner from '@/assets/airConditioner.svg'
+import blinds from '@/assets/blinds.svg'
+
 
 const buttonState = ref(false);
 const loading = ref(false);
@@ -29,7 +34,10 @@ const powerBtnImg = computed(() => {
     return buttonState.value ? powerOn : powerOff;
 })
 
-const categoryImg = lightbulb;
+const prop = defineProps({
+    name: String,
+    devices: Array
+})
 
 function toggleButtonState() {
     loading.value = true
@@ -37,16 +45,45 @@ function toggleButtonState() {
     buttonState.value = !buttonState.value;
 }
 
+function categoryImg(device) {
+    switch (device.category) {
+        case 'Luces':
+            return lightbulb;
+        case 'Horno':
+            return oven;
+        case 'Parlante':
+            return speaker;
+        case 'Aire Acondicionado':
+            return airConditioner;
+        case 'Persiana':
+            return blinds;
+        default:
+            return lightbulb;
+    }
+};
+
+
 </script>
 
 <style scoped>
-    .routine-card{
-        margin-top: 20px;
-        margin-bottom: 15px;
-    }
-    .routine-card:hover {
-        background-color: rgba(220, 220, 220, 0.892);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    }
+.routine-card {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+}
 
+.routine-card:hover {
+    background-color: rgba(220, 220, 220, 0.892);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+}
 </style>
