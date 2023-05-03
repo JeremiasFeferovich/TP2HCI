@@ -12,18 +12,41 @@
 
 <script setup>
 import TitleComponent from '@/components/TitleComponent.vue';
-import DeviceCard from '@/components/DeviceCard.vue';
+import DeviceCard from '@/components/devices/DeviceCard.vue';
 import { ref, watch} from 'vue';
 
 
 const search = ref("")
 
+function next(){
+    return;
+}
 
-const d = [ { name: "disp 1", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFEEE0" },
+function previous(){
+    return;
+}
+
+function play(){
+    return;
+}
+
+function stop(){
+    return;
+}
+
+function pause(){
+    return;
+}
+
+function resume(){
+    return;
+}
+
+const d = [ { name: "disp 1", category: "airConditioner", isOn: false, favorite: false, temperature: 0, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
             { name: "disp 2", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
             { name: "disp 3", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFBBB0" },
-            { name: "disp 4", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFCCC0" },
-            { name: "disp 5", category: "light", isOn: false, favorite: false, intensity: 0, color: "#FFDDD0" }];
+            { name: "disp 4", category: "oven", isOn: false, favorite: false, temperature: 0, heatSource: "Convencional", grillMode:"Apagado", convectionMode:"Convencional" },
+            { name: "disp 5", category: "speaker", isOn: false, favorite: false, volume: 5, genres: ["clasica", "country"], genre: "clasica" , song: "Alguna cancion" ,state: "stop", next: next, previous: previous, play: play, stop: stop, pause: pause, resume: resume }];
 const devices = ref(d)
 
 watch(search, () => {

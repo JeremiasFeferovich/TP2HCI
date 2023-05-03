@@ -24,40 +24,49 @@
                     <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
             </v-row>
-            <v-row align="center" justify="space-evenly">
-                <v-card-title>Intensidad</v-card-title>
-                <v-sheet width="40%">
-                    <v-slider hide-details v-model="device.intensity" thumb-label />
-                </v-sheet>
-            </v-row>
-            <v-row align="center" justify="space-evenly">
-                <v-card-title>Color</v-card-title>
-                <v-btn class="square-btn rounded-circle" variant="outlined"  @click="showColorPicker = true" :style="{ backgroundColor: device.color }"></v-btn>
-                <v-dialog v-model="showColorPicker" width="auto">
-                    <v-color-picker v-model="device.color" hide-inputs class="ma-0 px-2 pt-2" mode="hex" />
-                </v-dialog>
-            </v-row>
+            <LightDeviceInfo v-if="device.category === 'light'" :device="device" />
+            <ACDeviceInfo v-else-if="device.category === 'airConditioner'" :device="device" />
+            <OvenDeviceInfo v-else-if="device.category === 'oven'" :device="device" />
+            <SpeakerInfo v-else-if="device.category === 'speaker'" :device="device" />
         </v-card-text>
+
     </v-card>
 </template>
 
 <script setup>
-import { ref, computed, defineProps } from 'vue';
+import { ref, computed } from 'vue';
+
+import lightbulb from '@/assets/lightbulb.svg'
+import speaker from '@/assets/speaker.svg'
+import oven from '@/assets/oven.svg'
+import airConditioner from '@/assets/airConditioner.svg'
+
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
-import lightbulb from '@/assets/lightbulb.svg'
 
-const categoryImg = lightbulb;
+import LightDeviceInfo from './LightDeviceInfo.vue';
+import OvenDeviceInfo from './OvenDeviceInfo.vue';
+import ACDeviceInfo from './ACDeviceInfo.vue';
+import SpeakerInfo from './SpeakerInfo.vue';
+
 const loadingFav = ref(false);
-const showColorPicker = ref(false);
 
-const { device, toggleButtonState, loadingState } = defineProps({
-    device: Object,
-    toggleButtonState: Function,
-    loadingState: Boolean,
-})
+const categoryImg = computed(() => {
+    switch (device.category) {
+        case 'light':
+            return lightbulb;
+        case 'oven':
+            return oven;
+        case 'speaker':
+            return speaker;
+        case 'airConditioner':
+            return airConditioner;
+        default:
+            return lightbulb;
+    }
+});
 
 const powerBtnImg = computed(() => {
     return device.isOn ? powerOn : powerOff;
@@ -73,13 +82,10 @@ function toggleButtonFavorite() {
     device.favorite = !device.favorite;
 }
 
-</script>
+const { device, toggleButtonState, loadingState } = defineProps({
+    device: Object,
+    toggleButtonState: Function,
+    loadingState: Boolean,
+})
 
-<style scoped>
-.square-btn {
-  min-width: 35px;
-  max-width: 35px;
-  width: 35px;
-  height: 35px;
-}
-</style>
+</script>

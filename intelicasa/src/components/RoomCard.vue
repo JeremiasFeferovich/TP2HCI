@@ -15,8 +15,6 @@
 </template>
 
 <script setup>
-    import { defineProps } from 'vue';
-
     const prop = defineProps({
         roomText: String
     })

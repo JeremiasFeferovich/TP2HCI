@@ -11,8 +11,6 @@
         </v-tabs> 
       </v-container>
     </div>
-    
-    
   </v-container>
 </template>
   
