@@ -1,10 +1,10 @@
 <template>
     <TitleComponent title="Rooms" />
-    <v-container>
+    <v-sheet color="secondary">
         <v-row v-for="room in rooms" :key="room.id">
-            <RoomCard :roomText="room.name" />
-        </v-row>
-    </v-container>
+        <RoomCard :roomText="room.name" />
+    </v-row>
+</v-sheet>
     <RoomDialog />
 </template>
 
@@ -22,15 +22,16 @@ const rooms = ref([
 </script>
   
 
+
 <style scoped>
-.v-container {
-    background-color: rgba(173, 216, 230, 0.605);
+.v-sheet {       
     margin-top: 35px;
     border-radius: 10px;
-    width: 50%;
+    width: 75%;
     margin: 0 auto;
     padding: 25px 50px;
     margin-top: 15px;
-
+    display: flex;
+    flex-direction: column;
 }
 </style>

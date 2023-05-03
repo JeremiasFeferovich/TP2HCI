@@ -1,13 +1,16 @@
 <template>
     <TitleComponent title="Inicio" class="mb-5" />
-    <v-row justify="center">
-        <h1>Rutinas</h1>
-    </v-row>
-    <v-row justify="center">
-        <h1>Dispositivos</h1>
-    </v-row>
-    <DevicesList :showSearchbar="false"  :devices="shownDevices" @delete="deleteDevice" />
-    
+    <v-container fluid>
+        <v-row justify="center">
+            <h1>Rutinas</h1>
+        </v-row>
+        <v-row justify="center">
+            <h1>Dispositivos</h1>
+        </v-row>
+        <v-sheet color="secondary">
+            <DevicesList :showSearchbar="false" :devices="shownDevices" @delete="deleteDevice" />
+        </v-sheet>
+    </v-container>
 </template>
 
 <script setup>
@@ -38,3 +41,22 @@ watch(allDevices, filterDevices)
 
 
 </script>
+
+<style scoped>
+
+.v-sheet {       
+    margin-top: 35px;
+    border-radius: 10px;
+    width: 75%;
+    margin: 0 auto;
+    padding: 25px 25px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.v-container {
+    padding: 0;
+}
+
+</style>

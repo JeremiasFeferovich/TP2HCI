@@ -1,6 +1,9 @@
 <template>
     <TitleComponent title="Dispositivos" />
-    <DevicesList :showSearchbar="true" @update="(value) => search = value" :devices="shownDevices" @delete="(device) => deleteDevice(device)" />
+    <v-sheet color="secondary">
+        <DevicesList :showSearchbar="true" @update="(value) => search = value" :devices="shownDevices"
+            @delete="(device) => deleteDevice(device)" />
+    </v-sheet>
     <AddDeviceDialog objectTitle="Add Device" :categories="categories" @addDevice="(newDevice) => addDevice(newDevice)" />
 </template>
 
@@ -21,20 +24,20 @@ const search = ref("")
 
 const categories = [{ name: "Aire Acondicionado", img: airConditioner }, { name: "Luces", img: lightbulb }, { name: "Persiana", img: blinds }, { name: "Horno", img: oven }, { name: "Parlante", img: speaker }]
 
-const allDevices = ref([{ name: "Aire", category: "Aire Acondicionado", image: "airconditioner", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-{ name: "Luces", category: "Luces", image: "lightbulb", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-{ name: "Persiana", category: "Persiana", image: "blinds", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-{ name: "Horno", category: "Horno", image: "oven", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-{ name: "Parlante", category: "Parlante", image: "speaker", isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }]
+const allDevices = ref([{ name: "Aire", category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
+{ name: "Luces", category: "Luces",  isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
+{ name: "Persiana", category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
+{ name: "Horno", category: "Horno", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
+{ name: "Parlante", category: "Parlante", isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }]
 );
 
 const shownDevices = ref(allDevices.value);
 
-const defaultDevices = [{ category: "Aire Acondicionado", image: "airconditioner", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-{ category: "Luces", image: "lightbulb", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-{ category: "Persiana", image: "blinds", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-{ category: "Horno", image: "oven", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-{ category: "Parlante", image: "speaker", isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }];
+const defaultDevices = [{ category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
+{ category: "Luces", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
+{ category: "Persiana",  isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
+{ category: "Horno",  isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
+{ category: "Parlante",  isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }];
 
 function getDefaultDevice(category) {
     return defaultDevices.find(device => device.category === category);
@@ -72,7 +75,6 @@ watch(search, filterDevices)
 }
 
 .v-container {
-    background-color: rgba(173, 216, 230, 0.605);
     margin-top: 35px;
     border-radius: 10px;
     width: 75%;
@@ -90,5 +92,16 @@ watch(search, filterDevices)
     justify-content: right;
     margin-right: 20%;
 
+}
+
+.v-sheet {       
+    margin-top: 35px;
+    border-radius: 10px;
+    width: 75%;
+    margin: 0 auto;
+    padding: 25px 25px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
 }
 </style>
