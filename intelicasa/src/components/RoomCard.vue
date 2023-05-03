@@ -1,9 +1,9 @@
 <template>
     <v-card 
         class="mx-auto room-card"
-        prepend-icon="mdi-home"
         @click="openDialog = true"
       >
+        <img :src="typeImg" alt="typeImg" style="max-height: 100%; max-width: 100%; padding: 5px;" />
         <template v-slot:title>
             <p class="text-h4">{{ roomName }}</p>
         </template>
@@ -14,14 +14,25 @@
         </v-card-text>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">    
-        <RoomInfo :room="room" :room-name="roomName" :room-devices="roomDevices" @delete-room="removeRoom" />
+        <RoomInfo 
+            :room="room"
+            :room-name="roomName" 
+            :room-devices="roomDevices" 
+            @delete-room="removeRoom"
+         />
     </v-dialog>
            
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import RoomInfo from '@/components/RoomInfo.vue';
+
+    import habitacion from '@/assets/habitacion.svg';
+    import cocina from '@/assets/cocina.svg';
+    import living from '@/assets/living.svg';
+    import baño from '@/assets/baño.svg';
+    import patio from '@/assets/patio.svg';
 
     const openDialog = ref(false);
 
@@ -29,7 +40,23 @@
         room : Object,
         roomName: String,
         roomDevices: Array,
+        roomType: String,
     })
+
+    const typeImg = computed(() => {
+    switch (props.roomType) {
+        case 'Habitación':
+            return habitacion;
+        case 'Cocina':
+            return cocina;
+        case 'Living':
+            return living;
+        case 'Baño':
+            return baño;
+        case 'Patio':
+            return patio;
+    }
+});
 
     const emit = defineEmits(['remove-room']);
 

@@ -48,52 +48,51 @@
 </template>
   
 <script setup>
-  import { ref } from 'vue'
-  
-  const showRequired = ref(false);
-  
-  const dialog = ref(false)
-  const roomName = ref('')
-  const roomType = ref('')
-  const roomTypes = ref(['Bedroom', 'Kitchen', 'Living Room', 'Bathroom', 'Garden'])
-  const device1 = ref('')
-  const devices = ref([])
-  const deviceInputs = ref([{ value: '' }]) // initialize with one input
-  
+    import { ref } from 'vue'
+    
+    const showRequired = ref(false);
+    
+    const dialog = ref(false)
+    const roomName = ref('')
+    const roomType = ref('')
+    const roomTypes = ref(['Habitación', 'Cocina', 'Living', 'Baño', 'Patio'])
+    const device1 = ref('')
+    const devices = ref([])
+    const deviceInputs = ref([{ value: '' }]) // initialize with one input
 
-  const props = defineProps({
-    objectTitle: String,
-  })
+    const props = defineProps({
+        objectTitle: String,
+    })
 
-  const emit = defineEmits(['save-room'])
-  
-  function saveRoom() {
-    if( roomName.value === '' || roomType.value === '' || device1.value === ''){
-        showRequired.value = true;
-        return;
+    const emit = defineEmits(['save-room'])
+    
+    function saveRoom() {
+        if( roomName.value === '' || roomType.value === '' || device1.value === ''){
+            showRequired.value = true;
+            return;
+        }
+        devices.value = [device1.value];
+        if( deviceInputs.value.length > 0){
+            devices.value = [device1.value, ...deviceInputs.value.filter((dev) => dev.value !== "").map((input) => input.value)]
+        }
+        console.log(devices.value)
+        const newRoom = {
+            name: roomName.value,
+            devices: devices.value,
+            type: roomType.value,
+        }
+        emit('save-room', newRoom);
+        dialog.value = false;
+        // Reset form values;
+        roomName.value = '';
+        roomType.value = '';
+        device1.value = '';
+        deviceInputs.value = [{ value: '' }]; // reset to one input
     }
-    devices.value = [device1.value];
-    if( deviceInputs.value.length > 0){
-        devices.value = [device1.value, ...deviceInputs.value.filter((dev) => dev.value !== "").map((input) => input.value)]
+    
+    function addDeviceInput() {
+        deviceInputs.value.push({ value: '' }) // add new input
     }
-    console.log(devices.value)
-    const newRoom = {
-        name: roomName.value,
-        devices: devices.value,
-        type: roomType.value,
-    }
-    emit('save-room', newRoom);
-    dialog.value = false;
-    // Reset form values;
-    roomName.value = '';
-    roomType.value = '';
-    device1.value = '';
-    deviceInputs.value = [{ value: '' }]; // reset to one input
-  }
-  
-  function addDeviceInput() {
-    deviceInputs.value.push({ value: '' }) // add new input
-  }
 </script>
 
 

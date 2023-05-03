@@ -2,7 +2,13 @@
     <TitleComponent title="Rooms"/>
     <v-container >        
             <v-row v-for="(room, index) in rooms" :key="index">
-                <RoomCard :room="room" :roomName="room.name" :roomDevices="room.devices"  @remove-room="handleRemoveRoom(room)"/>
+                <RoomCard 
+                    :room="room" 
+                    :roomName="room.name" 
+                    :roomDevices="room.devices"  
+                    :room-type="room.type"
+                    @remove-room="handleRemoveRoom(room)"
+                />
             </v-row>
     </v-container>
     <RoomDialog :object-title="'New Room'" @save-room="addRoom" />
@@ -16,11 +22,11 @@
     import { ref } from 'vue';
 
     const rooms = ref([
-        { name: 'Living Room', devices: ["TV", "Lights"], type: "Living Room"},
-        { name: 'Kitchen', devices: ["Fridge", "Lights"], type: "Kitchen"},
-        { name: 'Bedroom', devices: ["Lights"], type: "Bedroom"},
-        { name: 'Bathroom', devices: ["Lights"], type: "Bathroom"},
-        { name: 'Garden', devices: ["Lights"], type: "Garden"}
+        { name: 'Living Room', devices: ["TV", "Luces"], type: "Living"},
+        { name: 'Kitchen', devices: ["Helader", "Luces"], type: "Cocina"},
+        { name: 'Bedroom', devices: ["Luces"], type: "Habitación"},
+        { name: 'Bathroom', devices: ["Luces"], type: "Baño"},
+        { name: 'Garden', devices: ["Luces"], type: "Patio"}
     ])
 
     function addRoom(newRoom) {
