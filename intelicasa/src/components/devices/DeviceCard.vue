@@ -15,7 +15,7 @@
             </v-col>
         </v-row>
         <v-dialog v-model="openDialog" width="30%">
-            <DeviceDialog :device="device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" :categoryImg="categoryImg"/>
+            <DeviceDialog :device="device" :loadingState="loadingState" :toggleButtonState="toggleButtonState" :categoryImg="categoryImg" @delete="deleteDevice"/>
         </v-dialog>
     </v-card>
 </template>
@@ -40,7 +40,7 @@ const loadingState = ref(false);
 const openDialog = ref(false);
 
 const { device } = defineProps({
-    device: Object
+    device: Object,
 })
 
 const categoryImg = computed(() => {
@@ -70,6 +70,12 @@ function toggleButtonState() {
     device.isOn = !device.isOn;
 }
 
+const emit = defineEmits(['delete']);
+
+function deleteDevice(){
+    openDialog.value=false; 
+    emit('delete');
+}
 
 </script>
   
