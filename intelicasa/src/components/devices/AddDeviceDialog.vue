@@ -16,10 +16,10 @@
                 <v-card-text>
                     <v-container class="fill-space">
                         <v-row>
-                            <v-text-field label="Device name*" v-model="deviceName" required />
+                            <v-text-field label="Device name*" v-model="deviceName" />
                         </v-row>
                         <v-row>
-                            <ImageSelect :items="categories" label="Category*" :selectedItem="selectedCategory"  @update="(updatedValue) => selectedCategory = updatedValue" required/>
+                            <ImageSelect :items="categories" label="Category*" :selectedItem="selectedCategory"  @update="(updatedValue) => selectedCategory = updatedValue"/>
                         </v-row>
                     </v-container>
                     <small v-if="showRequired" class="required">*indicates required field</small>
@@ -57,11 +57,14 @@ function handleSave () {
         showRequired.value = true;
         return;
     }
+    showRequired.value = false;
     const device = {
         name: deviceName.value,
         category: selectedCategory.value
     }
     emit('addDevice', device);
+    selectedCategory.value = ''
+    deviceName.value = ''
     dialog.value = false
 }
 

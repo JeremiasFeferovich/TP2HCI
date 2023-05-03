@@ -16,32 +16,23 @@
                 </v-col>
             </v-row>
         </v-card-title>
-        <v-card-text>
-            <v-row v-if="device.category !== 'blinds'" align="center" justify="space-evenly">
-                <v-card-title>Estado</v-card-title>
-                <v-btn v-model="device.isOn" @click="toggleButtonState" toggle :ripple="false" size="large" variant="plain"
-                    :loading="loadingState" rounded="xl">
-                    <img :src="powerBtnImg" alt="powerState" />
-                </v-btn>
-            </v-row>
-            <LightDeviceInfo v-if="device.category === 'light'" :device="device" />
-            <ACDeviceInfo v-else-if="device.category === 'airConditioner'" :device="device" />
-            <OvenDeviceInfo v-else-if="device.category === 'oven'" :device="device" />
-            <SpeakerInfo v-else-if="device.category === 'speaker'" :device="device" />
-            <BlindsDeviceInfo v-else-if="device.category === 'blinds'" :device="device" />
+        <v-card-text>    
+            <DevicePower v-show="device.category !== 'Persiana'" :device="device" :loading-state="loadingState" @changeState="$emit('changeState')"/>
+            <LightDeviceInfo v-if="device.category === 'Luces'" :device="device" />
+            <ACDeviceInfo v-else-if="device.category === 'Aire Acondicionado'" :device="device" />
+            <OvenDeviceInfo v-else-if="device.category === 'Horno'" :device="device" />
+            <SpeakerInfo v-else-if="device.category === 'Parlante'" :device="device" />
+            <BlindsDeviceInfo v-else-if="device.category === 'Persiana'" :device="device" />
             <v-row justify="end" class="mr-1">
                 <v-btn icon="mdi-delete" variant="text" @click="$emit('delete')"></v-btn>
             </v-row>
         </v-card-text>
-
     </v-card>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 
-import powerOn from '@/assets/powerOn.svg';
-import powerOff from '@/assets/powerOff.svg'
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 
@@ -50,12 +41,9 @@ import OvenDeviceInfo from './OvenDeviceInfo.vue';
 import ACDeviceInfo from './ACDeviceInfo.vue';
 import SpeakerInfo from './SpeakerInfo.vue';
 import BlindsDeviceInfo from './BlindsDeviceInfo.vue';
+import DevicePower from './DevicePower.vue';
 
 const loadingFav = ref(false);
-
-const powerBtnImg = computed(() => {
-    return device.isOn ? powerOn : powerOff;
-})
 
 const favoriteBtnImg = computed(() => {
     return device.favorite ? favoriteYes : favoriteNo;
@@ -67,9 +55,8 @@ function toggleButtonFavorite() {
     device.favorite = !device.favorite;
 }
 
-const { device, toggleButtonState, loadingState } = defineProps({
+const { device, loadingState } = defineProps({
     device: Object,
-    toggleButtonState: Function,
     loadingState: Boolean,
     categoryImg: String,
 })
