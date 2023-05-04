@@ -13,7 +13,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-col justify="center" align="center">
+            <v-col align="center">
               <v-row cols="12" class="fill-space">
                 <v-text-field v-model="roomName" label="Room name*" required />
               </v-row>
@@ -48,74 +48,74 @@
 </template>
   
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const showRequired = ref(false);
+  const showRequired = ref(false);
 
-const dialog = ref(false)
-const roomName = ref('')
-const roomType = ref('')
-const roomTypes = ref(['Habitación', 'Cocina', 'Living', 'Baño', 'Patio'])
-const device1 = ref('')
-const devices = ref([])
-const deviceInputs = ref([{ value: '' }]) // initialize with one input
+  const dialog = ref(false)
+  const roomName = ref('')
+  const roomType = ref('')
+  const roomTypes = ref(['Habitación', 'Cocina', 'Living', 'Baño', 'Patio', 'Otro'])
+  const device1 = ref('')
+  const devices = ref([])
+  const deviceInputs = ref([{ value: '' }]) // initialize with one input
 
-const props = defineProps({
-  objectTitle: String,
-})
+  const props = defineProps({
+    objectTitle: String,
+  })
 
-const emit = defineEmits(['save-room'])
+  const emit = defineEmits(['save-room'])
 
-function saveRoom() {
-  if (roomName.value === '' || roomType.value === '' || device1.value === '') {
-    showRequired.value = true;
-    return;
+  function saveRoom() {
+    if (roomName.value === '' || roomType.value === '' || device1.value === '') {
+      showRequired.value = true;
+      return;
+    }
+    devices.value = [device1.value];
+    if (deviceInputs.value.length > 0) {
+      devices.value = [device1.value, ...deviceInputs.value.filter((dev) => dev.value !== "").map((input) => input.value)]
+    }
+    console.log(devices.value)
+    const newRoom = {
+      name: roomName.value,
+      devices: devices.value,
+      type: roomType.value,
+    }
+    emit('save-room', newRoom);
+    dialog.value = false;
+    // Reset form values;
+    roomName.value = '';
+    roomType.value = '';
+    device1.value = '';
+    deviceInputs.value = [{ value: '' }]; // reset to one input
   }
-  devices.value = [device1.value];
-  if (deviceInputs.value.length > 0) {
-    devices.value = [device1.value, ...deviceInputs.value.filter((dev) => dev.value !== "").map((input) => input.value)]
-  }
-  console.log(devices.value)
-  const newRoom = {
-    name: roomName.value,
-    devices: devices.value,
-    type: roomType.value,
-  }
-  emit('save-room', newRoom);
-  dialog.value = false;
-  // Reset form values;
-  roomName.value = '';
-  roomType.value = '';
-  device1.value = '';
-  deviceInputs.value = [{ value: '' }]; // reset to one input
-}
 
-function addDeviceInput() {
-  deviceInputs.value.push({ value: '' }) // add new input
-}
+  function addDeviceInput() {
+    deviceInputs.value.push({ value: '' }) // add new input
+  }
 </script>
 
 
 <style scoped>
-.add-btn {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: right;
-  margin-right: 20%;
+  .add-btn {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: right;
+    margin-right: 20%;
 
-}
+  }
 
-.fill-space {
-  max-width: 60%;
-}
+  .fill-space {
+    max-width: 60%;
+  }
 
-.plus-btn {
-  justify-content: center;
-  margin-bottom: 40px;
-}
+  .plus-btn {
+    justify-content: center;
+    margin-bottom: 40px;
+  }
 
-.required-info {
-  color: red;
-}
+  .required-info {
+    color: red;
+  }
 </style>
