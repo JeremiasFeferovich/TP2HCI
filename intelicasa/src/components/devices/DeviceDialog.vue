@@ -33,13 +33,6 @@ import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 import DevicesOptions from '../DevicesOptions.vue';
 
-import LightDeviceInfo from './LightDeviceInfo.vue';
-import OvenDeviceInfo from './OvenDeviceInfo.vue';
-import ACDeviceInfo from './ACDeviceInfo.vue';
-import SpeakerInfo from './SpeakerInfo.vue';
-import BlindsDeviceInfo from './BlindsDeviceInfo.vue';
-import DevicePower from './DevicePower.vue';
-
 const loadingFav = ref(false);
 
 const favoriteBtnImg = computed(() => {
