@@ -74,17 +74,6 @@ watch(search, filterDevices)
     margin: 0 auto;
 }
 
-.v-container {
-    margin-top: 35px;
-    border-radius: 10px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 25px 25px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
 .add-btn {
     margin-top: 15px;
     margin-bottom: 15px;

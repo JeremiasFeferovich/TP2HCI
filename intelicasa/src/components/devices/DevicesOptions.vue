@@ -1,6 +1,6 @@
 <template>
     <DevicePower v-show="device.category !== 'Persiana'" :device="device" :loading-state="false"
-        @changeState="$emit('changeState')" />
+        @changeState="changeState" />
     <LightDeviceInfo :disabled="!device.isOn" v-if="device.category === 'Luces'" :device="device" />
     <ACDeviceInfo :disabled="!device.isOn" v-else-if="device.category === 'Aire Acondicionado'" :device="device" />
     <OvenDeviceInfo :disabled="!device.isOn" v-else-if="device.category === 'Horno'" :device="device" />
@@ -15,16 +15,17 @@ import ACDeviceInfo from '@/components/devices/ACDeviceInfo.vue';
 import OvenDeviceInfo from '@/components/devices/OvenDeviceInfo.vue';
 import SpeakerInfo from '@/components/devices/SpeakerInfo.vue';
 import BlindsDeviceInfo from '@/components/devices/BlindsDeviceInfo.vue';
-import { ref } from 'vue';
 
-const { device, disabled, loadingState } = defineProps({
+const { device, disabled } = defineProps({
     device: Object,
     disabled: Boolean,
-    loadingState: Boolean,
-
 })
 
+const emit = defineEmits(['changeState']);
 
+function changeState() {
+    emit('changeState')
+}
 
 
 </script>

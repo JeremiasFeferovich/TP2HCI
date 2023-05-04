@@ -1,9 +1,9 @@
 <template>
-    <input v-if="showSearchbar" class="search-bar" :value="text" @input="$emit('update', text)" type="text"
+    <input v-if="showSearchbar" class="search-bar" :value="text" @input="updateSearch(text)" type="text"
         placeholder="Buscar">
     <v-row no-gutters>
         <v-col v-for="(dev, index) in devices" :key="index" cols="12" sm="6" lg="3">
-            <DeviceCard :device="dev" @delete="$emit('delete', dev)" />
+            <DeviceCard :device="dev" @delete="deleteDevice(dev)" />
         </v-col>
     </v-row>
 </template>
@@ -20,5 +20,15 @@ const props = defineProps({
     showSearchbar: Boolean,
     search: String,
 })
+
+const emit = defineEmits(['delete', 'update'])
+
+function deleteDevice(device) {
+    emit('delete', device)
+}
+
+function updateSearch(text) {
+    emit('update', text)
+}
 
 </script>

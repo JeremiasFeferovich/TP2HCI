@@ -55,7 +55,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <CloseAndSaveBtns @setDialogFalse="dialog = false" @handleSave="handleSave" />
+        <CloseAndSaveBtns @closeDialog="dialog = false" @handleSave="handleSave" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -82,6 +82,10 @@ const opened = ref([0])
 
 function toggleButtonState(device) {
   device.isOn = !device.isOn;
+}
+
+function handleSave() {
+  console.log('save')
 }
 
 const addSelectedDevice = () => {

@@ -18,9 +18,9 @@
         </v-card-title>
         <v-card-text>
             <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="loadingState"
-                @changeState="$emit('changeState')" />
+                @changeState="changeState" />
             <v-row justify="end" class="mr-1">
-                <v-btn icon="mdi-delete" variant="text" @click="$emit('delete')"></v-btn>
+                <v-btn icon="mdi-delete" variant="text" @click="delete"></v-btn>
             </v-row>
         </v-card-text>
     </v-card>
@@ -50,5 +50,15 @@ const { device, loadingState } = defineProps({
     loadingState: Boolean,
     categoryImg: String,
 })
+
+const emit = defineEmits(['changeState', 'delete'])
+
+function deleteDevice() {
+    emit('delete')
+}
+
+function toggleButtonState() {
+    emit('changeState')
+}
 
 </script>

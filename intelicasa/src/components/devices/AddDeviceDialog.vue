@@ -3,7 +3,7 @@
         <template v-slot:activator="{ props }">
             <AddBtn :activator="props" />
         </template>
-        <v-card>
+        <v-card align="center">
             <v-card-title>
                 <v-container>
                     <span class="text-h5">{{ objectTitle }}</span>
@@ -23,7 +23,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <CloseAndSaveBtns @setDialogFalse="dialog = false" @handleSave="handleSave" />
+                <CloseAndSaveBtns @closeDialog="dialog = false" @handleSave="handleSave" />
             </v-card-actions>
         </v-card>
     </v-dialog>

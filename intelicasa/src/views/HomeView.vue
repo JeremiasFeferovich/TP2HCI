@@ -35,7 +35,7 @@ function filterDevices() {
 
 function deleteDevice(device) {
     allDevices.value = allDevices.value.filter(dev => dev !== device);
-    watch(search, filterDevices, { immediate: true });
+    watch(allDevices.value, filterDevices, { immediate: true });
 }
 
 watch(allDevices.value, filterDevices, { immediate: true });
