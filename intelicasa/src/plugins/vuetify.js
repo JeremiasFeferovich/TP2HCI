@@ -9,19 +9,19 @@ import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
 // Composables
-import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
 import colors from 'vuetify/lib/util/colors'
 
+const color = 'blue';
 
 const myCustomLightTheme = {
   dark: false,
   colors: {
-    background: colors.blue.lighten5,
+    background: colors[color].lighten5,
     surface: colors.shades.white,
-    primary: colors.blue.darken2,
-    'primary-darken-1': colors.blue.darken4,
-    secondary: colors.blue.lighten3,
+    primary: colors[color].darken2,
+    'primary-darken-1': colors[color].darken4,
+    secondary: colors[color].lighten3,
     'secondary-darken-1': '#018786',
     error: '#B00020',
     info: '#2196F3',
@@ -41,19 +41,3 @@ export default createVuetify({
     }
   }
 })
-
-/*
-// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-export default createVuetify({
-  theme: {
-    themes: {
-      light: {
-        colors: {
-          primary: '#1867C0',
-          secondary: '#5CBBF6',
-        },
-      },
-    },
-  },
-})
-*/

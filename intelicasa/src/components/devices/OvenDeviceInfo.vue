@@ -1,13 +1,18 @@
 <template>
     <v-row align="center" justify="space-evenly">
-        <v-card-title>Temperatura</v-card-title>
-        <v-sheet width="40%">
-            <v-slider :disabled="disabled" hide-details v-model="device.temperature" thumb-label min="90" max="230">
-                <template v-slot:thumb-label="{ modelValue }">
-                    {{ Math.round(modelValue) + '°C' }}
-                </template>
-            </v-slider>
-        </v-sheet>
+
+        <v-col cols="1"><v-spacer></v-spacer></v-col>
+        <v-col cols="5" class="align-start">
+            <p class="text-h6">Temperatura</p>
+        </v-col>
+        <v-col cols="6">
+            <v-sheet width="80%">
+                <v-row class="align-center">
+                    <p class="mr-3">{{ Math.round(device.temperature) + '°C' }}</p>
+                    <v-slider :disabled="disabled" hide-details v-model="device.temperature" min="90" max="230" />
+                </v-row>
+            </v-sheet>
+        </v-col>
     </v-row>
     <v-row justify="center">
         <v-sheet class="sliderCont">

@@ -1,7 +1,7 @@
 <template>
     <v-row align="center" justify="center">
-        <v-icon v-if="device.position < 40" class="mr-6" icon="mdi-window-shutter" />
-        <v-icon v-else class="mr-6" icon="mdi-window-shutter-open" />
+        <v-icon v-if="device.position < 40" class="mr-6" size="50" icon="mdi-window-shutter" />
+        <v-icon v-else class="mr-6" size="50" icon="mdi-window-shutter-open" />
         <v-sheet>
             <v-slider class="sliderVertCont" hide-details direction="vertical" v-model="device.position" />
         </v-sheet>

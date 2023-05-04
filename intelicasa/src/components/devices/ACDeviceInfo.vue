@@ -1,13 +1,15 @@
 <template>
-    <v-row align="center" justify="space-evenly">
-        <v-card-title>Temperatura</v-card-title>
-        <v-sheet width="40%">
-            <v-slider :disabled="disabled" hide-details v-model="device.temperature" thumb-label min="18" max="38">
-                <template v-slot:thumb-label="{ modelValue }">
-                    {{ Math.round(modelValue) + '°C' }}
-                </template>
-            </v-slider>
-        </v-sheet>
+    <v-row class="align-center justify-space-evenly">
+        <v-col cols="1"><v-spacer></v-spacer></v-col>
+        <v-col cols="5" class="align-start">
+            <p class="text-h6">Temperatura</p>
+        </v-col>
+        <v-col cols="6">
+            <v-row class="align-center">
+                <p class="mr-3">{{ device.temperature == 0 ? 'Auto' : Math.floor(device.temperature) + '°C' }}</p>
+                <v-slider :disabled="disabled" hide-details v-model="device.temperature" min="18" max="38"/>
+            </v-row>
+        </v-col>
     </v-row>
     <v-row justify="center">
         <v-sheet class="sliderCont">
@@ -20,13 +22,12 @@
             Aspas Verticales
         </v-sheet>
     </v-row>
-    <v-row justify="center">
-        <v-btn :disabled="disabled" v-model="verticalAutomatic" class="mr-3" variant="text" size="large"
-            @click="verticalAutomatic = !verticalAutomatic" density="compact"
-            :icon="verticalAutomatic ? 'mdi-alpha-a-circle' : 'mdi-alpha-a-circle-outline'" />
+    <v-row class="align-center justify-center">
+        <p class="mr-3">{{ verticalSwing == 0 ? 'Auto' : Math.floor(verticalSwing) + '°' }}</p>
         <v-sheet class="sliderCont">
-            <v-slider :disabled="disabled" v-model="verticalSwing" hide-details min="22.5" max="90" step="22.5"
-                show-ticks="always" tick-size="4"></v-slider>
+            <v-slider :disabled="disabled" v-model="verticalSwing" hide-details min="0" max="90" step="22.5"
+                show-ticks="always" tick-size="4">
+            </v-slider>
         </v-sheet>
     </v-row>
     <v-row justify="center">
@@ -35,11 +36,9 @@
         </v-sheet>
     </v-row>
     <v-row justify="center">
-        <v-btn :disabled="disabled" v-model="horizontalAutomatic" class="mr-3" variant="text" size="large"
-            @click="horizontalAutomatic = !horizontalAutomatic" density="compact"
-            :icon="horizontalAutomatic ? 'mdi-alpha-a-circle' : 'mdi-alpha-a-circle-outline'" />
+        <p class="mr-3">{{ horizontalSwing == -135 ? 'Auto' : Math.floor(horizontalSwing) + '°' }}</p>
         <v-sheet class="sliderCont">
-            <v-slider :disabled="horizontalAutomatic" v-model="horizontalSwing" hide-details min="-90" max="90" step="45"
+            <v-slider :disabled="disabled" v-model="horizontalSwing" hide-details min="-135" max="90" step="45"
                 show-ticks="always" tick-size="4"></v-slider>
         </v-sheet>
     </v-row>
@@ -49,9 +48,7 @@
         </v-sheet>
     </v-row>
     <v-row align="center" justify="center">
-        <v-btn :disabled="disabled" v-model="fanSpeedAutomatic" class="mr-3" variant="text" size="large"
-            @click="fanSpeedAutomatic = !fanSpeedAutomatic" density="compact"
-            :icon="fanSpeedAutomatic ? 'mdi-alpha-a-circle' : 'mdi-alpha-a-circle-outline'" />
+        <p class="mr-3">{{ fanSpeed == 0 ? 'Auto' : Math.floor(fanSpeed) + '%' }}</p>
         <v-sheet class="sliderCont mt-1">
             <v-slider :disabled="disabled" v-model="fanSpeed" hide-details step="25" show-ticks="always" tick-size="4">
             </v-slider>
@@ -76,9 +73,9 @@ const verticalAutomatic = ref(device.verticalSwing === 'Automático');
 const horizontalAutomatic = ref(device.horizontalSwing === 'Automático');
 const fanSpeedAutomatic = ref(device.fanSpeed === 'Automático');
 
-const fanSpeed = ref(device.fanSpeed != 'Automático' ? device.fanSpeed : 50);
-const verticalSwing = ref(device.verticalSwing != 'Automático' ? device.verticalSwing : 45);
-const horizontalSwing = ref(device.horizontalSwing != 'Automático' ? device.horizontalSwing : 0);
+const fanSpeed = ref(device.fanSpeed != 'Automático' ? device.fanSpeed : 0  );
+const verticalSwing = ref(device.verticalSwing != 'Automático' ? device.verticalSwing : 0);
+const horizontalSwing = ref(device.horizontalSwing != 'Automático' ? device.horizontalSwing : -135);
 
 watch(verticalSwing, (newValue) => {
     device.verticalSwing = Math.floor(newValue);

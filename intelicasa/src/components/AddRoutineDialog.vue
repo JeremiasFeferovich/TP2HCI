@@ -73,12 +73,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import LightDeviceInfo from './devices/LightDeviceInfo.vue'
-import OvenDeviceInfo from './devices/OvenDeviceInfo.vue'
-import ACDeviceInfo from './devices/ACDeviceInfo.vue'
-import SpeakerInfo from './devices/SpeakerInfo.vue'
-import BlindsDeviceInfo from './devices/BlindsDeviceInfo.vue'
-import DevicePower from './devices/DevicePower.vue'
 import DevicesOptions from './DevicesOptions.vue'
 
 

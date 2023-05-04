@@ -1,9 +1,14 @@
 <template>
-    <TitleComponent title="Habitaciones" />
-    <v-sheet color="secondary">
-        <v-row v-for="(room, index) in rooms" :key="index">
-            <RoomCard :room="room" :roomName="room.name" :roomDevices="room.devices" :room-type="room.type"
-                @remove-room="handleRemoveRoom(room)" />
+    <TitleComponent title="Habitaciones"/>
+    <v-sheet color="secondary" >        
+            <v-row v-for="(room, index) in rooms" :key="index">
+            <RoomCard 
+                    :room="room" 
+                    :roomName="room.name" 
+                    :roomDevices="room.devices"  
+                    :room-type="room.type"
+                    @remove-room="handleRemoveRoom(room)"
+                />
         </v-row>
     </v-sheet>
     <RoomDialog :object-title="'New Room'" @save-room="addRoom" />
