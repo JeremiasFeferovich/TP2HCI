@@ -1,6 +1,6 @@
 <template>
     <TitleComponent title="Habitaciones"/>
-    <v-sheet color="secondary" >        
+    <v-sheet class="viewSheet" color="secondary" >        
             <v-row v-for="(room, index) in rooms" :key="index">
             <RoomCard 
                     :room="room" 
@@ -39,17 +39,3 @@ function handleRemoveRoom(room) {
 
 </script>
   
-
-
-<style scoped>
-.v-sheet {
-    margin-top: 35px;
-    border-radius: 10px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 25px 50px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-}
-</style>
