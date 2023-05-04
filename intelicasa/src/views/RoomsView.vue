@@ -1,43 +1,50 @@
 <template>
-    <TitleComponent title="Rooms"/>
-    <v-container >        
-            <v-row v-for="room in rooms" :key="room.id">
-                <RoomCard :roomText="room.name" />
-            </v-row>
-    </v-container>
-    <RoomDialog :objectTitle="'New Room'" @saveRoom="addRoom" />    
+    <TitleComponent title="Habitaciones" />
+    <v-sheet color="secondary">
+        <v-row v-for="(room, index) in rooms" :key="index">
+            <RoomCard :room="room" :roomName="room.name" :roomDevices="room.devices" :room-type="room.type"
+                @remove-room="handleRemoveRoom(room)" />
+        </v-row>
+    </v-sheet>
+    <RoomDialog :object-title="'New Room'" @save-room="addRoom" />
 </template>
 
 
 <script setup>
-    import TitleComponent from '@/components/TitleComponent.vue';
-    import RoomCard from '@/components/RoomCard.vue';
-    import RoomDialog from '@/components/RoomDialog.vue';
-    import { ref } from 'vue';
+import TitleComponent from '@/components/TitleComponent.vue';
+import RoomCard from '@/components/RoomCard.vue';
+import RoomDialog from '@/components/RoomDialog.vue';
+import { ref } from 'vue';
 
-    const rooms = ref([
-        { id:1, name: 'Living Room', device1: "TV", device2: "Lights", type: "Living Room"},
-        { id:2, name: 'Kitchen', device1: "Fridge", device2: "Lights", type: "Kitchen"},
-        { id:3, name: 'Bedroom', device1: "Lights", device2: "TV", type: "Bedroom"},
-        { id:4, name: 'Bathroom', device1: "Lights", device2: "Shower", type: "Bathroom"},
-        { id:5, name: 'Garden', device1: "Lights", device2: "Sprinklers", type: "Garden"}])
+const rooms = ref([
+    { name: 'Living Room', devices: ["TV", "Luces"], type: "Living" },
+    { name: 'Kitchen', devices: ["Helader", "Luces"], type: "Cocina" },
+    { name: 'Bedroom', devices: ["Luces"], type: "Habitación" },
+    { name: 'Bathroom', devices: ["Luces"], type: "Baño" },
+    { name: 'Garden', devices: ["Luces"], type: "Patio" }
+])
 
-    function addRoom(newRoom) {
-        rooms.value.push(newRoom);
-    }
+function addRoom(newRoom) {
+    rooms.value.push(newRoom);
+}
+
+function handleRemoveRoom(room) {
+    rooms.value = rooms.value.filter(r => r !== room);
+}
 
 </script>
   
 
+
 <style scoped>
-    .v-container {
-        background-color: rgba(173, 216, 230, 0.605);
-        margin-top: 35px;
-        border-radius: 10px;
-        width: 50%;
-        margin: 0 auto;
-        padding: 25px 50px;
-        margin-top: 15px;
-        
-    }
+.v-sheet {
+    margin-top: 35px;
+    border-radius: 10px;
+    width: 75%;
+    margin: 0 auto;
+    padding: 25px 50px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
 </style>

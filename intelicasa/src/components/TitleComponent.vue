@@ -1,6 +1,5 @@
 <script setup>
 
-import { defineProps } from 'vue'
 
 const props = defineProps({
     title: {
@@ -12,19 +11,10 @@ const props = defineProps({
 </script>
 
 <template>
-  <v-sheet
-      class="d-flex align-center justify-center flex-wrap text-center mt-5 mx-auto"
-      elevation="4"
-      height="100"
-      rounded
-      max-width="50%"
-      width="100%"
-      margin-bottom="20px"
-  >
-        <h3 class="text-h3 font-weight-black">{{ props.title }}</h3>
-  </v-sheet>
+    <v-sheet class="d-flex align-center justify-center flex-wrap text-center mt-5 mx-auto" elevation="4" height="80px"
+        rounded max-width="30%" margin-bottom="20px">
+        <p class="text-h3">{{ props.title }}</p>
+    </v-sheet>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
