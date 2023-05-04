@@ -1,54 +1,50 @@
 <template>
-  <div class="add-btn">
-    <v-dialog v-model="dialog" persistent width="1024">
-      <template v-slot:activator="{ props }">
-        <v-btn color="primary" v-bind="props">
-          Agregar
-          <v-icon end icon="mdi-plus-circle"></v-icon>
+  <v-dialog v-model="dialog" persistent width="1024">
+    <template v-slot:activator="{ props }">
+      <AddBtn :activator="props" />
+    </template>
+    <v-card>
+      <v-card-title align="center">
+        <span class="text-h5">{{ objectTitle }}</span>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-col justify="center" align="center">
+            <v-row cols="12" class="fill-space">
+              <v-text-field v-model="roomName" label="Room name*" required />
+            </v-row>
+            <v-row cols="12" class="fill-space">
+              <v-text-field v-model="device1" label="Device 1*" required />
+            </v-row>
+            <v-row cols="12" class="fill-space" v-for="(deviceInput, index) in deviceInputs" :key="index">
+              <v-text-field v-model="deviceInput.value" :label="`Device ${index + 2}`" />
+            </v-row>
+            <v-row cols="12" class="plus-btn">
+              <v-btn icon="mdi-plus" density="comfortable" @click="addDeviceInput" />
+            </v-row>
+            <v-row cols="12" class="fill-space">
+              <v-select :items="roomTypes" v-model="roomType" label="Type*" required />
+            </v-row>
+          </v-col>
+        </v-container>
+        <small v-if="showRequired" class="required-info">*indicates required field</small>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+          Close
         </v-btn>
-      </template>
-      <v-card>
-        <v-card-title align="center">
-          <span class="text-h5">{{ objectTitle }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-col justify="center" align="center">
-              <v-row cols="12" class="fill-space">
-                <v-text-field v-model="roomName" label="Room name*" required />
-              </v-row>
-              <v-row cols="12" class="fill-space">
-                <v-text-field v-model="device1" label="Device 1*" required />
-              </v-row>
-              <v-row cols="12" class="fill-space" v-for="(deviceInput, index) in deviceInputs" :key="index">
-                <v-text-field v-model="deviceInput.value" :label="`Device ${index + 2}`" />
-              </v-row>
-              <v-row cols="12" class="plus-btn">
-                <v-btn icon="mdi-plus" density="comfortable" @click="addDeviceInput" />
-              </v-row>
-              <v-row cols="12" class="fill-space">
-                <v-select :items="roomTypes" v-model="roomType" label="Type*" required />
-              </v-row>
-            </v-col>
-          </v-container>
-          <small v-if="showRequired" class="required-info">*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-            Close
-          </v-btn>
-          <v-btn color="blue-darken-1" variant="text" @click="saveRoom">
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+        <v-btn color="blue-darken-1" variant="text" @click="saveRoom">
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
   
 <script setup>
 import { ref } from 'vue'
+import AddBtn from './AddBtn.vue';
 
 const showRequired = ref(false);
 
