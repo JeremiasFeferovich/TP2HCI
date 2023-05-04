@@ -63,7 +63,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import DevicesOptions from './DevicesOptions.vue'
+import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import AddBtn from './AddBtn.vue'
 import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
 

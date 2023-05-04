@@ -9,12 +9,12 @@
 </template>
 
 <script setup>
-import DevicePower from './devices/DevicePower.vue';
-import LightDeviceInfo from './devices/LightDeviceInfo.vue';
-import ACDeviceInfo from './devices/ACDeviceInfo.vue';
-import OvenDeviceInfo from './devices/OvenDeviceInfo.vue';
-import SpeakerInfo from './devices/SpeakerInfo.vue';
-import BlindsDeviceInfo from './devices/BlindsDeviceInfo.vue';
+import DevicePower from '@/components/devices/DevicePower.vue';
+import LightDeviceInfo from '@/components/devices/LightDeviceInfo.vue';
+import ACDeviceInfo from '@/components/devices/ACDeviceInfo.vue';
+import OvenDeviceInfo from '@/components/devices/OvenDeviceInfo.vue';
+import SpeakerInfo from '@/components/devices/SpeakerInfo.vue';
+import BlindsDeviceInfo from '@/components/devices/BlindsDeviceInfo.vue';
 import { ref } from 'vue';
 
 const { device, disabled, loadingState } = defineProps({

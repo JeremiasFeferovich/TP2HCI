@@ -1,14 +1,16 @@
 <template>
     <v-row align="center" justify="center">
-        <v-icon :disabled="disabled" v-if="device.volume === 0" icon="mdi-volume-low" class="mr-1"></v-icon>
-        <v-icon :disabled="disabled" v-else-if="device.volume < 5" icon="mdi-volume-medium" class="mr-1"></v-icon>
+        <v-icon :disabled="disabled" v-if="device.volume === 0" icon="mdi-volume-mute" class="mr-1"></v-icon>
+        <v-icon :disabled="disabled" v-else-if="device.volume < 30" icon="mdi-volume-low" class="mr-1"></v-icon>
+        <v-icon :disabled="disabled" v-else-if="device.volume < 65" icon="mdi-volume-medium" class="mr-1"></v-icon>
         <v-icon :disabled="disabled" v-else icon="mdi-volume-high" class="mr-1"></v-icon>
 
-        <v-btn :disabled="disabled" density="compact" icon="mdi-minus" @click="device.volume--" />
-        <v-sheet class="sliderCont">
-            <v-slider :disabled="disabled" v-model="device.volume" hide-details min="0" max="10" step="1"></v-slider>
+        <v-btn :disabled="disabled || device.volume===0" density="compact" icon="mdi-minus" @click="device.volume--" />
+        <v-sheet class="sliderCont px-3">
+            <v-slider :disabled="disabled" v-model="device.volume" min="0" max="100" step="1" thumb-label hide-details></v-slider>
         </v-sheet>
-        <v-btn density="compact" icon="mdi-plus" @click="device.volume++" />
+        <v-btn :disabled="disabled || device.volume===100" density="compact" icon="mdi-plus" @click="device.volume++" />
+
     </v-row>
     <v-row align="center" class="my-8" justify="center">
         <v-sheet>
@@ -29,14 +31,13 @@
     </v-row>
     <v-row align="center" display="flex" justify="center">
         <v-sheet class="sliderCont">
-            <v-select :disabled=" disabled " ,class="centeredSelect" variant="outlined" :items=" device.genres "
+            <v-select :disabled=" disabled " class="centeredSelect" variant="outlined" :items=" device.genres "
                 v-model=" device.genre " hide-details hide-selected label="Género" item-text="name" item-value="name" />
         </v-sheet>
     </v-row>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
 const { device, disabled } = defineProps({
     device: Object,

@@ -31,7 +31,7 @@ import { ref, computed } from 'vue';
 
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
-import DevicesOptions from '../DevicesOptions.vue';
+import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 
 const loadingFav = ref(false);
 
