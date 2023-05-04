@@ -2,7 +2,7 @@
     <v-row align="center" justify="space-evenly">
         <v-card-title>Temperatura</v-card-title>
         <v-sheet width="40%">
-            <v-slider hide-details v-model="device.temperature" thumb-label min="18" max="38">
+            <v-slider :disabled="disabled" hide-details v-model="device.temperature" thumb-label min="18" max="38">
                 <template v-slot:thumb-label="{ modelValue }">
                     {{ Math.round(modelValue) + '°C' }}
                 </template>
@@ -11,7 +11,7 @@
     </v-row>
     <v-row justify="center">
         <v-sheet class="sliderCont">
-            <ImageSelect label="Modo" :items="modeItems" :selectedItem="device.mode"
+            <ImageSelect :disabled="disabled" label="Modo" :items="modeItems" :selectedItem="device.mode"
                 @update="(updatedValue) => device.mode = updatedValue" />
         </v-sheet>
     </v-row>
@@ -21,11 +21,11 @@
         </v-sheet>
     </v-row>
     <v-row justify="center">
-        <v-btn v-model="verticalAutomatic" class="mr-3" variant="text" size="large"
+        <v-btn :disabled="disabled" v-model="verticalAutomatic" class="mr-3" variant="text" size="large"
             @click="verticalAutomatic = !verticalAutomatic" density="compact"
             :icon="verticalAutomatic ? 'mdi-alpha-a-circle' : 'mdi-alpha-a-circle-outline'" />
         <v-sheet class="sliderCont">
-            <v-slider :disabled="verticalAutomatic" v-model="verticalSwing" hide-details min="22.5" max="90" step="22.5"
+            <v-slider :disabled="disabled" v-model="verticalSwing" hide-details min="22.5" max="90" step="22.5"
                 show-ticks="always" tick-size="4"></v-slider>
         </v-sheet>
     </v-row>
@@ -35,7 +35,7 @@
         </v-sheet>
     </v-row>
     <v-row justify="center">
-        <v-btn v-model="horizontalAutomatic" class="mr-3" variant="text" size="large"
+        <v-btn :disabled="disabled" v-model="horizontalAutomatic" class="mr-3" variant="text" size="large"
             @click="horizontalAutomatic = !horizontalAutomatic" density="compact"
             :icon="horizontalAutomatic ? 'mdi-alpha-a-circle' : 'mdi-alpha-a-circle-outline'" />
         <v-sheet class="sliderCont">
@@ -49,12 +49,11 @@
         </v-sheet>
     </v-row>
     <v-row align="center" justify="center">
-        <v-btn v-model="fanSpeedAutomatic" class="mr-3" variant="text" size="large"
+        <v-btn :disabled="disabled" v-model="fanSpeedAutomatic" class="mr-3" variant="text" size="large"
             @click="fanSpeedAutomatic = !fanSpeedAutomatic" density="compact"
             :icon="fanSpeedAutomatic ? 'mdi-alpha-a-circle' : 'mdi-alpha-a-circle-outline'" />
         <v-sheet class="sliderCont mt-1">
-            <v-slider :disabled="fanSpeedAutomatic" v-model="fanSpeed" hide-details step="25" show-ticks="always"
-                tick-size="4">
+            <v-slider :disabled="disabled" v-model="fanSpeed" hide-details step="25" show-ticks="always" tick-size="4">
             </v-slider>
         </v-sheet>
         <!-- <v-icon class="ml-2" icon="mdi-fan" /> -->
@@ -112,8 +111,9 @@ watch(fanSpeedAutomatic, (newValue) => {
     }
 });
 
-const { device} = defineProps({
+const { device } = defineProps({
     device: Object,
+    disabled: Boolean
 })
 
 </script>

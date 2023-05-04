@@ -38,7 +38,8 @@
                       </template>
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                      <LightDeviceInfo :device="device" />
+                      <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="false"
+                        @changeState="toggleButtonState(device)" />
                     </v-expansion-panel-text>
 
 
@@ -46,7 +47,7 @@
                 </v-expansion-panels>
               </v-row>
               <v-row cols="12" class="fill-space">
-                <v-select label="Select" :items="devices" v-model="selectedDevice"
+                <v-select label="Select" :items="devices" item-title="name" return-object v-model="selectedDevice"
                   @update:modelValue="addSelectedDevice" />
               </v-row>
               <v-row cols="12" class="plus-btn">
@@ -73,6 +74,13 @@
 <script setup>
 import { ref } from 'vue'
 import LightDeviceInfo from './devices/LightDeviceInfo.vue'
+import OvenDeviceInfo from './devices/OvenDeviceInfo.vue'
+import ACDeviceInfo from './devices/ACDeviceInfo.vue'
+import SpeakerInfo from './devices/SpeakerInfo.vue'
+import BlindsDeviceInfo from './devices/BlindsDeviceInfo.vue'
+import DevicePower from './devices/DevicePower.vue'
+import DevicesOptions from './DevicesOptions.vue'
+
 
 
 const prop = defineProps({
@@ -87,9 +95,12 @@ const selectedDevices = ref([])
 const showSelector = ref(true)
 const opened = ref([0])
 
+function toggleButtonState(device) {
+  device.isOn = !device.isOn;
+}
+
 const addSelectedDevice = () => {
   if (selectedDevice.value !== '') {
-    console.info(selectedDevice.value)
     selectedDevice.value = prop.devices.find(device => device.name === selectedDevice.value.name);
 
     selectedDevices.value.push(selectedDevice.value)

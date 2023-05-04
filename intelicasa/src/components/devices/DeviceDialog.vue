@@ -16,13 +16,9 @@
                 </v-col>
             </v-row>
         </v-card-title>
-        <v-card-text>    
-            <DevicePower v-show="device.category !== 'Persiana'" :device="device" :loading-state="loadingState" @changeState="$emit('changeState')"/>
-            <LightDeviceInfo v-if="device.category === 'Luces'" :device="device" />
-            <ACDeviceInfo v-else-if="device.category === 'Aire Acondicionado'" :device="device" />
-            <OvenDeviceInfo v-else-if="device.category === 'Horno'" :device="device" />
-            <SpeakerInfo v-else-if="device.category === 'Parlante'" :device="device" />
-            <BlindsDeviceInfo v-else-if="device.category === 'Persiana'" :device="device" />
+        <v-card-text>
+            <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="loadingState"
+                @changeState="$emit('changeState')" />
             <v-row justify="end" class="mr-1">
                 <v-btn icon="mdi-delete" variant="text" @click="$emit('delete')"></v-btn>
             </v-row>
@@ -35,6 +31,7 @@ import { ref, computed } from 'vue';
 
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
+import DevicesOptions from '../DevicesOptions.vue';
 
 import LightDeviceInfo from './LightDeviceInfo.vue';
 import OvenDeviceInfo from './OvenDeviceInfo.vue';
