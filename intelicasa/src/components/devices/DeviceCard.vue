@@ -5,7 +5,7 @@
                 <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
             </v-col>
             <v-col cols="6" class="text-center" align-self="center">
-                <v-card-title>{{ props.device.name }}</v-card-title>
+                <v-card-title class="text-h5">{{ props.device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
                 <v-btn class="square-btn rounded-circle" v-model="props.device.isOn" @click.stop="toggleButtonState"
@@ -15,7 +15,8 @@
             </v-col>
         </v-row>
         <v-dialog v-model="openDialog" width="30%">
-            <DeviceDialog :device="props.device" :loadingState="loadingState" @changeState="toggleButtonState" :categoryImg="categoryImg" @delete="deleteDevice"/>
+            <DeviceDialog :device="props.device" :loadingState="loadingState" @changeState="toggleButtonState"
+                :categoryImg="categoryImg" @delete="deleteDevice" />
         </v-dialog>
     </v-card>
 </template>
@@ -72,8 +73,8 @@ function toggleButtonState() {
 
 const emit = defineEmits(['delete']);
 
-function deleteDevice(){
-    openDialog.value=false; 
+function deleteDevice() {
+    openDialog.value = false;
     emit('delete');
 }
 

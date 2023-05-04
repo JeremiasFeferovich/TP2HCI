@@ -5,9 +5,10 @@ import { RouterView } from 'vue-router'
 
 <template>
   <v-app id="main" :style="{ background: $vuetify.theme.themes['dark'].background }">
-      <Navigation />
-      <RouterView />
+    <Navigation />
+    <RouterView />
   </v-app>
 </template>
+
 
 

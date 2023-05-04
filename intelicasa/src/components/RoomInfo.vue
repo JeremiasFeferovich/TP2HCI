@@ -1,7 +1,7 @@
 <template>
     <v-card class="room-card-info" flat>
         <v-card-title>
-            <p class="text-h4">{{ roomName }}</p>
+            <p class="text-h5">{{ roomName }}</p>
         </v-card-title>
 
         <v-container fluid>
@@ -18,30 +18,30 @@
 </template>
   
 <script setup>
-    import DeviceCard from '@/components/devices/DeviceCard.vue';
+import DeviceCard from '@/components/devices/DeviceCard.vue';
 
-    const props = defineProps({
-        room: Object,
-        roomName: String,
-        roomDevices: Array,
-    });
+const props = defineProps({
+    room: Object,
+    roomName: String,
+    roomDevices: Array,
+});
 </script>
   
 <style scoped>
-    .room-card-info {
-        padding: 16px;
-        margin-bottom: 16px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-    }
+.room-card-info {
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
 
-    .room-card-info:hover {
-        box-shadow: none;
-    }
+.room-card-info:hover {
+    box-shadow: none;
+}
 
-    .delete-btn {
-        margin-left: auto;
-        cursor: pointer;
-    }
+.delete-btn {
+    margin-left: auto;
+    cursor: pointer;
+}
 </style>
   

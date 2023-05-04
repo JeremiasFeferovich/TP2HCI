@@ -6,7 +6,7 @@
                     <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
                 </v-col>
                 <v-col cols="6" class="text-center" align-self="center">
-                    <v-card-title>{{ device.name }}</v-card-title>
+                    <v-card-title class="text-h5">{{ device.name }}</v-card-title>
                 </v-col>
                 <v-col cols="3">
                     <v-btn v-model="device.favorite" @click="toggleButtonFavorite" toggle :ripple="false" size="large"

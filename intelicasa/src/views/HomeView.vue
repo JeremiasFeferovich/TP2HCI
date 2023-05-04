@@ -2,10 +2,10 @@
     <TitleComponent title="Inicio" class="mb-5" />
     <v-container fluid>
         <v-row justify="center">
-            <h1>Rutinas</h1>
+            <h1 class="text-h4">Rutinas</h1>
         </v-row>
         <v-row justify="center">
-            <h1>Dispositivos</h1>
+            <h1 class="text-h4">Dispositivos</h1>
         </v-row>
         <v-sheet color="secondary">
             <DevicesList :showSearchbar="false" :devices="shownDevices" @delete="deleteDevice" />
@@ -43,8 +43,7 @@ watch(allDevices, filterDevices)
 </script>
 
 <style scoped>
-
-.v-sheet {       
+.v-sheet {
     margin-top: 35px;
     border-radius: 10px;
     width: 75%;
@@ -58,5 +57,4 @@ watch(allDevices, filterDevices)
 .v-container {
     padding: 0;
 }
-
 </style>
