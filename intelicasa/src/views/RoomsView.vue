@@ -17,16 +17,16 @@
 
 <script setup>
 import TitleComponent from '@/components/TitleComponent.vue';
-import RoomCard from '@/components/RoomCard.vue';
-import RoomDialog from '@/components/RoomDialog.vue';
+import RoomCard from '@/components/rooms/RoomCard.vue';
+import RoomDialog from '@/components/rooms/RoomDialog.vue';
 import { ref } from 'vue';
 
 const rooms = ref([
-    { name: 'Living Room', devices: ["TV", "Luces"], type: "Living" },
-    { name: 'Kitchen', devices: ["Helader", "Luces"], type: "Cocina" },
-    { name: 'Bedroom', devices: ["Luces"], type: "Habitación" },
-    { name: 'Bathroom', devices: ["Luces"], type: "Baño" },
-    { name: 'Garden', devices: ["Luces"], type: "Patio" }
+    { name: 'Living', devices: ["TV", "Luces"], type: "Living" },
+    { name: 'Cocina', devices: ["Helader", "Luces"], type: "Cocina" },
+    { name: 'Habitación', devices: ["Luces"], type: "Habitación" },
+    { name: 'Baño', devices: ["Luces"], type: "Baño" },
+    { name: 'Patio', devices: ["Luces"], type: "Patio" }
 ])
 
 function addRoom(newRoom) {

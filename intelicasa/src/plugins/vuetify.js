@@ -23,6 +23,7 @@ const myCustomLightTheme = {
     'primary-darken-1': colors[color].darken4,
     secondary: colors[color].lighten3,
     'secondary-darken-1': '#018786',
+    tertiary: colors.red.lighten3,
     error: '#B00020',
     info: '#2196F3',
     success: '#4CAF50',
