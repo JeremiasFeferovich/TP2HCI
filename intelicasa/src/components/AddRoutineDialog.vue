@@ -55,12 +55,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-          Cerrar
-        </v-btn>
-        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-          Agregar
-        </v-btn>
+        <CloseAndSaveBtns @setDialogFalse="dialog = false" @handleSave="handleSave" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -68,15 +63,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import LightDeviceInfo from './devices/LightDeviceInfo.vue'
-import OvenDeviceInfo from './devices/OvenDeviceInfo.vue'
-import ACDeviceInfo from './devices/ACDeviceInfo.vue'
-import SpeakerInfo from './devices/SpeakerInfo.vue'
-import BlindsDeviceInfo from './devices/BlindsDeviceInfo.vue'
-import DevicePower from './devices/DevicePower.vue'
 import DevicesOptions from './DevicesOptions.vue'
 import AddBtn from './AddBtn.vue'
-
+import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
 
 
 const prop = defineProps({

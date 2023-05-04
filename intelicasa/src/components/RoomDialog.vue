@@ -31,12 +31,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-          Close
-        </v-btn>
-        <v-btn color="blue-darken-1" variant="text" @click="saveRoom">
-          Save
-        </v-btn>
+        <CloseAndSaveBtns @setDialogFalse="dialog = false" @handleSave="handleSave" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -45,6 +40,7 @@
 <script setup>
 import { ref } from 'vue'
 import AddBtn from './AddBtn.vue';
+import CloseAndSaveBtns from './CloseAndSaveBtns.vue';
 
 const showRequired = ref(false);
 
@@ -62,7 +58,7 @@ const props = defineProps({
 
 const emit = defineEmits(['save-room'])
 
-function saveRoom() {
+function handleSave() {
   if (roomName.value === '' || roomType.value === '' || device1.value === '') {
     showRequired.value = true;
     return;
@@ -93,15 +89,6 @@ function addDeviceInput() {
 
 
 <style scoped>
-.add-btn {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: right;
-  margin-right: 20%;
-
-}
-
 .fill-space {
   max-width: 60%;
 }

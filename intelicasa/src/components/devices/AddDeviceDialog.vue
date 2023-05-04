@@ -23,12 +23,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-                    Close
-                </v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="handleSave">
-                    Save
-                </v-btn>
+                <CloseAndSaveBtns @setDialogFalse="dialog = false" @handleSave="handleSave" />
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -38,6 +33,7 @@
 import { ref } from 'vue'
 import ImageSelect from './ImageSelect.vue';
 import AddBtn from '../AddBtn.vue';
+import CloseAndSaveBtns from '../CloseAndSaveBtns.vue';
 
 const dialog = ref(false)
 
