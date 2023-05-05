@@ -42,9 +42,6 @@ class DeviceApi {
     }
 
     static async getAll() {
-        if (!this.allCategories.length) {
-            await this.getCategories()
-        }
         const devices = await Api.get(DeviceApi.getUrl())
         return devices.map(device => {
             const category = this.categories.find(category => category.value === device.type.name);
@@ -57,9 +54,6 @@ class DeviceApi {
     }
 
     static async getDevice(id) {
-        if (!this.allCategories.length) {
-            await this.getCategories()
-        }
         const device = await Api.get(DeviceApi.getUrl(id))
         const category = this.categories.find(category => category.value === device.type.name);
         return {
