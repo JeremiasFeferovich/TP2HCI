@@ -1,8 +1,8 @@
 <template>
     <TitleComponent title="Dispositivos" />
     <v-sheet color="secondary">
-        <DevicesList :showSearchbar="true" @update="(value) => search = value" :devices="shownDevices"
-            @delete="(device) => deleteDevice(device)" />
+        <DevicesList :show-searchbar="true" :devices="shownDevices" :categories="categories"
+            @delete="(device) => deleteDevice(device)" @update="(value) => search = value" />
     </v-sheet>
     <AddDeviceDialog objectTitle="Add Device" :categories="categories" @addDevice="(newDevice) => addDevice(newDevice)" />
 </template>

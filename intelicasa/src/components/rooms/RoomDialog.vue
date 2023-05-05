@@ -1,6 +1,6 @@
 <template>
   <div class="add-btn">
-    <v-dialog v-model="dialog" persistent width="1024">
+    <v-dialog v-model="dialog" width="1024">
       <template v-slot:activator="{ props }">
         <v-btn color="primary" v-bind="props">
           Agregar

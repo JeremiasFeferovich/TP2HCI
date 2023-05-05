@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="70%">
+  <v-dialog v-model="dialog" width="70%">
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
