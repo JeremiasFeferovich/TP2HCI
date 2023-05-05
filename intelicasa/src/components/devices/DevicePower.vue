@@ -5,7 +5,7 @@
             <p class="text-h6">Estado</p>
         </v-col>
         <v-col cols="6" align="center">
-            <v-btn v-model="isOn" @click="changeState" toggle :ripple="false" size="large" variant="plain"
+            <v-btn v-model="isOn" @click="changeState" toggle :ripple="false" size="large" variant="text"
                 :loading="loadingState" rounded="xl">
                 <img :src="powerBtnImg" alt="powerState" />
             </v-btn>
