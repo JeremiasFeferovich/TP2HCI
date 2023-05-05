@@ -1,6 +1,8 @@
 <template>
   <v-sheet class="nav-container py-2" color="primary">
-    <router-link class="logo" :to="{ name: 'home' }"><v-img src="@/assets/logoIntelicasa.svg"></v-img></router-link>
+    <router-link class="logo" :to="{ name: 'home' }">
+      <v-img src="@/assets/logoIntelicasa.svg" />
+    </router-link>
     <v-container fluid class="nav-content ma-0 pa-0">
       <v-tabs v-model="tab" background-color="primary">
         <v-tab class="tab px-5 text-h6" :to="{ name: 'home' }" value="home">INICIO</v-tab>

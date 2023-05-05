@@ -1,18 +1,20 @@
 <template>
-    <v-card class="ma-2 pa-3 routine-card">
+    <v-card class="ma-2 pa-3 routine-card" @click="openDialog = true">
         <v-row align="center">
             <v-col cols="6" align="left" class="pl-5">
                 <p class="text-h4">{{ prop.name }}</p>
             </v-col>
             <v-col cols="6">
                 <div class="image-container">
-                    <v-img v-for="(device, index) in devices" :key="index" :src="categoryImg(device)" alt="categoryImg"
-                        contain height="40px" width="40px" />
+                    <v-img v-for="(device, index) in routine.devices" :key="index" :src="categoryImg(device)"
+                        alt="categoryImg" contain height="40px" width="40px" />
                 </div>
             </v-col>
-
         </v-row>
     </v-card>
+    <v-dialog v-model="openDialog" width="50%">
+        <RoutineInfo :routine="routine" :allDevices="allDevices" @delete-routine="removeRoutine" />
+    </v-dialog>
 </template>
 
 <script setup>
@@ -25,7 +27,9 @@ import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import blinds from '@/assets/blinds.svg'
+import RoutineInfo from './RoutineInfo.vue';
 
+const openDialog = ref(false);
 
 const buttonState = ref(false);
 const loading = ref(false);
@@ -36,7 +40,8 @@ const powerBtnImg = computed(() => {
 
 const prop = defineProps({
     name: String,
-    devices: Array
+    routine: Object,
+    allDevices: Array
 })
 
 function toggleButtonState() {
@@ -44,6 +49,15 @@ function toggleButtonState() {
     setTimeout(() => (loading.value = false), 1000)
     buttonState.value = !buttonState.value;
 }
+
+const emit = defineEmits(['remove-routine']);
+
+function removeRoutine() {
+    openDialog.value = false;
+    emit('remove-routine');
+}
+
+
 
 function categoryImg(device) {
     switch (device.category) {

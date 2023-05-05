@@ -3,7 +3,7 @@
         <v-card-title>
             <v-row align="center">
                 <v-col cols="3">
-                    <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
+                    <img :src="device.category.img" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
                 </v-col>
                 <v-col cols="6" class="text-center" align-self="center">
                     <v-card-title class="text-h5">{{ device.name }}</v-card-title>
@@ -15,17 +15,15 @@
                     </v-btn>
                 </v-col>
                 <v-col cols="1">
-                    <v-btn class="square-btn" variant="text" @click="$emit('delete')">
-                        <v-icon icon="mdi-delete" size="40px">
-
-                        </v-icon>
+                    <v-btn class="square-btn" variant="text" @click="deleteDevice">
+                        <v-icon icon="mdi-delete" size="40px" />
                     </v-btn>
                 </v-col>
             </v-row>
         </v-card-title>
         <v-card-text>
-            <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="loadingState"
-                @changeState="changeState" />
+            <DevicesOptions :disabled="disabled" :device="device" :loadingState="loadingState"
+                @changeState="toggleButtonState" />
             <v-row justify="end" class="mr-1">
                 <v-btn icon="mdi-delete" variant="text" @click="delete"></v-btn>
             </v-row>
@@ -39,23 +37,32 @@ import { ref, computed } from 'vue';
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
+import { DeviceApi } from "@/api/device";
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    DeviceApi.getDevice(device.id);
+})
 
 const loadingFav = ref(false);
+
+const disabled = computed(() => device.state.status === 'off' ? true : false);
 
 const favoriteBtnImg = computed(() => {
     return device.favorite ? favoriteYes : favoriteNo;
 })
 
-function toggleButtonFavorite() {
+async function toggleButtonFavorite() {
     loadingFav.value = true
-    setTimeout(() => (loadingFav.value = false), 500)
-    device.favorite = !device.favorite;
+    if (await DeviceApi.toggleFavorite(device)) {
+        device.favorite = !device.favorite
+    }
+    loadingFav.value = false
 }
 
 const { device, loadingState } = defineProps({
     device: Object,
     loadingState: Boolean,
-    categoryImg: String,
 })
 
 const emit = defineEmits(['changeState', 'delete'])

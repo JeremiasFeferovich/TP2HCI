@@ -15,8 +15,7 @@
                         <v-text-field label="Device name*" v-model="deviceName" />
                     </v-row>
                     <v-row>
-                        <ImageSelect :items="categories" label="Category*" :selectedItem="selectedCategory"
-                            @update="(updatedValue) => selectedCategory = updatedValue" />
+                        <ImageSelect :items="categories" @update:selected-item="(item) => selectedCategory=item" label="Tipo" />
                     </v-row>
                 </v-container>
                 <small v-if="showRequired" class="required">*indicates required field</small>
@@ -34,16 +33,14 @@ import { ref } from 'vue'
 import ImageSelect from './ImageSelect.vue';
 import AddBtn from '../AddBtn.vue';
 import CloseAndSaveBtns from '../CloseAndSaveBtns.vue';
+import { useDeviceStore } from '@/stores/deviceStore';
+
+const deviceStore = useDeviceStore();
 
 const dialog = ref(false)
-
 const showRequired = ref(false)
-
-const selectedCategory = ref('')
-
+const selectedCategory = ref(null)
 const deviceName = ref('')
-
-const emit = defineEmits(['addDevice']);
 
 function handleSave() {
     if (selectedCategory.value === '' || deviceName.value === '') {
@@ -51,12 +48,14 @@ function handleSave() {
         return;
     }
     showRequired.value = false;
+    console.log(selectedCategory.value)
     const device = {
         name: deviceName.value,
         category: selectedCategory.value
     }
-    emit('addDevice', device);
-    selectedCategory.value = ''
+    console.log(device)
+    deviceStore.addDevice(device);
+    selectedCategory.value = null
     deviceName.value = ''
     dialog.value = false
 }

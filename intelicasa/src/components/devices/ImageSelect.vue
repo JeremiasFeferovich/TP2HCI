@@ -1,17 +1,17 @@
 <template>
-    <v-select class="centeredSelect" v-model="props.selectedItem" variant="outlined" :items="items" :label="props.label"
-        hide-details auto text-align="center" item-value="name" item-text="name" hide-selected>
+    <v-select :disabled="disabled" v-model="selectedItem" return-object variant="outlined" :items="items" :label="props.label" hide-details
+        auto item-title="name" hide-selected>
         <template v-slot:selection="{ item, index }">
-            <v-img :src="item.raw.img" :alt="item.raw.name" contain height="40px" width="40px">
-            </v-img>
+            <v-row no-gutters align="center">
+                <v-img :src="item.raw.img" :alt="item.raw.name" contain  height="40px" width="40px"/>
+                <p class="text-h6 ml-5">{{ item.raw.name }}</p>
+            </v-row>
         </template>
         <template v-slot:item="{ item }">
-            <v-list-item @click="update(item.raw.name)">
+            <v-list-item @click="updateSelectedItem(item)">
                 <v-row no-gutters align="center">
-                    <span>{{ item.raw.name }}</span>
-                    <v-spacer></v-spacer>
-                    <v-spacer></v-spacer>
-                    <v-img :src="item.raw.img" :alt="item.raw.name" contain height="40px" width="40px"></v-img>
+                    <v-img :src="item.raw.img" :alt="item.raw.name" contain max-height="40px" max-width="40px"/>
+                    <p class="text-h6 ml-5">{{ item.raw.name }}</p>
                 </v-row>
             </v-list-item>
         </template>
@@ -20,23 +20,24 @@
   
 <script setup>
 
-const emit = defineEmits(['update'])
+import { ref } from 'vue';
 
-function update(selectedItem) {
-    emit('update', selectedItem);
-}
+const selectedItem = ref(null);
 
 const props = defineProps({
     items: Array,
-    selectedItem: String,
     label: String,
+    disabled: Boolean,
 });
+
+const emit = defineEmits(['update:selectedItem']);
+
+function updateSelectedItem(item) {
+    selectedItem.value = item.value;
+    emit('update:selectedItem', selectedItem.value);
+}
+
 
 </script>
 
-
-<style scoped>
-.centeredSelect :deep(.v-field__input) {
-    justify-content: center;
-}
-</style>
+<style scoped></style>

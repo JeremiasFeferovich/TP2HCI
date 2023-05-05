@@ -1,35 +1,66 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { DeviceApi } from "@/api/device";
+
+import lightbulb from '@/assets/lightbulb.svg'
+import speaker from '@/assets/speaker.svg'
+import oven from '@/assets/oven.svg'
+import airConditioner from '@/assets/airConditioner.svg'
+import blinds from '@/assets/blinds.svg'
 
 export const useDeviceStore = defineStore('device', () => {
     // State - ref
+    const devices = ref([]);
 
+    const categories = ref([]);
 
-    const devices = ref([{ name: "Aire", category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-    { name: "Luces", category: "Luces",  isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-    { name: "Persiana", category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-    { name: "Horno", category: "Horno", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-    { name: "Parlante", category: "Parlante", isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }]
-    );
-    
     // Getters - computed
-    const getDevices = computed(() => devices.value)
+
     // Actions - funciones Javascript
-    function fetchDevices(){
-        return devices
-    }
-    function addDevice(device){
-        devices.value.push(device)
-    }
-    function deleteDevice(device){
-        devices.value.splice(devices.value.indexOf(device), 1)
+    async function fetchDevices() {
+        const fetchedDevices = await DeviceApi.getAll()
+        console.log(fetchedDevices)
+        devices.value = fetchedDevices
+        return fetchedDevices
     }
 
+    async function fetchCategories() {
+        if (!categories.value.length) {
+            const fetchedCategories = await DeviceApi.getCategories();
+            const categoriesValues = [
+                { name: "Aire Acondicionado", value: "ac", img: airConditioner },
+                { name: "Luces", value: "lamp", img: lightbulb },
+                { name: "Persiana", value: "blinds", img: blinds },
+                { name: "Horno", value: "oven", img: oven },
+                { name: "Parlante", value: "speaker", img: speaker },
+            ];
 
-    return{
-        getDevices,
-        fetchDevices,addDevice,deleteDevice
-        
-    }  
+            const filteredCategories = fetchedCategories.filter((fetchedCategory) =>
+                categoriesValues.some((category) => category.value === fetchedCategory.name)
+            );
+
+            const updatedCategories = filteredCategories.map((filteredCategory) => {
+                const category = categoriesValues.find((category) => category.value === filteredCategory.name);
+                return { ...filteredCategory, img: category.img, name: category.name, value: category.value };
+            });
+            categories.value = updatedCategories;
+        }
+        return categories.value;
+    }
+
+    async function addDevice(device) {
+        const addedDevice = await DeviceApi.add(device);
+        fetchDevices()
+    }
+
+    async function deleteDevice(device) {
+        const deletedDevice = await DeviceApi.remove(device.id);
+        fetchDevices()
+    }
+
+    return {
+        devices, categories,
+        fetchDevices, addDevice, deleteDevice, fetchCategories
+    }
 
 })

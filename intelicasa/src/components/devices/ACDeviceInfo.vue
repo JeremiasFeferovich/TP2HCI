@@ -13,8 +13,8 @@
     </v-row>
     <v-row justify="center">
         <v-sheet class="sliderCont">
-            <ImageSelect :disabled="disabled" label="Modo" :items="modeItems" :selectedItem="device.mode"
-                @update="(updatedValue) => device.mode = updatedValue" />
+            <ImageSelect :disabled="disabled" label="Modo" :items="modeItems" 
+                @update:selected-item="(updatedValue) => device.mode = updatedValue" />
         </v-sheet>
     </v-row>
     <v-row justify="center">
@@ -108,7 +108,7 @@ watch(fanSpeedAutomatic, (newValue) => {
     }
 });
 
-const { device } = defineProps({
+const { device, disabled } = defineProps({
     device: Object,
     disabled: Boolean
 })

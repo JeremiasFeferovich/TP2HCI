@@ -5,7 +5,7 @@
             <p class="text-h6">Estado</p>
         </v-col>
         <v-col cols="6" align="center">
-            <v-btn v-model="device.isOn" @click="changeState" toggle :ripple="false" size="large" variant="plain"
+            <v-btn v-model="isOn" @click="changeState" toggle :ripple="false" size="large" variant="plain"
                 :loading="loadingState" rounded="xl">
                 <img :src="powerBtnImg" alt="powerState" />
             </v-btn>
@@ -17,7 +17,9 @@
 
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+
+const isOn = ref(props.device.state.status)
 
 const props = defineProps({
     device: Object,
@@ -31,7 +33,7 @@ function changeState() {
 }
 
 const powerBtnImg = computed(() => {
-    return props.device.isOn ? powerOn : powerOff;
+    return props.device.state.status === 'on' ? powerOn : powerOff;
 })
 
 </script>

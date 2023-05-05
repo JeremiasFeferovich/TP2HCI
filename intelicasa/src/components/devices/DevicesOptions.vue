@@ -1,11 +1,11 @@
 <template>
-    <DevicePower v-show="device.category !== 'Persiana'" :device="device" :loading-state="false"
+    <DevicePower v-show="device.category.name !== 'Persiana'" :device="device" :loading-state="loadingState"
         @changeState="changeState" />
-    <LightDeviceInfo :disabled="!device.isOn" v-if="device.category === 'Luces'" :device="device" />
-    <ACDeviceInfo :disabled="!device.isOn" v-else-if="device.category === 'Aire Acondicionado'" :device="device" />
-    <OvenDeviceInfo :disabled="!device.isOn" v-else-if="device.category === 'Horno'" :device="device" />
-    <SpeakerInfo :disabled="!device.isOn" v-else-if="device.category === 'Parlante'" :device="device" />
-    <BlindsDeviceInfo v-else-if="device.category === 'Persiana'" :device="device" />
+    <LightDeviceInfo :disabled="disabled" v-if="device.category.name === 'Luces'" :device="device" />
+    <ACDeviceInfo :disabled="disabled" v-else-if="device.category.name === 'Aire Acondicionado'" :device="device" />
+    <OvenDeviceInfo :disabled="disabled" v-else-if="device.category.name === 'Horno'" :device="device" />
+    <SpeakerInfo :disabled="disabled" v-else-if="device.category.name === 'Parlante'" :device="device" />
+    <BlindsDeviceInfo v-else-if="device.category.name === 'Persiana'" :device="device" />
 </template>
 
 <script setup>
@@ -16,9 +16,10 @@ import OvenDeviceInfo from '@/components/devices/OvenDeviceInfo.vue';
 import SpeakerInfo from '@/components/devices/SpeakerInfo.vue';
 import BlindsDeviceInfo from '@/components/devices/BlindsDeviceInfo.vue';
 
-const { device, disabled } = defineProps({
+const props= defineProps({
     device: Object,
     disabled: Boolean,
+    loadingState: Boolean,
 })
 
 const emit = defineEmits(['changeState']);

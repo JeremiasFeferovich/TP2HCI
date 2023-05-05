@@ -8,7 +8,7 @@
                 <v-card-title class="text-h5">{{ props.device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-btn class="square-btn rounded-circle" v-model="props.device.isOn" @click.stop="toggleButtonState"
+                <v-btn class="square-btn rounded-circle" v-model="props.device.state.status" @click.stop="toggleButtonState"
                     variant="plain" :loading="loadingState">
                     <img :src="powerBtnImg" alt="powerState" />
                 </v-btn>
@@ -28,14 +28,8 @@ import { ref, computed } from 'vue';
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 
-// Category images
-import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
-import blinds from '@/assets/blinds.svg'
-
 import DeviceDialog from './DeviceDialog.vue'
+import { DeviceApi } from '@/api/device';
 
 const loadingState = ref(false);
 const openDialog = ref(false);
@@ -44,31 +38,18 @@ const props = defineProps({
     device: Object,
 })
 
-const categoryImg = computed(() => {
-    switch (props.device.category) {
-        case 'Luces':
-            return lightbulb;
-        case 'Horno':
-            return oven;
-        case 'Parlante':
-            return speaker;
-        case 'Aire Acondicionado':
-            return airConditioner;
-        case 'Persiana':
-            return blinds;
-        default:
-            return lightbulb;
-    }
-});
+const categoryImg = computed(() => props.device.category.img);
 
 const powerBtnImg = computed(() => {
-    return props.device.isOn ? powerOn : powerOff;
+    return props.device.state.status === 'on' ? powerOn : powerOff;
 })
 
-function toggleButtonState() {
+async function toggleButtonState() {
     loadingState.value = true
-    setTimeout(() => (loadingState.value = false), 1000)
-    props.device.isOn = !props.device.isOn;
+    if (await DeviceApi.triggerEvent(props.device.id, props.device.state.status === 'on' ? 'turnOff' : 'turnOn')){
+        props.device.state.status = props.device.state.status === 'on' ? 'off' : 'on';
+    }
+    loadingState.value = false;
 }
 
 const emit = defineEmits(['delete']);

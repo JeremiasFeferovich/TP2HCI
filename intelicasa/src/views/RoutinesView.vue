@@ -2,10 +2,11 @@
     <TitleComponent title="Rutinas" />
     <v-sheet class="viewSheet" color="secondary">
         <v-row v-for="(routine, index) in routines" :key="index">
-            <RoutineCard :name="routine.name" :devices="routine.devices" />
+            <RoutineCard :name="routine.name" :routine="routine" @remove-routine="removeRoutine(routine)"
+                :allDevices="devices" />
         </v-row>
     </v-sheet>
-    <AddRoutineDialog :devices="allDevices" :categories="categories" />
+    <AddRoutineDialog :devices="devices" :categories="categories" @save-routine="addRoutine" />
 </template>
 
 <script setup>
@@ -19,33 +20,26 @@ import TitleComponent from '@/components/TitleComponent.vue';
 import RoutineCard from '@/components/RoutineCard.vue';
 import AddRoutineDialog from '@/components/AddRoutineDialog.vue';
 import { ref } from 'vue';
+import { useDeviceStore } from '@/stores/deviceStore';
+import { useRoutineStore } from '@/stores/routineStore'
 
-const allDevices = ref([{ name: "Aire", category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-{ name: "Luces", category: "Luces", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-{ name: "Persiana", category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-{ name: "Horno", category: "Horno", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-{ name: "Parlante", category: "Parlante", isOn: false, favorite: false, volume: 5, genres: ["clasica", "country"], genre: "clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }]);
+const deviceStore = useDeviceStore();
+const routineStore = useRoutineStore();
+
 
 const categories = [{ name: "airConditioner", img: airConditioner }, { name: "light", img: lightbulb }, { name: "blinds", img: blinds }, { name: "oven", img: oven }, { name: "speaker", img: speaker }]
 
-const routines = ref([
-    {
-        name: 'Llegada', devices:
-            [
-                { name: "Aire", category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-                { name: "Luces", category: "Luces", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-                { name: "Persiana", category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-            ]
-    },
-    {
-        name: 'Salida', devices:
-            [
-                { name: "Aire", category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-                { name: "Luces", category: "Luces", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-                { name: "Persiana", category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-            ]
-    }
+const devices = ref(deviceStore.getDevices)
+const routines = ref(routineStore.getRoutines);
 
-])
+
+function addRoutine(newRoutine) {
+    routineStore.addRoutine(newRoutine);
+}
+
+function removeRoutine(routine) {
+    routineStore.deleteRoutine(routine);
+}
+
 
 </script>
