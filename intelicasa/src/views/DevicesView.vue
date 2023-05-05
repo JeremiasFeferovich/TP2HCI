@@ -19,25 +19,22 @@ import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import blinds from '@/assets/blinds.svg'
 import DevicesList from '@/components/devices/DevicesList.vue';
+import { useDeviceStore } from '@/stores/deviceStore';
 
 const search = ref("")
 
 const categories = [{ name: "Aire Acondicionado", img: airConditioner }, { name: "Luces", img: lightbulb }, { name: "Persiana", img: blinds }, { name: "Horno", img: oven }, { name: "Parlante", img: speaker }]
 
-const allDevices = ref([{ name: "Aire", category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-{ name: "Luces", category: "Luces",  isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-{ name: "Persiana", category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-{ name: "Horno", category: "Horno", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-{ name: "Parlante", category: "Parlante", isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }]
-);
 
+const deviceStore = useDeviceStore();
+const allDevices = ref(deviceStore.getDevices);
 const shownDevices = ref(allDevices.value);
 
 const defaultDevices = [{ category: "Aire Acondicionado", isOn: false, favorite: false, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
 { category: "Luces", isOn: false, favorite: false, intensity: 0, color: "#FFAAA0" },
-{ category: "Persiana",  isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-{ category: "Horno",  isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-{ category: "Parlante",  isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }];
+{ category: "Persiana", isOn: false, favorite: false, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
+{ category: "Horno", isOn: false, favorite: false, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
+{ category: "Parlante", isOn: false, favorite: false, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }];
 
 function getDefaultDevice(category) {
     return defaultDevices.find(device => device.category === category);
@@ -51,12 +48,12 @@ function createDeviceWithDefaults(device) {
 
 function addDevice(device) {
     const newDevice = createDeviceWithDefaults(device);
-    allDevices.value = [...allDevices.value, newDevice];
+    deviceStore.addDevice(newDevice);
     watch(search, filterDevices, { immediate: true });
 }
 
 function deleteDevice(device) {
-    allDevices.value = allDevices.value.filter(dev => dev !== device);
+    deviceStore.deleteDevice(device)
     watch(search, filterDevices, { immediate: true });
 }
 
@@ -74,17 +71,6 @@ watch(search, filterDevices)
     margin: 0 auto;
 }
 
-.v-container {
-    margin-top: 35px;
-    border-radius: 10px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 25px 25px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
 .add-btn {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -92,16 +78,5 @@ watch(search, filterDevices)
     justify-content: right;
     margin-right: 20%;
 
-}
-
-.v-sheet {       
-    margin-top: 35px;
-    border-radius: 10px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 25px 25px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
 }
 </style>

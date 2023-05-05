@@ -36,7 +36,7 @@ const tab = ref('home');
 .logo {
   height: 75px;
   width: 500px;
-  color: #333;
+  color: white;
   display: flex;
   align-items: center;
 }
@@ -49,7 +49,7 @@ const tab = ref('home');
 .tab {
   font-size: 20px;
   text-decoration: none;
-  color: #333;
+
   align-items: center;
   padding: 0 10px;
 }
