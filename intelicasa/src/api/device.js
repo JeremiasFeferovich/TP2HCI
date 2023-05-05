@@ -11,6 +11,7 @@ class DeviceApi {
 
     static async getCategories() {
         this.categories = await Api.get(`${Api.baseUrl}/devicetypes`)
+        return this.categories
     }
 
     static getUrl(slug) {
@@ -21,9 +22,12 @@ class DeviceApi {
         if (!this.categories.length) {
             await this.getCategories()
         }
+        console.log(device)
+        console.log(this.categories)
+        console.log(this.categories.find(category => category.name === device.category.value))
         const body = {
             type: {
-                id: this.categories.find(category => category.name === device.category).id
+                id: this.categories.find(category => category.name === device.category.value).id
             },
             name: device.name,
         }
@@ -56,8 +60,25 @@ class DeviceApi {
                 category: category
             };
         });
-
     }
+
+    static async getDevice(id) {
+        if (!this.categories.length) {
+            await this.getCategories()
+        }
+        const categories = [{ name: "Aire Acondicionado", value: "ac", img: airConditioner }, { name: "Luces", value: "lamp", img: lightbulb }, { name: "Persiana", value: "blinds", img: blinds }, { name: "Horno", value: "oven", img: oven }, { name: "Parlante", value: "speaker", img: speaker }]
+        const device = await Api.get(DeviceApi.getUrl(id))
+        const category = categories.find(category => category.value === device.type.name);
+        return {
+            ...device,
+            category: category
+        };
+    }
+
+    static async triggerEvent(deviceId, event, data) {
+        return await Api.put(`${Api.baseUrl}/devices/${deviceId}/${event}`,data)
+    }
+
 
 }
 

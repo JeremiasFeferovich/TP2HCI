@@ -6,7 +6,7 @@
         </v-col>
         <v-col cols="6" align="center">
             <v-sheet width="90%">
-                <v-slider :disabled="disabled" hide-details v-model="device.intensity" thumb-label />
+                <v-slider :disabled="disabled || loading" hide-details v-model="intensity" step="1" @end="updateIntensity"  thumb-label />
             </v-sheet>
         </v-col>
     </v-row>
@@ -27,14 +27,24 @@
 
 <script setup>
 import { ref } from 'vue';
+import { DeviceApi } from '@/api/device';
 
 const showColorPicker = ref(false);
 
-const { device, disabled } = defineProps({
+const loading = ref(false);
+
+const intensity = ref(props.device.state.brightness);
+
+const props = defineProps({
     device: Object,
     disabled: Boolean
 })
 
+async function updateIntensity() {
+    loading.value = true
+    await DeviceApi.triggerEvent(props.device.id, 'setBrightness', [intensity.value] )
+    loading.value = false
+}
 </script>
 
 <style scoped>
