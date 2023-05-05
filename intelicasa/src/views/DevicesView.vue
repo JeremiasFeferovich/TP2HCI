@@ -1,8 +1,8 @@
 <template>
     <TitleComponent title="Dispositivos" />
-    <v-sheet class="viewSheet" color="secondary">
-        <DevicesList :showSearchbar="true" @update="(value) => search = value" :devices="shownDevices"
-            @delete="(device) => deleteDevice(device)" />
+    <v-sheet color="secondary" class="viewSheet">
+        <DevicesList :show-searchbar="true" :devices="shownDevices" :categories="categories"
+            @delete="(device) => deleteDevice(device)" @update="(value) => search = value" />
     </v-sheet>
     <AddDeviceDialog objectTitle="Add Device" :categories="categories" @addDevice="(newDevice) => addDevice(newDevice)" />
 </template>
@@ -66,17 +66,5 @@ watch(search, filterDevices)
 </script>
 
 <style scoped>
-.search-bar {
-    width: 75%;
-    margin: 0 auto;
-}
 
-.add-btn {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: right;
-    margin-right: 20%;
-
-}
 </style>
