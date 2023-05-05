@@ -16,7 +16,7 @@
                 </v-col>
                 <v-col cols="1">
                     <v-btn class="square-btn" variant="text" @click="deleteDevice">
-                        <v-icon icon="mdi-delete" size="40px"/>
+                        <v-icon icon="mdi-delete" size="40px" />
                     </v-btn>
                 </v-col>
             </v-row>
@@ -46,16 +46,18 @@ onMounted(() => {
 
 const loadingFav = ref(false);
 
-const disabled = computed( ()=> device.state.status === 'off' ? true : false );
+const disabled = computed(() => device.state.status === 'off' ? true : false);
 
 const favoriteBtnImg = computed(() => {
     return device.favorite ? favoriteYes : favoriteNo;
 })
 
-function toggleButtonFavorite() {
+async function toggleButtonFavorite() {
     loadingFav.value = true
-    setTimeout(() => (loadingFav.value = false), 500)
-    device.favorite = !device.favorite;
+    if (await DeviceApi.toggleFavorite(device)) {
+        device.favorite = !device.favorite
+    }
+    loadingFav.value = false
 }
 
 const { device, loadingState } = defineProps({

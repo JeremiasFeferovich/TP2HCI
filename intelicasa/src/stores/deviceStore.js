@@ -44,9 +44,7 @@ export const useDeviceStore = defineStore('device', () => {
                 return { ...filteredCategory, img: category.img, name: category.name, value: category.value };
             });
             categories.value = updatedCategories;
-            console.log(categories.value);
         }
-        console.log(categories.value);
         return categories.value;
     }
 
@@ -63,7 +61,6 @@ export const useDeviceStore = defineStore('device', () => {
     return {
         devices, categories,
         fetchDevices, addDevice, deleteDevice, fetchCategories
-
     }
 
 })

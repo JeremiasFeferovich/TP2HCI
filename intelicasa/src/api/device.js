@@ -7,11 +7,13 @@ import blinds from '@/assets/blinds.svg'
 
 class DeviceApi {
 
-    static categories = []
+    static allCategories = []
+
+    static categories = [{ name: "Aire Acondicionado", value: "ac", img: airConditioner }, { name: "Luces", value: "lamp", img: lightbulb }, { name: "Persiana", value: "blinds", img: blinds }, { name: "Horno", value: "oven", img: oven }, { name: "Parlante", value: "speaker", img: speaker }]
 
     static async getCategories() {
-        this.categories = await Api.get(`${Api.baseUrl}/devicetypes`)
-        return this.categories
+        this.allCategories = await Api.get(`${Api.baseUrl}/devicetypes`)
+        return this.allCategories
     }
 
     static getUrl(slug) {
@@ -19,23 +21,16 @@ class DeviceApi {
     }
 
     static async add(device) {
-        if (!this.categories.length) {
+        if (!this.allCategories.length) {
             await this.getCategories()
         }
-        console.log(device)
-        console.log(this.categories)
-        console.log(this.categories.find(category => category.name === device.category.value))
         const body = {
             type: {
-                id: this.categories.find(category => category.name === device.category.value).id
+                id: this.allCategories.find(category => category.name === device.category.value).id
             },
             name: device.name,
         }
         return await Api.post(DeviceApi.getUrl(), body)
-    }
-
-    static async modify(device) {
-        return await Api.put(DeviceApi.getUrl(device.id), device)
     }
 
     static async remove(id) {
@@ -47,28 +42,26 @@ class DeviceApi {
     }
 
     static async getAll() {
-        if (!this.categories.length) {
+        if (!this.allCategories.length) {
             await this.getCategories()
         }
-        const categories = [{ name: "Aire Acondicionado", value: "ac", img: airConditioner }, { name: "Luces", value: "lamp", img: lightbulb }, { name: "Persiana", value: "blinds", img: blinds }, { name: "Horno", value: "oven", img: oven }, { name: "Parlante", value: "speaker", img: speaker }]
-
         const devices = await Api.get(DeviceApi.getUrl())
         return devices.map(device => {
-            const category = categories.find(category => category.value === device.type.name);
+            const category = this.categories.find(category => category.value === device.type.name);
             return {
                 ...device,
-                category: category
+                category: category,
+                favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
             };
         });
     }
 
     static async getDevice(id) {
-        if (!this.categories.length) {
+        if (!this.allCategories.length) {
             await this.getCategories()
         }
-        const categories = [{ name: "Aire Acondicionado", value: "ac", img: airConditioner }, { name: "Luces", value: "lamp", img: lightbulb }, { name: "Persiana", value: "blinds", img: blinds }, { name: "Horno", value: "oven", img: oven }, { name: "Parlante", value: "speaker", img: speaker }]
         const device = await Api.get(DeviceApi.getUrl(id))
-        const category = categories.find(category => category.value === device.type.name);
+        const category = this.categories.find(category => category.value === device.type.name);
         return {
             ...device,
             category: category
@@ -77,6 +70,10 @@ class DeviceApi {
 
     static async triggerEvent(deviceId, event, data) {
         return await Api.put(`${Api.baseUrl}/devices/${deviceId}/${event}`,data)
+    }
+
+    static async toggleFavorite(device) {
+        return await Api.put(`${Api.baseUrl}/devices/${device.id}`, {name: device.name, meta: { favorite : !device.favorite}})
     }
 
 
