@@ -4,10 +4,10 @@ class Api {
         return 'http://localhost:8080/api'
     }
 
-    static fetchApi(url, init = {}) {
+    static async fetchApi(url, init = {}) {
         try {
-            const response = fetch(url, init)
-            const text = response.text()
+            const response = await fetch(url, init)
+            const text = await response.text()
             const json = JSON.parse(text)
             return json.result
         } catch (error) {
@@ -16,40 +16,38 @@ class Api {
 
     }
 
-    static get(url) {
-        Api.fetchApi(url);
+    static async get(url) {
+        return await Api.fetchApi(url);
     }
 
-    static post(url, data) {
-        Api.fetchApi(url, {
+    static async post(url, data) {
+        return await Api.fetchApi(url, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
-            body: JSON.stringify(data)        
+            body: JSON.stringify(data)
         })
     }
 
-    static put(url, data) {
-        Api.fetchApi(url, {
+    static async put(url, data) {
+        return await Api.fetchApi(url, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
-            body: JSON.stringify(data)        
+            body: JSON.stringify(data)
         })
     }
 
-    static delete(url) {
-        Api.fetchApi(url, {
+    static async delete(url) {
+        return await Api.fetchApi(url, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
         })
     }
-
-
 }
 
-return { Api }
+export { Api }

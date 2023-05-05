@@ -28,13 +28,6 @@ import { ref, computed } from 'vue';
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 
-// Category images
-import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
-import blinds from '@/assets/blinds.svg'
-
 import DeviceDialog from './DeviceDialog.vue'
 
 const loadingState = ref(false);
@@ -44,22 +37,7 @@ const props = defineProps({
     device: Object,
 })
 
-const categoryImg = computed(() => {
-    switch (props.device.category) {
-        case 'Luces':
-            return lightbulb;
-        case 'Horno':
-            return oven;
-        case 'Parlante':
-            return speaker;
-        case 'Aire Acondicionado':
-            return airConditioner;
-        case 'Persiana':
-            return blinds;
-        default:
-            return lightbulb;
-    }
-});
+const categoryImg = computed(() => props.device.category.img);
 
 const powerBtnImg = computed(() => {
     return props.device.isOn ? powerOn : powerOff;

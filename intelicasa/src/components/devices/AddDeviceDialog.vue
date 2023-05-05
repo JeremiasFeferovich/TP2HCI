@@ -15,8 +15,8 @@
                         <v-text-field label="Device name*" v-model="deviceName" />
                     </v-row>
                     <v-row>
-                        <ImageSelect :items="categories" label="Category*" :selectedItem="selectedCategory"
-                            @update="(updatedValue) => selectedCategory = updatedValue" />
+                        <v-select label="Tipo" :items="categories" item-title="name" return-object v-model="selectedCategory"
+                            @update:modelValue="(updatedValue) => selectedCategory = updatedValue" />
                     </v-row>
                 </v-container>
                 <small v-if="showRequired" class="required">*indicates required field</small>
@@ -39,7 +39,7 @@ const dialog = ref(false)
 
 const showRequired = ref(false)
 
-const selectedCategory = ref('')
+const selectedCategory = ref(null)
 
 const deviceName = ref('')
 
@@ -53,7 +53,7 @@ function handleSave() {
     showRequired.value = false;
     const device = {
         name: deviceName.value,
-        category: selectedCategory.value
+        category: selectedCategory.value.value
     }
     emit('addDevice', device);
     selectedCategory.value = ''
