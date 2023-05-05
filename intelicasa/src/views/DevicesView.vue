@@ -1,6 +1,6 @@
 <template>
     <TitleComponent title="Dispositivos" />
-    <v-sheet color="secondary">
+    <v-sheet class="viewSheet" color="secondary">
         <DevicesList :showSearchbar="true" @update="(value) => search = value" :devices="shownDevices"
             @delete="(device) => deleteDevice(device)" />
     </v-sheet>
@@ -71,17 +71,6 @@ watch(search, filterDevices)
     margin: 0 auto;
 }
 
-.v-container {
-    margin-top: 35px;
-    border-radius: 10px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 25px 25px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
 .add-btn {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -89,16 +78,5 @@ watch(search, filterDevices)
     justify-content: right;
     margin-right: 20%;
 
-}
-
-.v-sheet {
-    margin-top: 35px;
-    border-radius: 10px;
-    width: 75%;
-    margin: 0 auto;
-    padding: 25px 25px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
 }
 </style>

@@ -12,3 +12,15 @@ import { RouterView } from 'vue-router'
 
 
 
+<style>
+.viewSheet {
+    margin-top: 35px;
+    border-radius: 10px;
+    width: 75%;
+    margin: 0 auto;
+    padding: 25px 25px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+</style>

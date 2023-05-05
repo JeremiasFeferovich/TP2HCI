@@ -25,9 +25,9 @@
         </v-card-title>
         <v-card-text>
             <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="loadingState"
-                @changeState="$emit('changeState')" />
+                @changeState="changeState" />
             <v-row justify="end" class="mr-1">
-
+                <v-btn icon="mdi-delete" variant="text" @click="delete"></v-btn>
             </v-row>
         </v-card-text>
     </v-card>
@@ -38,14 +38,7 @@ import { ref, computed } from 'vue';
 
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
-import DevicesOptions from '../DevicesOptions.vue';
-
-import LightDeviceInfo from './LightDeviceInfo.vue';
-import OvenDeviceInfo from './OvenDeviceInfo.vue';
-import ACDeviceInfo from './ACDeviceInfo.vue';
-import SpeakerInfo from './SpeakerInfo.vue';
-import BlindsDeviceInfo from './BlindsDeviceInfo.vue';
-import DevicePower from './DevicePower.vue';
+import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 
 const loadingFav = ref(false);
 
@@ -64,6 +57,16 @@ const { device, loadingState } = defineProps({
     loadingState: Boolean,
     categoryImg: String,
 })
+
+const emit = defineEmits(['changeState', 'delete'])
+
+function deleteDevice() {
+    emit('delete')
+}
+
+function toggleButtonState() {
+    emit('changeState')
+}
 
 </script>
 <style scoped>

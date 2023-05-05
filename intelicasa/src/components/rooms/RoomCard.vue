@@ -1,14 +1,21 @@
 <template>
     <v-card class="mx-auto room-card" @click="openDialog = true">
-        <img :src="typeImg" alt="typeImg" style="max-height: 100%; max-width: 100%; padding: 5px;" />
-        <template v-slot:title>
-            <p class="text-h5">{{ roomName }}</p>
-        </template>
-
-        <v-card-text class="room-info">
-            <p class="text-data text-h6">{{ roomDevices.length }} dispositivos conectados</p>
-            <p class="text-data text-h6">3 dispositivos encendidos (to do)</p>
-        </v-card-text>
+        <v-row class="align-center">
+            <v-col class="ml-10" cols="1">
+                <img :src="typeImg" alt="typeImg" style="max-height: 100%; max-width: 100%; padding: 5px;" />
+            </v-col>
+            <v-col >
+                <v-card-title>
+                    <p class="text-h4">{{ roomName }}</p>
+                </v-card-title>
+            </v-col>
+            <v-col>
+                <v-card-text class="room-info mr-5 mt-1 align-end">
+                    <p class="text-data text-h6">{{ roomDevices.length }} dispositivos conectados</p>
+                    <p class="text-data text-h6">3 dispositivos encendidos (to do)</p>
+                </v-card-text>
+            </v-col>
+        </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
         <RoomInfo :room="room" :room-name="roomName" :room-devices="roomDevices" @delete-room="removeRoom" />
@@ -17,13 +24,14 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import RoomInfo from '@/components/RoomInfo.vue';
+import RoomInfo from '@/components/rooms/RoomInfo.vue';
 
 import habitacion from '@/assets/habitacion.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
+import otro from '@/assets/otro.svg';
 
 const openDialog = ref(false);
 
@@ -46,6 +54,8 @@ const typeImg = computed(() => {
             return baño;
         case 'Patio':
             return patio;
+        case 'Otro':
+            return otro;
     }
 });
 
@@ -53,7 +63,6 @@ const emit = defineEmits(['remove-room']);
 
 function removeRoom() {
     openDialog.value = false;
-    // cada card deberia tener su propio id
     emit('remove-room');
 }
 
@@ -64,7 +73,8 @@ function removeRoom() {
 .room-card {
     margin-top: 5px;
     margin-bottom: 5px;
-    width: 100%;
+    width: 90%;
+    height: 100px;
 }
 
 .room-card:hover {
@@ -75,9 +85,9 @@ function removeRoom() {
 .room-info {
     display: flex;
     flex-direction: column;
-    align-items: end;
     margin-bottom: -10px;
     margin-top: -25px;
+
 }
 
 .text-data {
