@@ -2,19 +2,22 @@
     <v-card class="ma-2 pa-0 pb-3">
         <v-card-title>
             <v-row align="center">
-                <v-col cols="3">
+                <v-col cols="2">
                     <img :src="device.category.img" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
                 </v-col>
-                <v-col cols="6" class="text-center" align-self="center">
-                    <v-card-title class="text-h5">{{ device.name }}</v-card-title>
+                <v-col cols="8">
+                    <v-row justify="center">
+                        <v-btn class="square-btn" variant="text" @click="editName">
+                            <v-icon icon="mdi-pencil" size="40px" />
+                        </v-btn>
+                        <v-card-title class="text-h5">{{ device.name }}</v-card-title>
+                        <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle
+                            :ripple="false" size="large" variant="plain" :loading="loadingFav" rounded="xl">
+                            <img :src="favoriteBtnImg" alt="fav button" />
+                        </v-btn>
+                    </v-row>
                 </v-col>
-                <v-col cols="2">
-                    <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
-                        size="large" variant="plain" :loading="loadingFav" rounded="xl">
-                        <img :src="favoriteBtnImg" alt="fav button" />
-                    </v-btn>
-                </v-col>
-                <v-col cols="1">
+                <v-col cols="2" justify="center">
                     <v-btn class="square-btn" variant="text" @click="deleteDevice">
                         <v-icon icon="mdi-delete" size="40px" />
                     </v-btn>
@@ -24,9 +27,6 @@
         <v-card-text>
             <DevicesOptions :disabled="disabled" :device="device" :loadingState="loadingState"
                 @changeState="toggleButtonState" />
-            <v-row justify="end" class="mr-1">
-                <v-btn icon="mdi-delete" variant="text" @click="delete"></v-btn>
-            </v-row>
         </v-card-text>
     </v-card>
 </template>
@@ -69,6 +69,10 @@ const emit = defineEmits(['changeState', 'delete'])
 
 function deleteDevice() {
     emit('delete')
+}
+
+function editName(){
+    
 }
 
 function toggleButtonState() {
