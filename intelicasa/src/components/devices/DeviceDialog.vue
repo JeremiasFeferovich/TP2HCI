@@ -8,10 +8,17 @@
                 <v-col cols="6" class="text-center" align-self="center">
                     <v-card-title class="text-h5">{{ device.name }}</v-card-title>
                 </v-col>
-                <v-col cols="3">
-                    <v-btn v-model="device.favorite" @click="toggleButtonFavorite" toggle :ripple="false" size="large"
-                        variant="plain" :loading="loadingFav" rounded="xl">
+                <v-col cols="2">
+                    <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
+                        size="large" variant="plain" :loading="loadingFav" rounded="xl">
                         <img :src="favoriteBtnImg" alt="fav button" />
+                    </v-btn>
+                </v-col>
+                <v-col cols="1">
+                    <v-btn class="square-btn" variant="text" @click="$emit('delete')">
+                        <v-icon icon="mdi-delete" size="40px">
+
+                        </v-icon>
                     </v-btn>
                 </v-col>
             </v-row>
@@ -62,3 +69,12 @@ function toggleButtonState() {
 }
 
 </script>
+<style scoped>
+.square-btn {
+    min-width: 30px;
+    max-width: 30px;
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+}
+</style>

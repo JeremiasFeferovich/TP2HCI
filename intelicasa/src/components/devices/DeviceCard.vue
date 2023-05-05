@@ -14,7 +14,7 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <v-dialog v-model="openDialog" width="30%">
+        <v-dialog v-model="openDialog" width="40%">
             <DeviceDialog :device="props.device" :loadingState="loadingState" @changeState="toggleButtonState"
                 :categoryImg="categoryImg" @delete="deleteDevice" />
         </v-dialog>
