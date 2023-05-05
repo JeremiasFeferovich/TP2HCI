@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="70%">
+  <v-dialog v-model="dialog" width="70%">
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
@@ -11,7 +11,7 @@
         <v-container>
           <v-col justify="center" align="center">
             <v-row cols="12" class="fill-space">
-              <v-text-field label="Nombre de la rutina*" required />
+              <v-text-field label="Nombre de la rutina*" v-model="routineName" required />
             </v-row>
 
             <v-row cols="12" class="fill-space">
@@ -73,8 +73,11 @@ const prop = defineProps({
   categories: Array
 })
 
+const emit = defineEmits(['save-routine'])
+
 const dialog = ref(false)
 
+const routineName = ref('')
 const selectedDevice = ref('')
 const selectedDevices = ref([])
 const showSelector = ref(true)
@@ -85,7 +88,13 @@ function toggleButtonState(device) {
 }
 
 function handleSave() {
-  console.log('save')
+  const routine = {
+    name: routineName.value,
+    devices: selectedDevices.value
+  }
+  emit('save-routine', routine)
+  selectedDevices.value = []
+  dialog.value = false
 }
 
 const addSelectedDevice = () => {

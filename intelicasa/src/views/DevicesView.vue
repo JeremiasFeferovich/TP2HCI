@@ -1,7 +1,6 @@
 <template>
     <TitleComponent title="Dispositivos" />
     <v-sheet class="viewSheet" color="secondary">
-        {{ search }}
         <DevicesList v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
             @delete="(device) => deleteDevice(device)" />
     </v-sheet>
@@ -40,17 +39,5 @@ function deleteDevice(device) {
 </script>
 
 <style scoped>
-.search-bar {
-    width: 75%;
-    margin: 0 auto;
-}
 
-.add-btn {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: right;
-    margin-right: 20%;
-
-}
 </style>
