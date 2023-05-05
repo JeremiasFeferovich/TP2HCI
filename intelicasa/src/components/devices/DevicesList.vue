@@ -16,11 +16,12 @@
 
     const text = ref('');
 
-const props = defineProps({
-    devices: Array,
-    showSearchbar: Boolean,
-    search: String,
-})
+    const props = defineProps({
+        devices: Array,
+        showSearchbar: Boolean,
+        search: String,
+        categories: Array
+    })
 
     const emit = defineEmits(['delete', 'update']);
 
