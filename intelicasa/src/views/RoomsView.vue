@@ -4,9 +4,6 @@
             <v-row v-for="(room, index) in rooms" :key="index">
             <RoomCard 
                     :room="room" 
-                    :roomName="room.name" 
-                    :roomDevices="room.devices"  
-                    :room-type="room.type"
                     @remove-room="handleRemoveRoom(room)"
                 />
         </v-row>

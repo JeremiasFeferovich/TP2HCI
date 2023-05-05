@@ -3,7 +3,7 @@
 
         <v-row>
             <v-card-title>
-                <p class="text-h5">{{ roomName }}</p>
+                <p class="text-h5">{{ room.name }}</p>
             </v-card-title>
             <v-col class="mr-1" align="end">
                 <v-icon end icon="mdi-delete" @click="deleteRoom" />
@@ -16,7 +16,7 @@
         </v-row>
 
         <v-container fluid>
-            <v-row v-for="(device, index) in roomDevices" :key="index">
+            <v-row v-for="(device, index) in room.devices" :key="index">
                 <v-col cols="12" class="device-card">
                     <DeviceCard :device="{ name: device }" />
                 </v-col>
@@ -30,9 +30,7 @@
 import DeviceCard from '@/components/devices/DeviceCard.vue';
 
 const props = defineProps({
-    room: Object,
-    roomName: String,
-    roomDevices: Array,
+    room: Object
 });
 
 const emit = defineEmits(['delete-room']);

@@ -6,19 +6,19 @@
             </v-col>
             <v-col >
                 <v-card-title>
-                    <p class="text-h4">{{ roomName }}</p>
+                    <p class="text-h4">{{ room.name }}</p>
                 </v-card-title>
             </v-col>
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
-                    <p class="text-data text-h6">{{ roomDevices.length }} dispositivos conectados</p>
+                    <p class="text-data text-h6">{{ room.devices.length }} dispositivos conectados</p>
                     <p class="text-data text-h6">3 dispositivos encendidos (to do)</p>
                 </v-card-text>
             </v-col>
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room" :room-name="roomName" :room-devices="roomDevices" @delete-room="removeRoom" />
+        <RoomInfo :room="room" @delete-room="removeRoom" />
     </v-dialog>
 </template>
 
@@ -36,14 +36,12 @@ import otro from '@/assets/otro.svg';
 const openDialog = ref(false);
 
 const props = defineProps({
-    room: Object,
-    roomName: String,
-    roomDevices: Array,
-    roomType: String,
+    room: Object
 })
 
+
 const typeImg = computed(() => {
-    switch (props.roomType) {
+    switch (props.room.type) {
         case 'Habitación':
             return habitacion;
         case 'Cocina':
