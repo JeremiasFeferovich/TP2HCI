@@ -8,7 +8,14 @@ class RoomApi{
     }
 
     static async add(room){
-        return await Api.post(RoomApi.getUrl(), room)
+        const body = {
+            name: room.name,
+            meta: {
+                devices: room.devices,
+                type: room.type
+            }
+        }
+        return await Api.post(RoomApi.getUrl(), body)
     }
 
     static async modify(room){
@@ -19,7 +26,7 @@ class RoomApi{
         return await Api.delete(RoomApi.getUrl(room.id))
     }
 
-    static async get(id){
+    static async getRoom(id){
         return await Api.get(RoomApi.getUrl(id))
     }
 

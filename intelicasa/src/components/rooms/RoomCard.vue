@@ -18,7 +18,7 @@
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room" @delete-room="removeRoom" />
+        <RoomInfo :room="room"/>
     </v-dialog>
 </template>
 
@@ -58,11 +58,6 @@ const typeImg = computed(() => {
 });
 
 const emit = defineEmits(['remove-room']);
-
-function removeRoom() {
-    openDialog.value = false;
-    emit('remove-room');
-}
 
 </script>
 

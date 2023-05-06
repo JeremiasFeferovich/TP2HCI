@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { RoomApi } from "@/api/room";
 
 export const useRoomStore = defineStore('room', () => {
     // State - ref
@@ -8,21 +9,25 @@ export const useRoomStore = defineStore('room', () => {
     // Getters - computed
     const getRooms = computed(() => rooms.value)
     // Actions - funciones Javascript
-    function fetchRooms(){
-        return rooms
+    async function fetchRooms(){
+        const fetchedRooms = await RoomApi.getAll()
+        rooms.value = fetchedRooms
+        return fetchedRooms
     }
-    function addRoom(room){
-        rooms.value.push(room)
+    async function addRoom(room){
+        const addedRoom = await RoomApi.add(room)
+        fetchRooms()
     }
-    function deleteRoom(room){
-        room.value.splice(rooms.value.indexOf(room), 1)
+    
+    async function deleteRoom(room){
+        const deletedRoom = await RoomApi.remove(room.id)
+        fetchRooms()
     }
 
 
     return{
-        getRooms,
+        rooms,
         fetchRooms,addRoom,deleteRoom
-
     }
 
 })

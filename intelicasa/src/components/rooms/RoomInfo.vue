@@ -27,17 +27,18 @@
 </template>
   
 <script setup>
-import DeviceCard from '@/components/devices/DeviceCard.vue';
+    import DeviceCard from '@/components/devices/DeviceCard.vue';
+    import { useRoomStore } from '@/stores/roomStore';
 
-const props = defineProps({
-    room: Object
-});
+    const roomsStore = useRoomStore();
 
-const emit = defineEmits(['delete-room']);
+    const props = defineProps({
+        room: Object
+    });
 
-function deleteRoom() {
-    emit('delete-room');
-}
+    function deleteRoom() {
+        roomsStore.removeRoom(props.room);
+    }
 
 </script>
   
