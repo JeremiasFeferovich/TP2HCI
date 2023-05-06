@@ -58,9 +58,9 @@ async function updateColor() {
 async function updateIntensity() {
     loading.value = true
     await DeviceApi.triggerEvent(props.device.id, 'setBrightness', [intensity.value])
-
     loading.value = false
 }
+
 </script>
 
 <style scoped>
