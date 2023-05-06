@@ -41,27 +41,38 @@ const updateTimeout = ref(null);
 
 const props = defineProps({
     device: Object,
-    disabled: Boolean
+    disabled: Boolean,
+    returnAction: Boolean
 })
 
-const emit = defineEmits(['updateColor', 'updateIntensity', 'toggleState']);
-
+const emit = defineEmits(['actionSet', 'updateIntensity']);
 
 async function updateColor() {
-    loading.value = true;
-    clearTimeout(updateTimeout.value);
-    updateTimeout.value = setTimeout(async () => {
-        if (DeviceApi.triggerEvent(props.device.id, 'setColor', [color.value])){
-            props.device.state.color = color.value;
-        }
-    }, 250); // wait for 250ms before sending the request
-    loading.value = false;
+    if (returnAction.value) {
+        clearTimeout(updateTimeout.value);
+        updateTimeout.value = setTimeout(async () => {
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+        }, 250);
+    } else {
+        loading.value = true;
+        clearTimeout(updateTimeout.value);
+        updateTimeout.value = setTimeout(async () => {
+            if (DeviceApi.triggerEvent(props.device.id, 'setColor', [color.value])) {
+                props.device.state.color = color.value;
+            }
+        }, 250); // wait for 250ms before sending the request
+        loading.value = false;
+    }
 }
 
 async function updateIntensity() {
-    loading.value = true
-    await DeviceApi.triggerEvent(props.device.id, 'setBrightness', [intensity.value])
-    loading.value = false
+    if (returnAction.value) {
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
+    } else {
+        loading.value = true
+        await DeviceApi.triggerEvent(props.device.id, 'setBrightness', [intensity.value])
+        loading.value = false
+    }
 }
 
 </script>
