@@ -69,10 +69,15 @@ class DeviceApi {
         };
     }
 
+    static async triggerEvent(event) {
+        return await Api.put(`${Api.baseUrl}/devices/${event.device.id}/${event.actionName}`,event.params)
+    }
+
+/*
     static async triggerEvent(deviceId, event, data) {
         return await Api.put(`${Api.baseUrl}/devices/${deviceId}/${event}`,data)
     }
-
+*/
     static async toggleFavorite(device) {
         return await Api.put(`${Api.baseUrl}/devices/${device.id}`, {name: device.name, meta: { favorite : !device.favorite}})
     }

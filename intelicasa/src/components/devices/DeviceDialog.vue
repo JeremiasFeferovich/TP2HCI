@@ -82,10 +82,10 @@ function toggleButtonState() {
 </script>
 <style scoped>
 .square-btn {
-    min-width: 30px;
-    max-width: 30px;
-    width: 30px;
-    height: 30px;
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    height: 50px;
     margin-right: 15px;
 }
 </style>

@@ -5,8 +5,8 @@
             <p class="text-h6">Estado</p>
         </v-col>
         <v-col cols="6" align="center">
-            <v-btn v-model="isOn" @click="changeState" toggle :ripple="false" size="large" variant="text"
-                :loading="loadingState" rounded="xl">
+            <v-btn v-model="isOn" @click="changeState" toggle  size="large" variant="text" class="square-btn rounded-circle"
+                :loading="loadingState" >
                 <img :src="powerBtnImg" alt="powerState" />
             </v-btn>
         </v-col>
@@ -24,12 +24,17 @@ const isOn = ref(props.device.state.status)
 const props = defineProps({
     device: Object,
     loadingState: Boolean,
+    returnAction: Boolean
 })
 
-const emit = defineEmits(['changeState']);
+const emit = defineEmits(['changeState', 'actionSet']);
 
 function changeState() {
-    emit('changeState')
+    if (props.returnAction) {
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setState', params: [!isOn.value] })
+    } else {
+        emit('changeState')
+    }
 }
 
 const powerBtnImg = computed(() => {
@@ -37,3 +42,14 @@ const powerBtnImg = computed(() => {
 })
 
 </script>
+
+<style scoped>
+.square-btn {
+    min-width: 45px;
+    max-width: 45px;
+    padding: 0;
+    width: 45px;
+    height: 45px;
+}
+
+</style>

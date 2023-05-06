@@ -1,10 +1,10 @@
 <template>
-    <DevicePower v-show="device.category.name !== 'Persiana'" :device="device" :loading-state="loadingState"
+    <DevicePower v-show="device.category.name !== 'Persiana'" :device="device" :loading-state="loadingState"  :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
         @changeState="changeState" />
     <LightDeviceInfo :disabled="disabled" v-if="device.category.name === 'Luces'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
-    <ACDeviceInfo :disabled="disabled" v-else-if="device.category.name === 'Aire Acondicionado'" :device="device" />
-    <OvenDeviceInfo :disabled="disabled" v-else-if="device.category.name === 'Horno'" :device="device" />
-    <SpeakerInfo :disabled="disabled" v-else-if="device.category.name === 'Parlante'" :device="device" />
+    <ACDeviceInfo :disabled="disabled" v-else-if="device.category.name === 'Aire Acondicionado'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
+    <OvenDeviceInfo :disabled="disabled" v-else-if="device.category.name === 'Horno'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
+    <SpeakerInfo :disabled="disabled" v-else-if="device.category.name === 'Parlante'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
     <BlindsDeviceInfo v-else-if="device.category.name === 'Persiana'" :device="device" />
 </template>
 

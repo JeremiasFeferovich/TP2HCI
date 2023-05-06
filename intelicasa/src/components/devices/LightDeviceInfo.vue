@@ -17,8 +17,8 @@
             <p class="text-h6">Color</p>
         </v-col>
         <v-col cols="6" align="center">
-            <v-btn :disabled="disabled" class="square-btn rounded-circle" variant="outlined" @click="showColorPicker = true"
-                :style="{ backgroundColor: device.state.color }"></v-btn>
+            <v-btn :disabled="disabled || loading" class="square-btn rounded-circle" variant="outlined"
+                @click="showColorPicker = true" :style="{ backgroundColor: device.state.color }"></v-btn>
             <v-dialog class="ma-0" v-model="showColorPicker" width="auto" align="centers">
                 <v-color-picker :disabled="loading" v-model="color" hide-inputs @update:model-value="updateColor"
                     class="ma-0 px-2 pt-2" mode="hex" />
@@ -29,7 +29,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import { DeviceApi } from '@/api/device';
+import { useDeviceStore } from '@/stores/deviceStore';
+
+const deviceStore = useDeviceStore();
 
 const showColorPicker = ref(false);
 
@@ -45,32 +47,29 @@ const props = defineProps({
     returnAction: Boolean
 })
 
-const emit = defineEmits(['actionSet', 'updateIntensity']);
+const emit = defineEmits(['actionSet']);
 
 async function updateColor() {
-    if (returnAction.value) {
-        clearTimeout(updateTimeout.value);
-        updateTimeout.value = setTimeout(async () => {
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
-        }, 250);
-    } else {
-        loading.value = true;
-        clearTimeout(updateTimeout.value);
-        updateTimeout.value = setTimeout(async () => {
-            if (DeviceApi.triggerEvent(props.device.id, 'setColor', [color.value])) {
+    const action = { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] }
+    clearTimeout(updateTimeout.value);
+    updateTimeout.value = setTimeout(async () => {
+        emit('actionSet', action)
+        if (!props.returnAction) {
+            loading.value = true;
+            if (deviceStore.triggerEvent(action)) {
                 props.device.state.color = color.value;
             }
-        }, 250); // wait for 250ms before sending the request
-        loading.value = false;
-    }
+            loading.value = false;
+        }
+    }, 250); // wait for 250ms before sending the request
 }
 
 async function updateIntensity() {
-    if (returnAction.value) {
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
-    } else {
+    const action = { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] }
+    emit('actionSet', action)
+    if (!props.returnAction) {
         loading.value = true
-        await DeviceApi.triggerEvent(props.device.id, 'setBrightness', [intensity.value])
+        await deviceStore.triggerEvent(action)
         loading.value = false
     }
 }

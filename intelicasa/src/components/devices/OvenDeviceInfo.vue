@@ -28,16 +28,16 @@
     </v-row>
     <v-row justify="center">
         <v-sheet class="sliderCont">
-            <ImageSelect :disabled="disabled" :items="convectionModes" label="Modo Convección" :initial-item="convectionMode"
-                @update:selected-item="(updatedValue) => setConvectionMode(updatedValue)" />
+            <ImageSelect :disabled="disabled" :items="convectionModes" label="Modo Convección"
+                :initial-item="convectionMode" @update:selected-item="(updatedValue) => setConvectionMode(updatedValue)" />
         </v-sheet>
     </v-row>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { DeviceApi } from '@/api/device'
 import ImageSelect from './ImageSelect.vue'
+import { useDeviceStore } from '@/stores/deviceStore';
 
 //Image assets
 import heatModeConventional from '@/assets/oven/heatModeConventional.png'
@@ -68,52 +68,71 @@ const convectionModes = [
     { name: 'Normal', value: 'normal', img: convectionModeNormal }]
 
 
+const props = defineProps({
+    device: Object,
+    disabled: Boolean,
+    returnAction: Boolean
+})
+
+const deviceStore = useDeviceStore()
+
+const loading = ref(false)
 
 const temperature = ref(props.device.state.temperature)
 const heatSource = ref(heatModes.find(x => x.value === props.device.state.heat))
 const grillMode = ref(grillModes.find(x => x.value === props.device.state.grill))
 const convectionMode = ref(convectionModes.find(x => x.value === props.device.state.convection))
 
-const loading = ref(false)
+const emit = defineEmits(['actionSet']);
 
 async function setTemperature() {
-    loading.value = true
-    await DeviceApi.triggerEvent(props.device.id, 'setTemperature', [temperature.value])
-    loading.value = false
+    const action = { device: { id: props.device.id }, actionName: 'setTemperature', params: [temperature.value] }
+    emit('actionSet', action)
+    if (!props.returnAction) {
+        loading.value = true
+        await deviceStore.triggerEvent(action)
+        loading.value = false
+    }
 }
 
 async function setHeatSource(newHeatSource) {
-    loading.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, 'setHeat', [newHeatSource.value])) {
-        heatSource.value = newHeatSource;
-        props.device.state.heat = newHeatSource.value;
+    const action = { device: { id: props.device.id }, actionName: 'setHeat', params: [newHeatSource.value] }
+    emit('actionSet', action)
+    if (!props.returnAction) {
+        loading.value = true
+        if (await deviceStore.triggerEvent(action)) {
+            heatSource.value = newHeatSource;
+            props.device.state.heat = newHeatSource.value;
+        }
+        loading.value = false
     }
-    loading.value = false
 }
 
 async function setGrillMode(newGrillMode) {
-    loading.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, 'setGrill', [newGrillMode.value])) {
-        grillMode.value = newGrillMode;
-        props.device.state.grill = newGrillMode.value;
+    const action = { device: { id: props.device.id }, actionName: 'setGrill', params: [newGrillMode.value] }
+    emit('actionSet', action)
+    if (!props.returnAction) {
+        loading.value = true
+        if (await deviceStore.triggerEvent(action)) {
+            grillMode.value = newGrillMode;
+            props.device.state.grill = newGrillMode.value;
+        }
+        loading.value = false
     }
-    loading.value = false
 }
 
 async function setConvectionMode(newConvMode) {
-    loading.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, 'setConvection', [newConvMode.value])) {
-        convectionMode.value = newConvMode;
-        props.device.state.convection = newConvMode.value;
+    const action = { device: { id: props.device.id }, actionName: 'setConvection', params: [newConvMode.value] }
+    emit('actionSet', action)
+    if (!props.returnAction) {
+        loading.value = true
+        if (await deviceStore.triggerEvent(action)) {
+            convectionMode.value = newConvMode;
+            props.device.state.convection = newConvMode.value;
+        }
+        loading.value = false
     }
-    loading.value = false
 }
-
-
-const props = defineProps({
-    device: Object,
-    disabled: Boolean
-})
 
 </script>
 

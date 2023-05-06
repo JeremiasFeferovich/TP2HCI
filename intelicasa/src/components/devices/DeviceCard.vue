@@ -46,7 +46,7 @@ const powerBtnImg = computed(() => {
 
 async function toggleButtonState() {
     loadingState.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, props.device.state.status === 'on' ? 'turnOff' : 'turnOn')){
+    if (await DeviceApi.triggerEvent( {device: {id: props.device.id}, actionName:  props.device.state.status === 'on' ? 'turnOff' : 'turnOn'})){
         props.device.state.status = props.device.state.status === 'on' ? 'off' : 'on';
     }
     loadingState.value = false;
