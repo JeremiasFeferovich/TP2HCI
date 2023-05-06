@@ -7,22 +7,23 @@
                 </v-col>
                 <v-col cols="8">
                     <v-row justify="center">
-                        <v-btn class="square-btn" variant="text" @click="editName">
-                            <v-icon icon="mdi-pencil" size="40px" />
+                        <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle
+                            :ripple="false"  variant="plain" :loading="loadingFav" rounded="xl">
+                            <img :src="favoriteBtnImg" alt="fav button" />
                         </v-btn>
                         <v-card-title class="text-h5">{{ device.name }}</v-card-title>
-                        <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle
-                            :ripple="false" size="large" variant="plain" :loading="loadingFav" rounded="xl">
-                            <img :src="favoriteBtnImg" alt="fav button" />
+                        <v-btn class="square-btn" variant="text" @click="editName">
+                            <v-icon icon="mdi-pencil" size="20px" />
                         </v-btn>
                     </v-row>
                 </v-col>
-                <v-col cols="2" justify="center">
+                <v-col cols="2" justify="center" align="center">
                     <v-btn class="square-btn" variant="text" @click="deleteDevice">
-                        <v-icon icon="mdi-delete" size="40px" />
+                        <v-icon icon="mdi-delete" size="30px" />
                     </v-btn>
                 </v-col>
             </v-row>
+            <v-divider class="border-opacity-25" color="info"></v-divider>
         </v-card-title>
         <v-card-text>
             <DevicesOptions :disabled="disabled" :device="device" :loadingState="loadingState"
