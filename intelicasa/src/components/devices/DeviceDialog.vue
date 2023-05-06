@@ -2,8 +2,8 @@
     <v-card class="ma-2 pa-0 pb-3">
         <v-card-title>
             <v-row align="center">
-                <v-col cols="2">
-                    <img :src="device.category.img" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
+                <v-col cols="2" align="center" justify-content="center">
+                    <v-img :src="device.category.img" alt="categoryImg" contain  />
                 </v-col>
                 <v-col cols="8">
                     <v-row justify="center">
@@ -83,10 +83,10 @@ function toggleButtonState() {
 </script>
 <style scoped>
 .square-btn {
-    min-width: 30px;
-    max-width: 30px;
-    width: 30px;
-    height: 30px;
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    height: 50px;
     margin-right: 15px;
 }
 </style>

@@ -19,7 +19,6 @@ export const useDeviceStore = defineStore('device', () => {
     // Actions - funciones Javascript
     async function fetchDevices() {
         const fetchedDevices = await DeviceApi.getAll()
-        console.log(fetchedDevices)
         devices.value = fetchedDevices
         return fetchedDevices
     }
@@ -58,9 +57,13 @@ export const useDeviceStore = defineStore('device', () => {
         fetchDevices()
     }
 
+    async function triggerEvent(event) {
+        const triggeredAction = await DeviceApi.triggerEvent(event);
+    }
+
     return {
         devices, categories,
-        fetchDevices, addDevice, deleteDevice, fetchCategories
+        fetchDevices, addDevice, deleteDevice, fetchCategories, triggerEvent
     }
 
 })

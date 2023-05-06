@@ -4,7 +4,8 @@
         <DevicesList v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
             @delete="(device) => deleteDevice(device)" />
     </v-sheet>
-    <AddDeviceDialog v-if="!loading" objectTitle="Add Device" :categories="deviceStore.categories" @addDevice="(newDevice) => addDevice(newDevice)" />
+    <AddDeviceDialog v-if="!loading" objectTitle="Add Device" :categories="deviceStore.categories"
+        @addDevice="(newDevice) => addDevice(newDevice)" />
 </template>
 
 <script setup>
@@ -15,8 +16,6 @@ import { ref, watch, computed } from 'vue';
 import DevicesList from '@/components/devices/DevicesList.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { onMounted } from 'vue';
-
-const search = ref("")
 
 const loading = ref(false)
 const deviceStore = useDeviceStore();
@@ -37,7 +36,3 @@ function deleteDevice(device) {
 }
 
 </script>
-
-<style scoped>
-
-</style>
