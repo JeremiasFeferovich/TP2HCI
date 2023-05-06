@@ -82,29 +82,29 @@ async function setTemperature() {
     loading.value = false
 }
 
-async function setHeatSource(value) {
+async function setHeatSource(newHeatSource) {
     loading.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, 'setHeat', [value.value])) {
-        heatSource.value = value;
-        props.device.state.heat = value.value;
+    if (await DeviceApi.triggerEvent(props.device.id, 'setHeat', [newHeatSource.value])) {
+        heatSource.value = newHeatSource;
+        props.device.state.heat = newHeatSource.value;
     }
     loading.value = false
 }
 
-async function setGrillMode(value) {
+async function setGrillMode(newGrillMode) {
     loading.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, 'setGrill', [value.value])) {
-        grillMode.value = value;
-        props.device.state.grill = value.value;
+    if (await DeviceApi.triggerEvent(props.device.id, 'setGrill', [newGrillMode.value])) {
+        grillMode.value = newGrillMode;
+        props.device.state.grill = newGrillMode.value;
     }
     loading.value = false
 }
 
-async function setConvectionMode(value) {
+async function setConvectionMode(newConvMode) {
     loading.value = true
-    if (await DeviceApi.triggerEvent(props.device.id, 'setConvection', [value.value])) {
-        convectionMode.value = value;
-        props.device.state.convection = value.value;
+    if (await DeviceApi.triggerEvent(props.device.id, 'setConvection', [newConvMode.value])) {
+        convectionMode.value = newConvMode;
+        props.device.state.convection = newConvMode.value;
     }
     loading.value = false
 }
