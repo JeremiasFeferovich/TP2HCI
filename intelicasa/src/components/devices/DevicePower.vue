@@ -1,5 +1,5 @@
 <template>
-    <v-row v-if="device.category !== 'blinds'" align="center">
+    <v-row align="center">
         <v-col cols="1"><v-spacer></v-spacer></v-col>
         <v-col cols="5" align="start">
             <p class="text-h6">Estado</p>

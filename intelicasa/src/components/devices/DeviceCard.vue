@@ -9,7 +9,8 @@
             </v-col>
             <v-col cols="3">
                 <v-icon v-if="device.category.name === 'Aspiradora'" :icon="batteryImg" size="35"/>
-                <v-btn v-if="device.category.name !== 'Aspiradora'" class="square-btn rounded-circle"
+                <v-icon v-else-if="device.category.name === 'Puerta'" :icon="doorImg" size="40"/>
+                <v-btn v-else class="square-btn rounded-circle"
                     v-model="props.device.state.status" @click.stop="toggleButtonState" variant="text"
                     :loading="loadingState">
                     <img :src="powerBtnImg" contain alt="powerState" />
@@ -60,6 +61,15 @@ function deleteDevice() {
     openDialog.value = false;
     emit('delete');
 }
+
+const doorImg = computed(() => {
+    if (props.device.state.status === 'opened') {
+        return 'mdi-door-open'
+    } else if (props.device.state.status === 'closed' && props.device.state.lock === 'locked') {
+        return 'mdi-door-closed-lock'
+    } else 
+        return 'mdi-door-closed'
+})
 
 const batteryImg = computed(() => {
     if (props.device.state.batteryLevel < 10) {

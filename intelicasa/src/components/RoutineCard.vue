@@ -26,7 +26,6 @@ import lightbulb from '@/assets/lightbulb.svg'
 import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
-import blinds from '@/assets/blinds.svg'
 import RoutineInfo from './RoutineInfo.vue';
 
 const openDialog = ref(false);
@@ -69,8 +68,6 @@ function categoryImg(device) {
             return speaker;
         case 'Aire Acondicionado':
             return airConditioner;
-        case 'Persiana':
-            return blinds;
         default:
             return lightbulb;
     }

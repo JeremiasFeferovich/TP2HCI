@@ -6,7 +6,7 @@ import lightbulb from '@/assets/lightbulb.svg'
 import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
-import blinds from '@/assets/blinds.svg'
+import door from '@/assets/door.svg'
 import vacuum from '@/assets/vacuumCleaner.svg'
 
 export const useDeviceStore = defineStore('device', () => {
@@ -30,10 +30,10 @@ export const useDeviceStore = defineStore('device', () => {
             const categoriesValues = [
                 { name: "Aire Acondicionado", value: "ac", img: airConditioner },
                 { name: "Luces", value: "lamp", img: lightbulb },
-                { name: "Persiana", value: "blinds", img: blinds },
                 { name: "Horno", value: "oven", img: oven },
                 { name: "Parlante", value: "speaker", img: speaker },
-                { name: "Aspiradora", value: "vacuum", img: vacuum }
+                { name: "Aspiradora", value: "vacuum", img: vacuum },
+                { name: "Puerta", value: "door", img: door }
             ];
 
             const filteredCategories = fetchedCategories.filter((fetchedCategory) =>

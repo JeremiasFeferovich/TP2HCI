@@ -3,7 +3,7 @@ import lightbulb from '@/assets/lightbulb.svg'
 import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
-import blinds from '@/assets/blinds.svg'
+import door from '@/assets/door.svg'
 import vacuum from '@/assets/vacuumCleaner.svg'
 
 class DeviceApi {
@@ -13,12 +13,13 @@ class DeviceApi {
 
     static categories = [
         { name: "Aire Acondicionado", value: "ac", img: airConditioner },
-       { name: "Luces", value: "lamp", img: lightbulb }, 
-       { name: "Persiana", value: "blinds", img: blinds },
-        { name: "Horno", value: "oven", img: oven }, 
+        { name: "Luces", value: "lamp", img: lightbulb },
+        { name: "Horno", value: "oven", img: oven },
         { name: "Parlante", value: "speaker", img: speaker },
-        { name: "Aspiradora", value: "vacuum", img: vacuum }]
-    
+        { name: "Aspiradora", value: "vacuum", img: vacuum },
+        { name: "Puerta", value: "door", img: door }
+    ]
+
     static getUrl(slug) {
         return `${Api.baseUrl}/devices${slug ? `/${slug}` : ''}`
     }
@@ -69,16 +70,16 @@ class DeviceApi {
     }
 
     static async triggerEvent(event) {
-        return await Api.put(`${Api.baseUrl}/devices/${event.device.id}/${event.actionName}`,event.params)
+        return await Api.put(`${Api.baseUrl}/devices/${event.device.id}/${event.actionName}`, event.params)
     }
 
-/*
-    static async triggerEvent(deviceId, event, data) {
-        return await Api.put(`${Api.baseUrl}/devices/${deviceId}/${event}`,data)
-    }
-*/
+    /*
+        static async triggerEvent(deviceId, event, data) {
+            return await Api.put(`${Api.baseUrl}/devices/${deviceId}/${event}`,data)
+        }
+    */
     static async toggleFavorite(device) {
-        return await Api.put(`${Api.baseUrl}/devices/${device.id}`, {name: device.name, meta: { favorite : !device.favorite}})
+        return await Api.put(`${Api.baseUrl}/devices/${device.id}`, { name: device.name, meta: { favorite: !device.favorite } })
     }
 
 

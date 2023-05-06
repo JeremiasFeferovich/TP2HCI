@@ -14,7 +14,6 @@ import lightbulb from '@/assets/lightbulb.svg'
 import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
-import blinds from '@/assets/blinds.svg'
 
 import TitleComponent from '@/components/TitleComponent.vue';
 import RoutineCard from '@/components/RoutineCard.vue';
