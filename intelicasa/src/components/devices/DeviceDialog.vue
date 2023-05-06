@@ -2,8 +2,8 @@
     <v-card class="ma-2 pa-0 pb-3">
         <v-card-title>
             <v-row align="center">
-                <v-col cols="2">
-                    <img :src="device.category.img" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
+                <v-col cols="2" align="center" justify-content="center">
+                    <v-img :src="device.category.img" alt="categoryImg" contain  />
                 </v-col>
                 <v-col cols="8">
                     <v-row justify="center">

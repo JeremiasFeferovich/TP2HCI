@@ -1,8 +1,8 @@
 <template>
     <v-card class="ma-2 py-2 px-5" @click.stop="openDialog = true">
         <v-row align="center">
-            <v-col cols="3" align="center">
-                <img :src="categoryImg" alt="categoryImg" style="max-height: 100%; max-width: 100%;" />
+            <v-col cols="3" align="center" class="pa-0">
+                <v-img :src="categoryImg" alt="categoryImg" contain />
             </v-col>
             <v-col cols="6" class="text-center" align-self="center">
                 <v-card-title class="text-h5">{{ props.device.name }}</v-card-title>

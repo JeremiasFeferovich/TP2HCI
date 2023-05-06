@@ -5,7 +5,7 @@
         </v-col>
         <v-col justify-center>
             <v-row align="center" justify="center">
-                <v-icon v-if="position < 40" class="mr-6" size="50" icon="mdi-window-shutter" />
+                <v-icon v-if="level < 40" class="mr-6" size="50" icon="mdi-window-shutter" />
                 <v-icon v-else class="mr-6" size="50" icon="mdi-window-shutter-open" />
                 <v-sheet>
                     <v-slider :disabled="loading" class="sliderVertCont" hide-details direction="vertical" v-model="level"
@@ -41,12 +41,6 @@ const props = defineProps({
 const level = ref(props.device.state.currentLevel);
 const loading = ref(false);
 const status = ref(props.device.state.status);
-
-async function setTemperature() {
-    loading.value = true
-    await DeviceApi.triggerEvent(props.device.id, 'setTemperature', [temperature.value])
-    loading.value = false
-}
 
 
 </script>
