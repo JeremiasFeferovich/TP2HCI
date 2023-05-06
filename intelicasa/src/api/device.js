@@ -4,12 +4,20 @@ import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import blinds from '@/assets/blinds.svg'
+import vacuum from '@/assets/vacuumCleaner.svg'
 
 class DeviceApi {
 
+
     static allCategories = []
 
-    static categories = [{ name: "Aire Acondicionado", value: "ac", img: airConditioner }, { name: "Luces", value: "lamp", img: lightbulb }, { name: "Persiana", value: "blinds", img: blinds }, { name: "Horno", value: "oven", img: oven }, { name: "Parlante", value: "speaker", img: speaker }]
+    static categories = [
+        { name: "Aire Acondicionado", value: "ac", img: airConditioner },
+       { name: "Luces", value: "lamp", img: lightbulb }, 
+       { name: "Persiana", value: "blinds", img: blinds },
+        { name: "Horno", value: "oven", img: oven }, 
+        { name: "Parlante", value: "speaker", img: speaker },
+        { name: "Aspiradora", value: "vacuum", img: vacuum }]
     
     static getUrl(slug) {
         return `${Api.baseUrl}/devices${slug ? `/${slug}` : ''}`
@@ -38,10 +46,6 @@ class DeviceApi {
         return await Api.delete(DeviceApi.getUrl(id))
     }
 
-    static async get(id) {
-        return await Api.get(DeviceApi.getUrl(id))
-    }
-
     static async getAll() {
         if (!this.allCategories.length) {
             await this.getCategories()
@@ -65,7 +69,8 @@ class DeviceApi {
         const category = this.categories.find(category => category.value === device.type.name);
         return {
             ...device,
-            category: category
+            category: category,
+            favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
         };
     }
 

@@ -15,19 +15,19 @@
         </v-col>
     </v-row>
     <v-row justify="center">
-        <v-sheet class="sliderCont">
+        <v-sheet class="imageCont">
             <ImageSelect :disabled="disabled" :items="heatModes" label="Fuente Calor" :initial-item="heatSource"
                 @update:selected-item="(updatedValue) => setHeatSource(updatedValue)" />
         </v-sheet>
     </v-row>
     <v-row justify="center">
-        <v-sheet class="sliderCont">
+        <v-sheet class="imageCont">
             <ImageSelect :disabled="disabled" :items="grillModes" label="Modo Grill" :initial-item="grillMode"
                 @update:selected-item="(updatedValue) => setGrillMode(updatedValue)" />
         </v-sheet>
     </v-row>
     <v-row justify="center">
-        <v-sheet class="sliderCont">
+        <v-sheet class="imageCont">
             <ImageSelect :disabled="disabled" :items="convectionModes" label="Modo Convección"
                 :initial-item="convectionMode" @update:selected-item="(updatedValue) => setConvectionMode(updatedValue)" />
         </v-sheet>
@@ -144,7 +144,7 @@ async function setConvectionMode(newConvMode) {
     height: 35px;
 }
 
-.sliderCont {
+.imageCont {
     width: 70%;
     display: inline-flex;
     margin-top: 1rem;

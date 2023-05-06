@@ -12,7 +12,7 @@
                         </v-btn>
                         <v-card-title class="text-h5">{{ device.name }}</v-card-title>
                         <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle
-                            :ripple="false" size="large" variant="plain" :loading="loadingFav" rounded="xl">
+                            :ripple="false" size="large" variant="text" :loading="loadingFav" rounded="xl">
                             <img :src="favoriteBtnImg" alt="fav button" />
                         </v-btn>
                     </v-row>
@@ -24,7 +24,7 @@
                 </v-col>
             </v-row>
         </v-card-title>
-        <v-card-text>
+        <v-card-text class="pt-0 pb-4">
             <DevicesOptions :disabled="disabled" :device="device" :loadingState="loadingState"
                 @changeState="toggleButtonState" />
         </v-card-text>
@@ -38,10 +38,13 @@ import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import { DeviceApi } from "@/api/device";
+import { useDeviceStore } from '@/stores/deviceStore';
 import { onMounted } from 'vue';
 
+const deviceStore = useDeviceStore();
+
 onMounted(() => {
-    DeviceApi.getDevice(device.id);
+    deviceStore.fetchDevice(device.id);
 })
 
 const loadingFav = ref(false);

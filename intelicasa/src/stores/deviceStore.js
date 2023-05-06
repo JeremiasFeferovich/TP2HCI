@@ -7,6 +7,7 @@ import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import blinds from '@/assets/blinds.svg'
+import vacuum from '@/assets/vacuumCleaner.svg'
 
 export const useDeviceStore = defineStore('device', () => {
     // State - ref
@@ -32,6 +33,7 @@ export const useDeviceStore = defineStore('device', () => {
                 { name: "Persiana", value: "blinds", img: blinds },
                 { name: "Horno", value: "oven", img: oven },
                 { name: "Parlante", value: "speaker", img: speaker },
+                { name: "Aspiradora", value: "vacuum", img: vacuum }
             ];
 
             const filteredCategories = fetchedCategories.filter((fetchedCategory) =>
@@ -52,18 +54,27 @@ export const useDeviceStore = defineStore('device', () => {
         fetchDevices()
     }
 
+    async function fetchDevice(deviceId) {
+        const fetchedDevice = await DeviceApi.getDevice(deviceId);
+        const index = devices.value.findIndex(device => device.id === deviceId);
+        if (index !== -1) {
+            devices.value[index] = fetchedDevice;
+        }
+        return fetchedDevice;
+    }
+
     async function deleteDevice(device) {
         const deletedDevice = await DeviceApi.remove(device.id);
         fetchDevices()
     }
 
     async function triggerEvent(event) {
-        const triggeredAction = await DeviceApi.triggerEvent(event);
+        return await DeviceApi.triggerEvent(event);
     }
 
     return {
         devices, categories,
-        fetchDevices, addDevice, deleteDevice, fetchCategories, triggerEvent
+        fetchDevices, addDevice, fetchDevice, deleteDevice, fetchCategories, triggerEvent
     }
 
 })

@@ -8,7 +8,7 @@
                 <p class="text-h6 ml-5">{{ item.raw.name }}</p>
             </v-row>
         </template>
-        <template v-slot:item="{ item }">
+        <template v-slot:item="{ item }" >
             <v-list-item @click="updateSelectedItem(item)">
                 <v-row no-gutters align="center">
                     <v-img :src="item.raw.img" :alt="item.raw.name" contain max-height="40px" max-width="40px" />
@@ -16,14 +16,19 @@
                 </v-row>
             </v-list-item>
         </template>
+        <template v-slot:no-data v-if="showSelectedOnly">
+            <p class="text-body1 py-2" align="center">No hay mas opciones disponibles</p>
+        </template>
     </v-select>
 </template>
   
 <script setup>
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const selectedItem = ref(props.initialItem);
+
+const showSelectedOnly = computed(() => props.items.length === 1 && selectedItem.value === props.items[0])
 
 const props = defineProps({
     items: Array,
