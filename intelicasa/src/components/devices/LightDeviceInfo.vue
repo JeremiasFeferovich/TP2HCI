@@ -44,6 +44,9 @@ const props = defineProps({
     disabled: Boolean
 })
 
+const emit = defineEmits(['updateColor', 'updateIntensity', 'toggleState']);
+
+
 async function updateColor() {
     loading.value = true;
     clearTimeout(updateTimeout.value);

@@ -10,15 +10,16 @@ class DeviceApi {
     static allCategories = []
 
     static categories = [{ name: "Aire Acondicionado", value: "ac", img: airConditioner }, { name: "Luces", value: "lamp", img: lightbulb }, { name: "Persiana", value: "blinds", img: blinds }, { name: "Horno", value: "oven", img: oven }, { name: "Parlante", value: "speaker", img: speaker }]
+    
+    static getUrl(slug) {
+        return `${Api.baseUrl}/devices${slug ? `/${slug}` : ''}`
+    }
 
     static async getCategories() {
         this.allCategories = await Api.get(`${Api.baseUrl}/devicetypes`)
         return this.allCategories
     }
 
-    static getUrl(slug) {
-        return `${Api.baseUrl}/devices${slug ? `/${slug}` : ''}`
-    }
 
     static async add(device) {
         if (!this.allCategories.length) {

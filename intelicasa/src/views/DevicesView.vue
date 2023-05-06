@@ -37,7 +37,3 @@ function deleteDevice(device) {
 }
 
 </script>
-
-<style scoped>
-
-</style>

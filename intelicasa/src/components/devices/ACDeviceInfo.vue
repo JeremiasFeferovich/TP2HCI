@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 import ImageSelect from './ImageSelect.vue';
 
@@ -80,11 +80,9 @@ const horizontalSwing = ref (props.device.state.horizontalSwing !== 'auto' ? par
 const loading = ref(false)
 
 async function setTemperature() {
-    console.log('setTemperature')
     loading.value = true
     await DeviceApi.triggerEvent(props.device.id, 'setTemperature', [temperature.value])
     loading.value = false
-    console.log('setTemperature end')
 }
 
 async function setMode(newMode) {
