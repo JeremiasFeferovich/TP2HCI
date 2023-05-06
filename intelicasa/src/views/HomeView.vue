@@ -9,8 +9,8 @@
                 Dispositivos
                 <v-divider/>
             </v-row>
-            <DevicesList v-if="!loading" :showSearchbar="false" :devices="deviceStore.devices"
-                @delete="(device) => deleteDevice(device)" />
+            <DevicesList v-if="!loading" :showSearchbar="false" :devices="deviceStore.devices.filter(device => device.favorite)"
+                @delete="(device) => deleteDevice(device)"/>
         </v-sheet>
     </v-container>
 </template>
@@ -32,10 +32,6 @@ onMounted(async () => {
     await deviceStore.fetchCategories();
     loading.value = false
 })
-
-function addDevice(device) {
-    deviceStore.addDevice(device);
-}
 
 function deleteDevice(device) {
     deviceStore.deleteDevice(device)
