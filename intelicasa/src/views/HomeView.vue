@@ -9,38 +9,37 @@
                 Dispositivos
                 <v-divider/>
             </v-row>
-            <DevicesList :showSearchbar="false" :devices="shownDevices" @delete="deleteDevice" />
+            <DevicesList v-if="!loading" :showSearchbar="false" :devices="deviceStore.devices"
+                @delete="(device) => deleteDevice(device)" />
         </v-sheet>
     </v-container>
 </template>
 
 <script setup>
-import TitleComponent from '@/components/TitleComponent.vue'
+import TitleComponent from '@/components/TitleComponent.vue';
+import { ref } from 'vue';
+
 import DevicesList from '@/components/devices/DevicesList.vue';
-import { ref, watch } from 'vue';
+import { useDeviceStore } from '@/stores/deviceStore';
+import { onMounted } from 'vue';
 
+const loading = ref(false)
+const deviceStore = useDeviceStore();
 
-const allDevices = ref([{ name: "Aire", category: "Aire Acondicionado", image: "airconditioner", isOn: false, favorite: true, temperature: 24, mode: "Ventilación", verticalSwing: "Automático", horizontalSwing: "Automático", fanSpeed: "Automático" },
-{ name: "Luces", category: "Luces", image: "lightbulb", isOn: false, favorite: true, intensity: 0, color: "#FFAAA0" },
-{ name: "Persiana", category: "Persiana", image: "blinds", isOn: false, favorite: true, position: 50, open: function () { this.position = 100 }, close: function () { this.position = 0 } },
-{ name: "Horno", category: "Horno", image: "oven", isOn: false, favorite: true, temperature: 120, heatSource: "Convencional", grillMode: "Apagado", convectionMode: "Convencional" },
-{ name: "Parlante", category: "Parlante", image: "speaker", isOn: false, favorite: true, volume: 5, genres: ["Clasica", "Country"], genre: "Clasica", song: "Alguna cancion", state: "stop", next: function () { return }, previous: function () { return }, play: function () { this.state = 'play' }, stop: function () { this.state = 'stop' }, pause: function () { this.state = 'pause' }, resume: function () { this.state = 'play' } }]
-);
+onMounted(async () => {
+    loading.value = true
+    await deviceStore.fetchDevices();
+    await deviceStore.fetchCategories();
+    loading.value = false
+})
 
-const shownDevices = ref(allDevices.value);
-
-
-function filterDevices() {
-    shownDevices.value = allDevices.value.filter((device) => device.favorite);
+function addDevice(device) {
+    deviceStore.addDevice(device);
 }
 
 function deleteDevice(device) {
-    allDevices.value = allDevices.value.filter(dev => dev !== device);
-    watch(allDevices.value, filterDevices, { immediate: true });
+    deviceStore.deleteDevice(device)
 }
-
-watch(allDevices.value, filterDevices, { immediate: true });
-
 
 </script>
 
