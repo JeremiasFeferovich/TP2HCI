@@ -39,6 +39,10 @@ class DeviceApi {
                 id: this.allCategories.find(category => category.name === device.category.value).id
             },
             name: device.name,
+            meta: {
+                favorite: false,
+                category: device.category
+            }
         }
         return await Api.post(DeviceApi.getUrl(), body)
     }
@@ -49,24 +53,26 @@ class DeviceApi {
 
     static async getAll() {
         const devices = await Api.get(DeviceApi.getUrl())
-        return devices.map(device => {
-            const category = this.categories.find(category => category.value === device.type.name);
-            return {
-                ...device,
-                category: category,
-                favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
-            };
-        });
+        // return devices.map(device => {
+        //     const category = this.categories.find(category => category.value === device.type.name);
+        //     return {
+        //         ...device,
+        //         category: category,
+        //         favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
+        //     };
+        // });
+        return devices
     }
 
     static async getDevice(id) {
         const device = await Api.get(DeviceApi.getUrl(id))
         const category = this.categories.find(category => category.value === device.type.name);
-        return {
-            ...device,
-            category: category,
-            favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
-        };
+        // return {
+        //     ...device,
+        //     category: category,
+        //     favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
+        // };
+        return device
     }
 
     static async triggerEvent(event) {

@@ -11,14 +11,14 @@
             </v-col>
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
-                    <p class="text-data text-h6">{{ room.devices.length }} dispositivos conectados</p>
+                    <p class="text-data text-h6">{{ room.devices? room.devices.length : "No hay " }} dispositivos conectados</p>
                     <p class="text-data text-h6">3 dispositivos encendidos (to do)</p>
                 </v-card-text>
             </v-col>
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room"/>
+        <RoomInfo :room="room" :devices="devices"/>
     </v-dialog>
 </template>
 
@@ -26,7 +26,7 @@
 import { ref, computed } from 'vue';
 import RoomInfo from '@/components/rooms/RoomInfo.vue';
 
-import habitacion from '@/assets/habitacion.svg';
+import dormitorio from '@/assets/dormitorio.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
@@ -34,16 +34,16 @@ import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
 
 const openDialog = ref(false);
-
 const props = defineProps({
-    room: Object
+    room: Object,
+    devices: Array
 })
 
 
 const typeImg = computed(() => {
-    switch (props.room.type) {
-        case 'Habitación':
-            return habitacion;
+    switch (props.room.meta.type) {
+        case 'Dormitorio':
+            return dormitorio;
         case 'Cocina':
             return cocina;
         case 'Living':
