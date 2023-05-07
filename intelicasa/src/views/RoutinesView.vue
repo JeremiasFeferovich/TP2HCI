@@ -30,7 +30,7 @@ const routineStore = useRoutineStore();
 const loading = ref(false)
 
 function addRoutine(newRoutine) {
-    routineStore.addRoutine(newRoutine);
+    routineStore.addRoutine(newRoutine.routine);
 }
 
 function removeRoutine(routine) {

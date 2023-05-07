@@ -19,6 +19,10 @@ class RoutineApi{
         return await Api.delete(RoutineApi.getUrl(routine.id))
     }
 
+    static async execute(routine){
+        return await Api.put(`${RoutineApi.getUrl(routine.id)}/execute`, routine)
+    }
+
     static async get(id){
         return await Api.get(RoutineApi.getUrl(id))
     }

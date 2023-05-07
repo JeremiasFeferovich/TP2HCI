@@ -34,8 +34,10 @@
                     </template>
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
-                    <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="false"
-                      @changeState="toggleButtonState(device)" />
+                    {{ device.state.status }}
+                    <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
+                      :loadingState="false" @changeState="toggleButtonState(device)"
+                      @actionSet="(action) => addAction(action)" />
                   </v-expansion-panel-text>
 
 
@@ -77,6 +79,8 @@ const emit = defineEmits(['save-routine'])
 
 const dialog = ref(false)
 
+const actions = ref([])
+
 const routineName = ref('')
 const selectedDevice = ref('')
 const selectedDevices = ref([])
@@ -84,13 +88,33 @@ const showSelector = ref(true)
 const opened = ref([0])
 
 function toggleButtonState(device) {
-  device.isOn = !device.isOn;
+  if (device.state.status === 'off') {
+    device.state.status = 'on'
+  } else {
+    device.state.status = 'off'
+  }
+}
+
+function addAction(action) {
+
+  const { device, actionName } = action
+  if (actionName === "turnOn" || actionName === "turnOff") {
+    actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
+
+  } else {
+    actions.value = actions.value.filter(action => action.device.id !== device.id || action.actionName !== actionName)
+  }
+  actions.value.push(action)
 }
 
 function handleSave() {
   const routine = {
     name: routineName.value,
-    devices: selectedDevices.value
+    devices: selectedDevices.value,
+    routine: {
+      name: routineName.value,
+      actions: actions.value
+    }
   }
   emit('save-routine', routine)
   selectedDevices.value = []

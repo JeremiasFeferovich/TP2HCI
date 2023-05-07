@@ -4,11 +4,16 @@
             <v-col cols="6" align="left" class="pl-5">
                 <p class="text-h4">{{ prop.name }}</p>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="4">
                 <div class="image-container">
+                    <!--
                     <v-img v-for="(device, index) in routine.devices" :key="index" :src="categoryImg(device)"
                         alt="categoryImg" contain height="40px" width="40px" />
+                    -->
                 </div>
+            </v-col>
+            <v-col cols="2">
+                <v-btn icon="mdi-play" @click.stop="executeRoutine(routine)" />
             </v-col>
         </v-row>
     </v-card>
@@ -27,6 +32,9 @@ import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import RoutineInfo from './RoutineInfo.vue';
+import { useRoutineStore } from '@/stores/routineStore';
+
+const routineStore = useRoutineStore();
 
 const openDialog = ref(false);
 
@@ -56,6 +64,9 @@ function removeRoutine() {
     emit('remove-routine');
 }
 
+function executeRoutine(routine) {
+    routineStore.executeRoutine(routine);
+}
 
 
 function categoryImg(device) {
