@@ -45,7 +45,7 @@
               </v-expansion-panels>
             </v-row>
             <v-row cols="12" class="fill-space">
-              <v-select label="Select" :items="devices" item-title="name" return-object v-model="selectedDevice"
+              <v-select v-if="showSelector" label="Select" :items="devices" item-title="name" return-object v-model="selectedDevice"
                 @update:modelValue="addSelectedDevice" />
             </v-row>
             <v-row cols="12" class="plus-btn">

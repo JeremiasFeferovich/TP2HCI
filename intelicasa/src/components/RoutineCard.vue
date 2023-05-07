@@ -70,7 +70,7 @@ function executeRoutine(routine) {
 
 
 function categoryImg(device) {
-    switch (device.category) {
+    switch (device.meta.category) {
         case 'Luces':
             return lightbulb;
         case 'Horno':

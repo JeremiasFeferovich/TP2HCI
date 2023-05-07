@@ -2,14 +2,9 @@
     <TitleComponent title="Habitaciones"/>
     <v-sheet class="viewSheet" color="secondary" >        
         <RoomsList v-if="!loading" 
-            :rooms="roomStore.rooms"> 
-        </RoomsList>
-        <!-- <v-row v-for="(room, index) in rooms" :key="index">
-        <RoomCard 
-                :rooms="room" 
-                @remove-room="handleRemoveRoom(room)"
-        />
-        </v-row> -->
+            :rooms="roomStore.rooms"
+            :devices="deviceStore.devices"
+        /> 
     </v-sheet>
     <RoomDialog v-if="!loading" :devices="deviceStore.devices"/>
 </template>
@@ -31,23 +26,11 @@ onMounted(async () => {
     loading.value = true;
     await roomStore.fetchRooms();
     await deviceStore.fetchDevices();
+    console.log(roomStore.rooms)
     loading.value = false;
 })
-// const rooms = ref([
-//     { name: 'Living', devices: ["TV", "Luces"], type: "Living" },
-//     { name: 'Cocina', devices: ["Helader", "Luces"], type: "Cocina" },
-//     { name: 'Habitación', devices: ["Luces"], type: "Habitación" },
-//     { name: 'Baño', devices: ["Luces"], type: "Baño" },
-//     { name: 'Patio', devices: ["Luces"], type: "Patio" }
-// ])
 
-// function addRoom(newRoom) {
-//     rooms.value.push(newRoom);
-// }
 
-// function handleRemoveRoom(room) {
-//     roomStore.deleteRoom(room);
-// }
 
 </script>
   

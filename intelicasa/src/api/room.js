@@ -17,8 +17,7 @@ class RoomApi{
         const roomPost = await Api.post(RoomApi.getUrl(), body)
         console.log(roomPost)
         room.devices.forEach(device => {
-            
-            console.log(this.addDevice(roomPost.id, device))
+            this.addDevice(roomPost.id, device)
         });
         return roomPost
     }
@@ -27,8 +26,12 @@ class RoomApi{
         return await Api.put(RoomApi.getUrl(room.id), room)
     }
 
-    static async remove(room){
-        return await Api.delete(RoomApi.getUrl(room.id))
+    static async remove(id){
+        return await Api.delete(RoomApi.getUrl(id))
+    }
+
+    static async removeDevice(id) {
+        return await Api.delete(`${RoomApi.getUrl()}/devices/${id}`)
     }
 
     static async getRoom(id){

@@ -18,7 +18,7 @@
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room"/>
+        <RoomInfo :room="room" :devices="devices"/>
     </v-dialog>
 </template>
 
@@ -26,7 +26,7 @@
 import { ref, computed } from 'vue';
 import RoomInfo from '@/components/rooms/RoomInfo.vue';
 
-import habitacion from '@/assets/habitacion.svg';
+import dormitorio from '@/assets/dormitorio.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
@@ -35,16 +35,15 @@ import otro from '@/assets/otro.svg';
 
 const openDialog = ref(false);
 const props = defineProps({
-    room: Object
+    room: Object,
+    devices: Array
 })
 
-console.log(props.room)
-console.log(props.room.meta.type)
 
 const typeImg = computed(() => {
     switch (props.room.meta.type) {
-        case 'Habitación':
-            return habitacion;
+        case 'Dormitorio':
+            return dormitorio;
         case 'Cocina':
             return cocina;
         case 'Living':
