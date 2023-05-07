@@ -41,19 +41,28 @@ const intensity = ref(props.device.state.brightness);
 const color = ref(props.device.state.color);
 const updateTimeout = ref(null);
 
+const deviceState = {
+    id: props.device.id,
+    name: props.device.name,
+    category: props.device.category,
+    state: JSON.parse(JSON.stringify(props.device.state))
+}
+
 const props = defineProps({
     device: Object,
     disabled: Boolean,
     returnAction: Boolean
 })
 
-const emit = defineEmits(['actionSet']);
+const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 async function updateColor() {
     const action = { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] }
+    console.log(props.device)
     clearTimeout(updateTimeout.value);
     updateTimeout.value = setTimeout(async () => {
         emit('actionSet', action)
+        emit('deviceUpdate', deviceState)
         if (!props.returnAction) {
             loading.value = true;
             if (deviceStore.triggerEvent(action)) {
@@ -67,6 +76,7 @@ async function updateColor() {
 async function updateIntensity() {
     const action = { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
