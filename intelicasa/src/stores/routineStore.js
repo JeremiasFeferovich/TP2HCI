@@ -18,14 +18,19 @@ export const useRoutineStore = defineStore('routine', () => {
         fetchRoutines()
     }
     async function deleteRoutine(routine){
-        const deletedRoutine = await RoutineApi.remove(routine.id)
+        const deletedRoutine = await RoutineApi.remove(routine)
         fetchRoutines()
+    }
+
+    async function executeRoutine(routine){
+        const execute = await RoutineApi.execute(routine)
+        console.log(execute)
     }
 
 
     return{
         routines,
-        fetchRoutines,addRoutine,deleteRoutine
+        fetchRoutines,addRoutine,deleteRoutine,executeRoutine
         
     }  
 

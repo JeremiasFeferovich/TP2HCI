@@ -32,8 +32,9 @@
                                 </template>
                             </v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="false"
-                                    @changeState="toggleButtonState(device)" />
+                                <DevicesOptions :returnAction="true" :disabled="!device.isOn" :device="device"
+                                    :loadingState="false" @changeState="toggleButtonState(device)"
+                                    @actionSet="(action) => addAction(action)" />
                             </v-expansion-panel-text>
 
 
@@ -46,15 +47,6 @@
                 </v-row>
             </v-col>
         </v-container>
-        <!--
-        <v-container fluid>
-            <v-row v-for="(device, index) in roomDevices" :key="index">
-                <v-col cols="12" class="device-card">
-                    <DeviceCard :device="{ name: device }" />
-                </v-col>
-            </v-row>
-        </v-container>
-    -->
     </v-card>
 </template>
   
@@ -83,6 +75,19 @@ function deleteRoutine() {
 function deleteDevice(device) {
     routine.devices = routine.devices.filter(d => d.name !== device.name)
 }
+
+function addAction(action) {
+
+    const { device, actionName } = action
+    if (actionName === "turnOn" || actionName === "turnOff") {
+        routine.actions.value = routine.actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
+
+    } else {
+        routine.actions.value = routine.actions.value.filter(action => action.device.id !== device.id || action.actionName !== actionName)
+    }
+    routine.actions.value.push(action)
+}
+
 
 const addSelectedDevice = () => {
     if (selectedDevice.value !== '') {

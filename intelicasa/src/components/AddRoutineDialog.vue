@@ -34,8 +34,9 @@
                     </template>
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
-                    <DevicesOptions :disabled="!device.isOn" :device="device" :loadingState="false"
-                      @changeState="toggleButtonState(device)" />
+                    <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
+                      :loadingState="false" @changeState="toggleButtonState(device)"
+                      @actionSet="(action) => addAction(action)" />
                   </v-expansion-panel-text>
 
 
@@ -43,8 +44,8 @@
               </v-expansion-panels>
             </v-row>
             <v-row cols="12" class="fill-space">
-              <v-select label="Select" :items="devices" item-title="name" return-object v-model="selectedDevice"
-                @update:modelValue="addSelectedDevice" />
+              <v-select v-if="showSelector" label="Select" :items="devices" item-title="name" return-object
+                v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
             </v-row>
             <v-row cols="12" class="plus-btn">
               <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" flat />
@@ -55,7 +56,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <CloseAndSaveBtns @closeDialog="dialog = false" @handleSave="handleSave" />
+        <CloseAndSaveBtns @closeDialog="closeDialog()" @handleSave="handleSave" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -77,6 +78,8 @@ const emit = defineEmits(['save-routine'])
 
 const dialog = ref(false)
 
+const actions = ref([])
+
 const routineName = ref('')
 const selectedDevice = ref('')
 const selectedDevices = ref([])
@@ -84,13 +87,39 @@ const showSelector = ref(true)
 const opened = ref([0])
 
 function toggleButtonState(device) {
-  device.isOn = !device.isOn;
+  if (device.state.status === 'off') {
+    device.state.status = 'on'
+  } else {
+    device.state.status = 'off'
+  }
+}
+
+function addAction(action) {
+
+  const { device, actionName } = action
+  if (actionName === "turnOn" || actionName === "turnOff") {
+    actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
+
+  } else {
+    actions.value = actions.value.filter(action => action.device.id !== device.id || action.actionName !== actionName)
+  }
+  actions.value.push(action)
+}
+
+function closeDialog() {
+  dialog.value = false
+  selectedDevices.value = []
+  selectedDevice.value = ''
 }
 
 function handleSave() {
   const routine = {
     name: routineName.value,
-    devices: selectedDevices.value
+    devices: selectedDevices.value,
+    routine: {
+      name: routineName.value,
+      actions: actions.value
+    }
   }
   emit('save-routine', routine)
   selectedDevices.value = []
