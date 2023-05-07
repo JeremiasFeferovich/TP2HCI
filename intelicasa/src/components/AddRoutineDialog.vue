@@ -34,7 +34,6 @@
                     </template>
                   </v-expansion-panel-title>
                   <v-expansion-panel-text>
-                    {{ device.state.status }}
                     <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
                       :loadingState="false" @changeState="toggleButtonState(device)"
                       @actionSet="(action) => addAction(action)" />
@@ -45,8 +44,8 @@
               </v-expansion-panels>
             </v-row>
             <v-row cols="12" class="fill-space">
-              <v-select label="Select" :items="devices" item-title="name" return-object v-model="selectedDevice"
-                @update:modelValue="addSelectedDevice" />
+              <v-select v-if="showSelector" label="Select" :items="devices" item-title="name" return-object
+                v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
             </v-row>
             <v-row cols="12" class="plus-btn">
               <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" flat />
@@ -57,7 +56,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <CloseAndSaveBtns @closeDialog="dialog = false" @handleSave="handleSave" />
+        <CloseAndSaveBtns @closeDialog="closeDialog()" @handleSave="handleSave" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -105,6 +104,12 @@ function addAction(action) {
     actions.value = actions.value.filter(action => action.device.id !== device.id || action.actionName !== actionName)
   }
   actions.value.push(action)
+}
+
+function closeDialog() {
+  dialog.value = false
+  selectedDevices.value = []
+  selectedDevice.value = ''
 }
 
 function handleSave() {
