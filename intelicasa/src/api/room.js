@@ -11,11 +11,16 @@ class RoomApi{
         const body = {
             name: room.name,
             meta: {
-                devices: room.devices,
                 type: room.type
             }
         }
-        return await Api.post(RoomApi.getUrl(), body)
+        const roomPost = await Api.post(RoomApi.getUrl(), body)
+        console.log(roomPost)
+        room.devices.forEach(device => {
+            
+            console.log(this.addDevice(roomPost.id, device))
+        });
+        return roomPost
     }
 
     static async modify(room){
@@ -30,8 +35,16 @@ class RoomApi{
         return await Api.get(RoomApi.getUrl(id))
     }
 
+    static async getDevices(id){
+        return await Api.get(`${RoomApi.getUrl(id)}/devices`)
+    }
+
     static async getAll(){
         return await Api.get(RoomApi.getUrl())
+    }
+
+    static async addDevice(id, device){
+        return await Api.post(`${RoomApi.getUrl(id)}/devices/${device.id}`)
     }
 
 }

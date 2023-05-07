@@ -58,7 +58,6 @@
   const props = defineProps({
     devices: Array,
   });
-  console.log(props.devices)
 
   const showRequired = ref(false);
   const showSelector = ref(true)

@@ -11,7 +11,7 @@
             </v-col>
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
-                    <p class="text-data text-h6">{{ room.devices.length }} dispositivos conectados</p>
+                    <p class="text-data text-h6">{{ room.devices? room.devices.length : "No hay " }} dispositivos conectados</p>
                     <p class="text-data text-h6">3 dispositivos encendidos (to do)</p>
                 </v-card-text>
             </v-col>
@@ -34,14 +34,15 @@ import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
 
 const openDialog = ref(false);
-
 const props = defineProps({
     room: Object
 })
 
+console.log(props.room)
+console.log(props.room.meta.type)
 
 const typeImg = computed(() => {
-    switch (props.room.type) {
+    switch (props.room.meta.type) {
         case 'Habitación':
             return habitacion;
         case 'Cocina':
