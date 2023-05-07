@@ -1,11 +1,18 @@
 <template>
-    <DevicePower v-show="device.meta.category.name !== 'Puerta' && device.meta.category.name !== 'Aspiradora'" :device="device" :loading-state="loadingState"  :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
+    <DevicePower v-show="device.meta.category.name !== 'Puerta' && device.meta.category.name !== 'Aspiradora'" :device="device"
+        :loading-state="loadingState" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
         @changeState="changeState" />
-    <LightDeviceInfo :disabled="disabled" v-if="device.meta.category.name === 'Luces'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
-    <ACDeviceInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Aire Acondicionado'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
-    <OvenDeviceInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Horno'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
-    <SpeakerInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Parlante'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
-    <VacuumDeviceInfo v-else-if="device.meta.category.name === 'Aspiradora'" :device="device" :returnAction="returnAction" @actionSet="(action) => emitAction(action)"/>
+    <LightDeviceInfo :disabled="disabled" v-if="device.meta.category.name === 'Luces'" :device="device"
+        :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
+        @deviceUpdate="(device) => emitDeviceUpdate(device)" />
+    <ACDeviceInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Aire Acondicionado'" :device="device"
+        :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
+    <OvenDeviceInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Horno'" :device="device"
+        :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
+    <SpeakerInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Parlante'" :device="device"
+        :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
+    <VacuumDeviceInfo v-else-if="device.meta.category.name === 'Aspiradora'" :device="device" :returnAction="returnAction"
+        @actionSet="(action) => emitAction(action)" />
     <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device" />
 </template>
 
@@ -18,7 +25,7 @@ import SpeakerInfo from '@/components/devices/SpeakerInfo.vue';
 import DoorDeviceInfo from '@/components/devices/DoorDeviceInfo.vue';
 import VacuumDeviceInfo from '@/components/devices/VacuumDeviceInfo.vue';
 
-const props= defineProps({
+const props = defineProps({
     device: Object,
     disabled: Boolean,
     loadingState: Boolean,
@@ -28,10 +35,21 @@ const props= defineProps({
 function emitAction(action) {
     emit('actionSet', action)
 }
+function emitDeviceUpdate(deviceState) {
+    emit('deviceUpdate', deviceState)
+}
 
-const emit = defineEmits(['changeState', 'actionSet']);
+const emit = defineEmits(['changeState', 'actionSet', 'deviceUpdate']);
+
 
 function changeState() {
+    const deviceState = {
+        id: props.device.id,
+        name: props.device.name,
+        category: props.device.category,
+        state: JSON.parse(JSON.stringify(props.device.state))
+    }
+    emit('deviceUpdate', deviceState)
     emit('changeState')
 }
 

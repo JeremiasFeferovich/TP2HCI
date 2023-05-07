@@ -31,7 +31,7 @@ const emit = defineEmits(['changeState', 'actionSet']);
 
 function changeState() {
     if (props.returnAction) {
-        emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn' })
+        emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn', params: [] })
     }
     emit('changeState')
 }

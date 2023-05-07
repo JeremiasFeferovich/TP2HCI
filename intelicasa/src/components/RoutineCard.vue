@@ -6,10 +6,9 @@
             </v-col>
             <v-col cols="4">
                 <div class="image-container">
-                    <!--
-                    <v-img v-for="(device, index) in routine.devices" :key="index" :src="categoryImg(device)"
-                        alt="categoryImg" contain height="40px" width="40px" />
-                    -->
+                    <v-img v-for="(category, index) in categories" :key="category.id" :src="category.img" alt="categoryImg"
+                        contain height="40px" width="40px" />
+
                 </div>
             </v-col>
             <v-col cols="2">
@@ -33,8 +32,18 @@ import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import RoutineInfo from './RoutineInfo.vue';
 import { useRoutineStore } from '@/stores/routineStore';
+import { useDeviceStore } from '@/stores/deviceStore';
 
 const routineStore = useRoutineStore();
+const deviceStore = useDeviceStore();
+
+const categories = computed(() => {
+    //filter basado en https://stackoverflow.com/questions/2218999/remove-duplicates-from-an-array-of-objects-in-javascript
+    const categories = prop.routine.actions.filter((value, index, arr) => arr.findIndex(value2 => (value2.device.id === value.device.id)) === index).map(action => {
+        return deviceStore.categories.find(category => category.value === action.device.type.name);
+    });
+    return categories;
+})
 
 const openDialog = ref(false);
 
@@ -67,23 +76,6 @@ function removeRoutine() {
 function executeRoutine(routine) {
     routineStore.executeRoutine(routine);
 }
-
-
-function categoryImg(device) {
-    switch (device.meta.category) {
-        case 'Luces':
-            return lightbulb;
-        case 'Horno':
-            return oven;
-        case 'Parlante':
-            return speaker;
-        case 'Aire Acondicionado':
-            return airConditioner;
-        default:
-            return lightbulb;
-    }
-};
-
 
 </script>
 
