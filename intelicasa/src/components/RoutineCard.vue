@@ -38,11 +38,7 @@ const routineStore = useRoutineStore();
 const deviceStore = useDeviceStore();
 
 const categories = computed(() => {
-    //filter basado en https://stackoverflow.com/questions/2218999/remove-duplicates-from-an-array-of-objects-in-javascript
-    const categories = prop.routine.actions.filter((value, index, arr) => arr.findIndex(value2 => (value2.device.id === value.device.id)) === index).map(action => {
-        return deviceStore.categories.find(category => category.value === action.device.type.name);
-    });
-    return categories;
+    return prop.routine.meta.devicesState.map(deviceState => deviceState.category)
 })
 
 const openDialog = ref(false);
@@ -66,7 +62,7 @@ function toggleButtonState() {
     buttonState.value = !buttonState.value;
 }
 
-const emit = defineEmits(['remove-routine']);
+const emit = defineEmits(['remove-routine', 'update-routine']);
 
 function removeRoutine() {
     openDialog.value = false;

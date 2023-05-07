@@ -1,5 +1,5 @@
 <template>
-    <v-card class="routine-card-info" flat>
+    <v-card class="routine-card-info" flat v-click-outside="handleUpdate">
 
         <v-row>
             <v-card-title>
@@ -13,12 +13,13 @@
             <v-col justify="center" align="center">
                 <v-row cols="12" class="fill-space">
                     <v-expansion-panels variant="inset" :model-value="opened">
-                        <v-expansion-panel mandatory v-for="(device, index) in routine.devices" :key="index">
+
+                        <v-expansion-panel mandatory v-for="(device, index) in routine.meta.devicesState" :key="index">
                             <v-expansion-panel-title>
                                 <template v-slot:default="{ expanded }">
                                     <v-row no-gutters>
                                         <v-col cols="3">
-                                            <v-img :src="categoryImg(device)" alt="categoryImg" contain height="40px"
+                                            <v-img :src="device.category.img" alt="categoryImg" contain height="40px"
                                                 width="40px" />
                                         </v-col>
                                         <v-col cols="6" class="d-flex justify-start text-h5">
@@ -32,9 +33,10 @@
                                 </template>
                             </v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <DevicesOptions :returnAction="true" :disabled="!device.isOn" :device="device"
-                                    :loadingState="false" @changeState="toggleButtonState(device)"
-                                    @actionSet="(action) => addAction(action)" />
+                                <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'"
+                                    :device="device" :loadingState="false" @changeState="toggleButtonState(device)"
+                                    @actionSet="(action) => addAction(action)"
+                                    @deviceUpdate="(deviceState) => device = deviceState" />
                             </v-expansion-panel-text>
 
 
@@ -59,6 +61,9 @@ import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import DevicesOptions from './devices/DevicesOptions.vue';
 import { ref } from 'vue'
+import { useRoutineStore } from '@/stores/routineStore';
+
+const routineStore = useRoutineStore();
 
 const { routine, allDevices } = defineProps({
     routine: Object,
@@ -79,13 +84,23 @@ function deleteDevice(device) {
 function addAction(action) {
 
     const { device, actionName } = action
+    console.log(action)
     if (actionName === "turnOn" || actionName === "turnOff") {
-        routine.actions.value = routine.actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
+        routine.actions = routine.actions.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
 
     } else {
-        routine.actions.value = routine.actions.value.filter(action => action.device.id !== device.id || action.actionName !== actionName)
+        routine.actions = routine.actions.filter(action => action.device.id !== device.id || action.actionName !== actionName)
     }
-    routine.actions.value.push(action)
+    routine.actions.push(action)
+}
+
+function toggleButtonState(device) {
+    routine.meta.devicesState = routine.meta.devicesState.map(d => {
+        if (d.id === device.id) {
+            d.state.status = d.state.status === 'on' ? 'off' : 'on'
+        }
+        return d
+    })
 }
 
 
@@ -98,6 +113,18 @@ const addSelectedDevice = () => {
         showSelector.value = false
     }
 
+}
+
+function handleUpdate() {
+    const updatedRoutine = {
+        id: routine.id,
+        name: routine.name,
+        actions: routine.actions,
+        meta: {
+            devicesState: routine.meta.devicesState
+        }
+    }
+    routineStore.updateRoutine(updatedRoutine)
 }
 
 
