@@ -22,7 +22,6 @@ export const useRoutineStore = defineStore('routine', () => {
         fetchRoutines()
     }
 
-
     async function updateRoutine(routine){
         console.log("update routine")
         const updatedRoutine = await RoutineApi.update(routine)

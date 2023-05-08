@@ -12,7 +12,9 @@ class RoutineApi{
     }
 
     static async update(routine){
-        console.log(routine.id)
+        routine.actions.forEach(action => {
+            action.device = { id: action.device.id}
+        });
         return await Api.put(RoutineApi.getUrl(routine.id), routine)
     }
 

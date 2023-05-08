@@ -114,7 +114,6 @@ function addAction(action) {
   const { device, actionName } = action
   if (actionName === "turnOn" || actionName === "turnOff") {
     actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
-
   } else {
     actions.value = actions.value.filter(action => action.device.id !== device.id || action.actionName !== actionName)
   }

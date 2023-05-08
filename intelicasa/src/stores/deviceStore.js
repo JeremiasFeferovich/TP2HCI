@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { DeviceApi } from "@/api/device";
+import { useRoutineStore } from "./routineStore";
 
 import lightbulb from '@/assets/lightbulb.svg'
 import oven from '@/assets/oven.svg'
@@ -13,6 +14,8 @@ export const useDeviceStore = defineStore('device', () => {
     const devices = ref([]);
 
     const categories = ref([]);
+
+    const routineStore = useRoutineStore();
 
     // Getters - computed
 
@@ -63,6 +66,13 @@ export const useDeviceStore = defineStore('device', () => {
 
     async function deleteDevice(device) {
         const deletedDevice = await DeviceApi.remove(device.id);
+        if (deletedDevice) {
+            /*routineStore.routines.forEach(routine => {
+                routine.actions.forEach(action => {
+                    if (action.device.id === deletedDevice.id) action = null; routineStore.updateRoutine(routine);
+                })
+            });*/
+        }
         fetchDevices()
     }
 
