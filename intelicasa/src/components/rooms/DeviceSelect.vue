@@ -16,7 +16,12 @@
             <template v-slot:item="{item}"> 
                 <v-list-item @click="updateSelectedItem(item)">
                     <v-row no-gutters align="center">
-                        <p class="text-h6 ml-5">{{ item.value.name }}</p>
+                        <v-col cols="1" >
+                            <v-img :src="item.raw.meta.category.img" :alt="item.raw.name" contain height="40px" width="40px" />
+                        </v-col>
+                        <v-col>
+                            <p class="text-h6 ml-5">{{ item.value.name }}</p>
+                        </v-col>
                     </v-row>
                 </v-list-item>
             </template>

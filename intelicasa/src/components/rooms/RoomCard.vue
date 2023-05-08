@@ -18,7 +18,7 @@
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room" :devices="devices"/>
+        <RoomInfo :room="room" :devices="devices" @close-dialog="openDialog=false"/>
     </v-dialog>
 </template>
 

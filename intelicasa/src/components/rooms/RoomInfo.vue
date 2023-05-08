@@ -25,7 +25,7 @@
                 <v-divider/>
             </v-row>
             <v-row cols="12" class="fill-space">
-              <v-select v-if="showSelector" label="Device" :items="availableDevices" item-title="name" return-object v-model="selectedDevice"
+              <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices" item-title="name" return-object v-model="selectedDevice"
                 @update:modelValue="addSelectedDevice" />
             </v-row>
             <v-row>
@@ -35,6 +35,13 @@
             </v-row>
         </v-container>
 
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn size="large" color="blue-darken-1" variant="flat"  @click="closeDialog">
+            Guardar
+          </v-btn>
+        </v-card-actions>
+
     </v-card>
 </template>
   
@@ -42,13 +49,15 @@
     import DeviceCard from '@/components/devices/DeviceCard.vue';
     import { useRoomStore } from '@/stores/roomStore';
     import { ref, computed } from 'vue';
+    import CloseAndSaveBtns from '@/components/CloseAndSaveBtns.vue';
+
     const roomsStore = useRoomStore();
 
     const props = defineProps({
         room: Object,
         devices: Array
     });
-    /* filter the diveces that they dont have the room attribute*/
+    /* filter the devices that they dont have the room attribute*/
     const availableDevices = computed(() => {
         return props.devices.filter(device => !device.room);
     });
@@ -70,6 +79,11 @@
         showSelector.value = false;
     }
 
+    const emit = defineEmits(['closeDialog'])
+
+    function closeDialog() {
+        emit('closeDialog')
+    }
 </script>
   
 <style scoped>
