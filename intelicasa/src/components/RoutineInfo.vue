@@ -73,7 +73,6 @@ function deleteDevice(device) {
 
 function addAction(action) {
     const { device, actionName } = action
-    console.log(action)
     if (actionName === "turnOn" || actionName === "turnOff") {
         routine.actions = routine.actions.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
 

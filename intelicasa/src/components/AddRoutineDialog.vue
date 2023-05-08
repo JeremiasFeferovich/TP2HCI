@@ -43,8 +43,8 @@
                 </v-expansion-panels>
               </v-row>
               <v-row cols="12" class="fill-space">
-                <v-select :rules="deviceRules" v-if="showSelector" label="Select" :items="devices" item-title="name" return-object
-                  v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
+                <v-select :rules="deviceRules" v-if="showSelector" label="Select" :items="devices" item-title="name"
+                  return-object v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
               </v-row>
             </v-form>
             <v-row cols="12" class="plus-btn">
@@ -143,6 +143,10 @@ function handleSave() {
   emit('save-routine', routine)
   selectedDevices.value = []
   dialog.value = false
+  routineName.value = ''
+  actions.value = []
+  devicesState.value = []
+  selectedDevice.value = ''
 }
 
 const addSelectedDevice = () => {

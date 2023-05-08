@@ -16,7 +16,8 @@
             <v-form @submit.prevent validate-on="input" ref="newRoomForm">
               <v-col align="center">
                 <v-row cols="12" class="fill-space">
-                  <v-text-field :rules="nameRules" class="mb-3" v-model="roomName" label="Nombre de la habitación*" required />
+                  <v-text-field :rules="nameRules" class="mb-3" v-model="roomName" label="Nombre de la habitación*"
+                    required />
                 </v-row>
 
                 <v-list class="mb-3">
@@ -71,7 +72,8 @@
                 </v-row>
 
                 <v-row cols="12" class="fill-space">
-                  <v-select :rules="roomTypeRules" :items="roomTypes" v-model="roomType" label="Tipo de habitación*" required hide-details="auto"/>
+                  <v-select :rules="roomTypeRules" :items="roomTypes" v-model="roomType" label="Tipo de habitación*"
+                    required hide-details="auto" />
                 </v-row>
               </v-col>
             </v-form>
@@ -80,8 +82,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn size="large" color="blue-darken-1" variant="text"
-            @click="dialog = false; attemptSave = false">
+          <v-btn size="large" color="blue-darken-1" variant="text" @click="dialog = false; attemptSave = false">
             Cerrar
           </v-btn>
           <v-btn size="large" color="blue-darken-1" variant="flat" @click="validateForm($refs.newRoomForm)">
@@ -142,6 +143,7 @@ function saveRoom() {
   roomType.value = '';
   deviceInputs.value = [null];
   attemptSave.value = false
+  selectedDevices.value = []
 }
 
 function addSelectedDevice(selectedDevice) {

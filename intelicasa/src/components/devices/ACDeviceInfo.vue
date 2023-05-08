@@ -103,11 +103,11 @@ const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
     emit('deviceUpdate', deviceState)
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature' })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode' })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setVerticalSwing' })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setHorizontalSwing' })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setFanSpeed' })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature', params: [temperature.value] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [mode.value.value] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setVerticalSwing', params: [verticalSwing.value] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setHorizontalSwing', params: [horizontalSwing.value] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setFanSpeed', params: [fanSpeed.value] })
 })
 
 

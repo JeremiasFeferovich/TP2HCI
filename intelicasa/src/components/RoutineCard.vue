@@ -37,8 +37,8 @@ const routineStore = useRoutineStore();
 const deviceStore = useDeviceStore();
 
 const categories = computed(() => {
-    console.log(prop.routine.meta.devicesState)
-    return prop.routine.meta.devicesState.map(deviceState => deviceState.meta.category)
+    console.log(prop.routine.meta.devicesState.map(deviceState => deviceState.category))
+    return []//prop.routine.meta.devicesState.map(deviceState => deviceState.category)
 })
 
 const openDialog = ref(false);

@@ -116,11 +116,11 @@ const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
     emit('deviceUpdate', deviceState)
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] } })
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] } })
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'start' } })
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'pause' } })
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'dock' } })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'start', params: [] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'pause', params: [] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'dock', params: [] })
 })
 
 

@@ -1,5 +1,5 @@
 <template>
-    <DevicePower v-show="device.meta.category.name !== 'Puerta' && device.meta.category.name !== 'Aspiradora'"
+    <DevicePower v-if="device.meta.category.name !== 'Puerta' && device.meta.category.name !== 'Aspiradora'"
         :device="device" :loading-state="loadingState" :returnAction="returnAction"
         @actionSet="(action) => emitAction(action)" @changeState="changeState" />
     <LightDeviceInfo :disabled="disabled" v-if="device.meta.category.name === 'Luces'" :device="device"
@@ -11,7 +11,8 @@
         :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
     <VacuumDeviceInfo v-else-if="device.meta.category.name === 'Aspiradora'" :device="device" :returnAction="returnAction"
         @actionSet="(action) => emitAction(action)" />
-    <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device" />
+    <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device"
+        @actionSet="(action) => emitAction(action)" @deviceUpdate="(device) => emitDeviceUpdate(device)" />
 </template>
 
 <script setup>

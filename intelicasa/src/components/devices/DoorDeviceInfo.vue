@@ -87,12 +87,12 @@ const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
     emit('deviceUpdate', deviceState)
-    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open" })
-    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock" })
+    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] })
 })
 
 async function setDoorState() {
-    const action = { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open" }
+    const action = { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] }
     emit('actionSet', action)
     if (!props.returnAction) {
         loading.value = true
@@ -104,7 +104,7 @@ async function setDoorState() {
 }
 
 async function setLockState() {
-    const action = { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock" }
+    const action = { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] }
     emit('actionSet', action)
     if (!props.returnAction) {
         loading.value = true
