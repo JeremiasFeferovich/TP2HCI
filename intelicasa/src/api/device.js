@@ -1,6 +1,5 @@
 import { Api } from "./api.js"
 import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import door from '@/assets/door.svg'
@@ -15,7 +14,6 @@ class DeviceApi {
         { name: "Aire Acondicionado", value: "ac", img: airConditioner },
         { name: "Luces", value: "lamp", img: lightbulb },
         { name: "Horno", value: "oven", img: oven },
-        { name: "Parlante", value: "speaker", img: speaker },
         { name: "Aspiradora", value: "vacuum", img: vacuum },
         { name: "Puerta", value: "door", img: door }
     ]

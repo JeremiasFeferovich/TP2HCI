@@ -56,7 +56,6 @@
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import DevicesOptions from './devices/DevicesOptions.vue';
@@ -134,8 +133,6 @@ function categoryImg(device) {
             return lightbulb;
         case 'Horno':
             return oven;
-        case 'Parlante':
-            return speaker;
         case 'Aire Acondicionado':
             return airConditioner;
         default:

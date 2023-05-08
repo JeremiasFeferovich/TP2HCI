@@ -27,7 +27,6 @@ import { ref, computed } from 'vue';
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
 import oven from '@/assets/oven.svg'
 import airConditioner from '@/assets/airConditioner.svg'
 import RoutineInfo from './RoutineInfo.vue';
