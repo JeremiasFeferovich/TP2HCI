@@ -8,6 +8,10 @@ class RoutineApi{
     }
 
     static async add(routine){
+        routine.actions.forEach(action => {
+            action.device = { id: action.device.id}
+        });
+        console.log(routine)
         return await Api.post(RoutineApi.getUrl(), routine)
     }
 
