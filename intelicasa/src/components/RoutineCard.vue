@@ -36,9 +36,30 @@ import { useDeviceStore } from '@/stores/deviceStore';
 const routineStore = useRoutineStore();
 const deviceStore = useDeviceStore();
 
+/*
+"meta": {
+        "devicesState": [
+          {
+            "id": "46dd1059c71e6a26",
+            "name": "Lampara 1",
+            "meta": {
+              "category": {
+                "id": "go46xmbqeomjrsjr",
+                "name": "Luces",
+                "img": "/src/assets/lightbulb.svg",
+                "value": "lamp"
+              }
+            },
+            "state": {
+              "status": "off",
+              "color": "#170000",
+              "brightness": 0
+            }
+          }
+*/
 const categories = computed(() => {
-    console.log(prop.routine.meta.devicesState.map(deviceState => deviceState.category))
-    return []//prop.routine.meta.devicesState.map(deviceState => deviceState.category)
+    console.log(prop.routine.meta.devicesState.map(deviceState => deviceState.meta.category))
+    return prop.routine.meta.devicesState.map(deviceState => deviceState.meta.category)
 })
 
 const openDialog = ref(false);

@@ -32,7 +32,9 @@ const modeItems = ref([
 const deviceState = {
     id: props.device.id,
     name: props.device.name,
-    category: props.device.meta.category,
+    meta: {
+        category: props.device.meta.category
+    },
     state: JSON.parse(JSON.stringify(props.device.state))
 }
 
