@@ -6,13 +6,16 @@
         :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
         @deviceUpdate="(device) => emitDeviceUpdate(device)" />
     <ACDeviceInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Aire Acondicionado'" :device="device"
-        :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
+        :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
+        @deviceUpdate="(device) => emitDeviceUpdate(device)" />
     <OvenDeviceInfo :disabled="disabled" v-else-if="device.meta.category.name === 'Horno'" :device="device"
-        :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
+        :returnAction="returnAction" @actionSet="(action) => emitAction(action)"
+        @deviceUpdate="(device) => emitDeviceUpdate(device)" />
     <VacuumDeviceInfo v-else-if="device.meta.category.name === 'Aspiradora'" :device="device" :returnAction="returnAction"
-        @actionSet="(action) => emitAction(action)" />
-    <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device"
         @actionSet="(action) => emitAction(action)" @deviceUpdate="(device) => emitDeviceUpdate(device)" />
+    <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device"
+        @actionSet="(action) => emitAction(action)" :returnAction="returnAction"
+        @deviceUpdate="(device) => emitDeviceUpdate(device)" :disabled="disabled" />
 </template>
 
 <script setup>

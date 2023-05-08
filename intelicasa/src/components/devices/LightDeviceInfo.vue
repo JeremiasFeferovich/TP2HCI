@@ -59,7 +59,6 @@ const props = defineProps({
 const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
-    console.log(deviceState)
     emit('deviceUpdate', deviceState)
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
@@ -87,8 +86,6 @@ async function updateIntensity() {
     emit('actionSet', action)
     deviceState.state.brightness = JSON.parse(JSON.stringify(intensity.value))
     emit('deviceUpdate', deviceState)
-    console.log(props.device)
-    console.log(deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)

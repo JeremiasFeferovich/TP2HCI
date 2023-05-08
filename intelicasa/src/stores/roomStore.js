@@ -11,7 +11,6 @@ export const useRoomStore = defineStore('room', () => {
     // Actions - funciones Javascript
     async function fetchRooms(){
         const fetchedRooms = await RoomApi.getAll()
-        console.log(fetchedRooms)
         fetchedRooms.forEach(async room => {
             room.devices = await RoomApi.getDevices(room.id)
         });

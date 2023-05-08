@@ -12,7 +12,7 @@
             <v-form @submit.prevent validate-on="input" ref="newDeviceForm">
                 <v-card-text>
                     <v-container class="fill-space">
-                        <v-row >
+                        <v-row>
                             <v-text-field :rules="nameRules" label="Device name*" v-model="deviceName" aria-required />
                         </v-row>
                         <v-row>
@@ -68,12 +68,10 @@ async function validateForm(form) {
 }
 
 async function handleSave() {
-    console.log(selectedCategory.value)
     const device = {
         name: deviceName.value,
         category: selectedCategory.value
     }
-    console.log(device)
     deviceStore.addDevice(device);
     selectedCategory.value = null
     deviceName.value = ''

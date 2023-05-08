@@ -15,7 +15,6 @@ class RoomApi{
             }
         }
         const roomPost = await Api.post(RoomApi.getUrl(), body)
-        console.log(roomPost)
         room.devices.forEach(device => {
             this.addDevice(roomPost.id, device)
         });
