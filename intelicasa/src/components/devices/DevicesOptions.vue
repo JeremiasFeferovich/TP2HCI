@@ -41,7 +41,6 @@ function emitDeviceUpdate(deviceState) {
 
 const emit = defineEmits(['changeState', 'actionSet', 'deviceUpdate']);
 
-
 function changeState() {
     const deviceState = {
         id: props.device.id,

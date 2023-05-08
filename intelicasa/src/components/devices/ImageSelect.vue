@@ -1,6 +1,6 @@
 <template>
     <v-select :disabled="disabled" v-model="selectedItem" return-object variant="outlined" :items="items"
-        :label="props.label" hide-details auto item-title="name" hide-selected
+        :label="props.label" hide-details="auto" auto item-title="name" hide-selected
         :menu-props="{ closeOnContentClick: true, }">
         <template v-slot:selection="{ item, index }">
             <v-row no-gutters align="center">

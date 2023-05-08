@@ -2,7 +2,7 @@
     <v-btn size="x-large" color="blue-darken-1" variant="text" @click="closeDialog">
         cerrar
     </v-btn>
-    <v-btn size="x-large" color="blue-darken-1" variant="flat" @click="handleSave">
+    <v-btn type="submit" size="x-large" color="blue-darken-1" variant="flat" @click="handleSave">
         guardar
     </v-btn>
 </template>
