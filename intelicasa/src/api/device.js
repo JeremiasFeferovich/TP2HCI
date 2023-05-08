@@ -83,7 +83,7 @@ class DeviceApi {
         }
     */
     static async toggleFavorite(device) {
-        return await Api.put(`${Api.baseUrl}/devices/${device.id}`, { name: device.name, meta: { favorite: !device.favorite } })
+        return await Api.put(`${Api.baseUrl}/devices/${device.id}`, { name: device.name, meta: { ...device.meta, favorite: !device.meta.favorite } })
     }
 
 

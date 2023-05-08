@@ -7,7 +7,7 @@
                 </v-col>
                 <v-col cols="8">
                     <v-row justify="center">
-                        <v-btn class="square-btn" v-model="device.favorite" @click="toggleButtonFavorite" toggle
+                        <v-btn class="square-btn" v-model="device.meta.favorite" @click="toggleButtonFavorite" toggle
                             :ripple="false" size="large" variant="text" :loading="loadingFav" rounded="xl">
                             <img :src="favoriteBtnImg" alt="fav button" />
                         </v-btn>
@@ -53,13 +53,13 @@ const loadingFav = ref(false);
 const disabled = computed(() => device.state.status === 'off' ? true : false);
 
 const favoriteBtnImg = computed(() => {
-    return device.favorite ? favoriteYes : favoriteNo;
+    return device.meta.favorite ? favoriteYes : favoriteNo;
 })
 
 async function toggleButtonFavorite() {
     loadingFav.value = true
     if (await DeviceApi.toggleFavorite(device)) {
-        device.favorite = !device.favorite
+        device.meta.favorite = !device.meta.favorite
     }
     loadingFav.value = false
 }

@@ -1,7 +1,10 @@
 <template>
     <TitleComponent title="Dispositivos" />
     <v-sheet class="viewSheet" color="secondary">
-        <DevicesList v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
+        <v-row v-if="!deviceStore.devices.length" justify="center">
+            <p class="text-h6" align="center">Aún no tienes dispositivos</p>
+        </v-row>
+        <DevicesList v-else v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
             @delete="(device) => deleteDevice(device)" />
     </v-sheet>
     <AddDeviceDialog v-if="!loading" objectTitle="Add Device" :categories="deviceStore.categories"
