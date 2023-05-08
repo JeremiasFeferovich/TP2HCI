@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { DeviceApi } from "@/api/device";
 import { useRoutineStore } from "./routineStore";
+import { useRoomStore } from "./roomStore";
 
 import lightbulb from '@/assets/lightbulb.svg'
 import oven from '@/assets/oven.svg'
@@ -16,6 +17,7 @@ export const useDeviceStore = defineStore('device', () => {
     const categories = ref([]);
 
     const routineStore = useRoutineStore();
+    const roomStore = useRoomStore();
 
     // Getters - computed
 
@@ -75,6 +77,7 @@ export const useDeviceStore = defineStore('device', () => {
                 if (routine.actions.length > 0)
                     routineStore.addRoutine(routine);
             });
+            roomStore.deleteDeviceFromRoom(device);
         }
         fetchDevices()
     }

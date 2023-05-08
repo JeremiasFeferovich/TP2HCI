@@ -2,6 +2,9 @@
     <!-- <input v-if="showSearchbar" class="search-bar" v-model="text" type="text" placeholder="Buscar"> -->
     <v-text-field v-if="showSearchbar" v-model="searchText" placeholder="Buscar" type="text"
         variant="outlined"></v-text-field>
+    <v-row v-if="devices.length && !shownDevices.length" justify="center">
+        <p class="text-h6" align="center">No hay dispositivos con ese nombre</p>
+    </v-row>
     <v-row>
         <v-col v-for="(dev, index) in shownDevices" :key="index" cols="12" sm="6" lg="3">
             <DeviceCard :device="dev" @delete="deleteDevice(dev)" />
