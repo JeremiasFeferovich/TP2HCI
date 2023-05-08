@@ -3,7 +3,7 @@
         <v-card-title>
             <v-row align="center">
                 <v-col cols="2" align="center" justify-content="center">
-                    <v-img :src="device.category.img" alt="categoryImg" contain  />
+                    <v-img :src="device.meta.category.img" alt="categoryImg" contain  />
                 </v-col>
                 <v-col cols="8">
                     <v-row justify="center">

@@ -8,11 +8,10 @@
                 <v-card-title class="text-h5">{{ props.device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-icon v-if="device.category.name === 'Aspiradora'" :icon="batteryImg" size="35"/>
-                <v-icon v-else-if="device.category.name === 'Puerta'" :icon="doorImg" size="40"/>
-                <v-btn v-else class="square-btn rounded-circle"
-                    v-model="props.device.state.status" @click.stop="toggleButtonState" variant="text"
-                    :loading="loadingState">
+                <v-icon v-if="device.meta.category.name === 'Aspiradora'" :icon="batteryImg" size="35" />
+                <v-icon v-else-if="device.meta.category.name === 'Puerta'" :icon="doorImg" size="40" />
+                <v-btn v-else class="square-btn rounded-circle" v-model="props.device.state.status"
+                    @click.stop="toggleButtonState" variant="text" :loading="loadingState">
                     <img :src="powerBtnImg" contain alt="powerState" />
                 </v-btn>
             </v-col>
@@ -41,7 +40,7 @@ const props = defineProps({
     device: Object,
 })
 
-const categoryImg = computed(() => props.device.category.img);
+const categoryImg = computed(() => props.device.meta.category.img);
 
 const powerBtnImg = computed(() => {
     return props.device.state.status === 'on' ? powerOn : powerOff;
@@ -67,7 +66,7 @@ const doorImg = computed(() => {
         return 'mdi-door-open'
     } else if (props.device.state.status === 'closed' && props.device.state.lock === 'locked') {
         return 'mdi-door-closed-lock'
-    } else 
+    } else
         return 'mdi-door-closed'
 })
 

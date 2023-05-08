@@ -11,7 +11,8 @@ class RoutineApi{
         return await Api.post(RoutineApi.getUrl(), routine)
     }
 
-    static async modify(routine){
+    static async update(routine){
+        console.log(routine.id)
         return await Api.put(RoutineApi.getUrl(routine.id), routine)
     }
 
