@@ -1,8 +1,8 @@
 <template>
-    <v-btn size="x-large" color="blue-darken-1" variant="text" @click="closeDialog">
+    <v-btn size="large" color="blue-darken-1" variant="text" @click="closeDialog">
         cerrar
     </v-btn>
-    <v-btn size="x-large" color="blue-darken-1" variant="flat" @click="handleSave">
+    <v-btn size="large" color="blue-darken-1" variant="flat" @click="handleSave">
         guardar
     </v-btn>
 </template>
