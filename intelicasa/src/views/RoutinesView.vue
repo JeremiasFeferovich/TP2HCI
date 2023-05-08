@@ -10,11 +10,6 @@
 </template>
 
 <script setup>
-import lightbulb from '@/assets/lightbulb.svg'
-import speaker from '@/assets/speaker.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
-
 import TitleComponent from '@/components/TitleComponent.vue';
 import RoutineCard from '@/components/RoutineCard.vue';
 import AddRoutineDialog from '@/components/AddRoutineDialog.vue';
@@ -29,8 +24,8 @@ const routineStore = useRoutineStore();
 
 const loading = ref(false)
 
-function addRoutine(newRoutine) {
-    routineStore.addRoutine(newRoutine.routine);
+function addRoutine(routine) {
+    routineStore.addRoutine(routine);
 }
 
 function removeRoutine(routine) {

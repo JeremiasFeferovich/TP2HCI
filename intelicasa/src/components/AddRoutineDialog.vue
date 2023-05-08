@@ -36,7 +36,8 @@
                   <v-expansion-panel-text>
                     <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
                       :loadingState="false" @changeState="toggleButtonState(device)"
-                      @actionSet="(action) => addAction(action)" />
+                      @actionSet="(action) => addAction(action)"
+                      @deviceUpdate="deviceState => addDeviceState(deviceState)" />
                   </v-expansion-panel-text>
 
 
@@ -85,6 +86,7 @@ const selectedDevice = ref('')
 const selectedDevices = ref([])
 const showSelector = ref(true)
 const opened = ref([0])
+const devicesState = ref([])
 
 function toggleButtonState(device) {
   if (device.state.status === 'off') {
@@ -106,6 +108,12 @@ function addAction(action) {
   actions.value.push(action)
 }
 
+function addDeviceState(deviceState) {
+  devicesState.value = devicesState.value.filter(d => d.id !== deviceState.id)
+  devicesState.value.push(deviceState)
+}
+
+
 function closeDialog() {
   dialog.value = false
   selectedDevices.value = []
@@ -115,10 +123,9 @@ function closeDialog() {
 function handleSave() {
   const routine = {
     name: routineName.value,
-    devices: selectedDevices.value,
-    routine: {
-      name: routineName.value,
-      actions: actions.value
+    actions: actions.value,
+    meta: {
+      devicesState: devicesState.value
     }
   }
   emit('save-routine', routine)

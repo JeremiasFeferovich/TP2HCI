@@ -17,7 +17,7 @@
 
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 
 const isOn = ref(props.device.state.status)
 
@@ -28,6 +28,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['changeState', 'actionSet']);
+
+onMounted(() => {
+    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn', params: [] })
+})
 
 function changeState() {
     if (props.returnAction) {

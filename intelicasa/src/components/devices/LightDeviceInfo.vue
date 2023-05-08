@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 const deviceStore = useDeviceStore();
@@ -41,12 +41,12 @@ const intensity = ref(props.device.state.brightness);
 const color = ref(props.device.state.color);
 const updateTimeout = ref(null);
 
-const deviceState = {
+const deviceState = ref({
     id: props.device.id,
     name: props.device.name,
     category: props.device.category,
     state: JSON.parse(JSON.stringify(props.device.state))
-}
+})
 
 const props = defineProps({
     device: Object,
@@ -56,13 +56,19 @@ const props = defineProps({
 
 const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
+onMounted(() => {
+    emit('deviceUpdate', deviceState.value)
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+})
+
 async function updateColor() {
     const action = { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] }
     console.log(props.device)
     clearTimeout(updateTimeout.value);
     updateTimeout.value = setTimeout(async () => {
         emit('actionSet', action)
-        emit('deviceUpdate', deviceState)
+        emit('deviceUpdate', deviceState.value)
         if (!props.returnAction) {
             loading.value = true;
             if (deviceStore.triggerEvent(action)) {
@@ -76,7 +82,7 @@ async function updateColor() {
 async function updateIntensity() {
     const action = { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
+    emit('deviceUpdate', deviceState.value)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
