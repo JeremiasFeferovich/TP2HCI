@@ -22,6 +22,8 @@ import OvenDeviceInfo from '@/components/devices/OvenDeviceInfo.vue';
 import DoorDeviceInfo from '@/components/devices/DoorDeviceInfo.vue';
 import VacuumDeviceInfo from '@/components/devices/VacuumDeviceInfo.vue';
 
+import { ref } from 'vue';
+
 const props = defineProps({
     device: Object,
     disabled: Boolean,
@@ -42,7 +44,9 @@ function changeState() {
     const deviceState = {
         id: props.device.id,
         name: props.device.name,
-        category: props.device.category,
+        meta: {
+            category: props.device.meta.category
+        },
         state: JSON.parse(JSON.stringify(props.device.state))
     }
     emit('deviceUpdate', deviceState)

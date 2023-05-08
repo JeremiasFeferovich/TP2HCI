@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import ImageSelect from './ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
@@ -79,12 +79,14 @@ const props = defineProps({
     returnAction: Boolean
 })
 
-const deviceState = ref({
+const deviceState = {
     id: props.device.id,
     name: props.device.name,
-    category: props.device.category,
+    meta: {
+        category: props.device.meta.category
+    },
     state: JSON.parse(JSON.stringify(props.device.state))
-})
+}
 
 const deviceStore = useDeviceStore()
 
@@ -100,7 +102,7 @@ const horizontalSwing = ref(props.device.state.horizontalSwing !== 'auto' ? pars
 const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature' })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode' })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setVerticalSwing' })
@@ -112,7 +114,7 @@ onMounted(() => {
 async function setTemperature() {
     const action = { device: { id: props.device.id }, actionName: 'setTemperature', params: [temperature.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -123,7 +125,7 @@ async function setTemperature() {
 async function setMode(newMode) {
     const action = { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -138,7 +140,7 @@ async function setVerticalSwing() {
     const newVerticalSwing = verticalSwing.value === 0 ? 'auto' : Math.floor(verticalSwing.value)
     const action = { device: { id: props.device.id }, actionName: 'setVerticalSwing', params: [newVerticalSwing] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -152,7 +154,7 @@ async function setHorizontalSwing() {
     const newHorizontalSwing = horizontalSwing.value === -135 ? 'auto' : Math.floor(horizontalSwing.value)
     const action = { device: { id: props.device.id }, actionName: 'setHorizontalSwing', params: [newHorizontalSwing] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -166,7 +168,7 @@ async function setFanSpeed() {
     const newFanSpeed = fanSpeed.value === 0 ? 'auto' : Math.floor(fanSpeed.value)
     const action = { device: { id: props.device.id }, actionName: 'setFanSpeed', params: [newFanSpeed] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {

@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import ImageSelect from './ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
@@ -46,12 +46,14 @@ const modeItems = ref([
     { name: 'Trapear', value: 'mop', img: mopMode }])
 
 
-const deviceState = ref({
+const deviceState = {
     id: props.device.id,
     name: props.device.name,
-    category: props.device.category,
+    meta: {
+        category: props.device.meta.category
+    },
     state: JSON.parse(JSON.stringify(props.device.state))
-})
+}
 
 
 const props = defineProps({
@@ -113,13 +115,12 @@ const location = ref(rooms.value.find(x => x.is = props.device.state.location))
 const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState.value)
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] } })
-    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setLocation', params: [newLocation.id] } })
+    emit('deviceUpdate', deviceState)
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] } })
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] } })
     emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'start' } })
     emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'pause' } })
     emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'dock' } })
-
 })
 
 
@@ -127,7 +128,7 @@ onMounted(() => {
 async function setMode(newMode) {
     const action = { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -140,7 +141,7 @@ async function setMode(newMode) {
 async function setLocation(newLocation) {
     const action = { device: { id: props.device.id }, actionName: 'setLocation', params: [newLocation.id] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -154,7 +155,7 @@ async function setLocation(newLocation) {
 async function startCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'start' }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -166,7 +167,7 @@ async function startCleaning() {
 async function pauseCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'pause' }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -178,7 +179,7 @@ async function pauseCleaning() {
 async function dock() {
     const action = { device: { id: props.device.id }, actionName: 'dock' }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)

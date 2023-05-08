@@ -9,7 +9,7 @@
                 Dispositivos
                 <v-divider/>
             </v-row>
-            <p class="text-h6" align="center" v-if="!deviceStore.devices.filter(device => device.favorite).length">Aun no tienes dispositivos favoritos</p>
+            <p class="text-h6" align="center" v-if="deviceStore.devices.length && !deviceStore.devices.filter(device => device.favorite).length">Aún no tienes dispositivos favoritos</p>
             <DevicesList v-if="!loading" :showSearchbar="false" :devices="deviceStore.devices.filter(device => device.favorite)"
                 @delete="(device) => deleteDevice(device)"/>
         </v-sheet>

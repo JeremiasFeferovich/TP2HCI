@@ -24,7 +24,7 @@ class DeviceApi {
 
     static async getCategories() {
         this.allCategories = await Api.get(`${Api.baseUrl}/devicetypes`)
-        return this.allCategories
+        return this.allCategories.map(category => { return {id: category.id, name: category.name}})
     }
 
 

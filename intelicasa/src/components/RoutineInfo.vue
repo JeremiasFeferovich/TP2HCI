@@ -13,13 +13,12 @@
             <v-col justify="center" align="center">
                 <v-row cols="12" class="fill-space">
                     <v-expansion-panels variant="inset" :model-value="opened">
-
                         <v-expansion-panel mandatory v-for="(device, index) in routine.meta.devicesState" :key="index">
                             <v-expansion-panel-title>
                                 <template v-slot:default="{ expanded }">
                                     <v-row no-gutters>
                                         <v-col cols="3">
-                                            <v-img :src="device.category.img" alt="categoryImg" contain height="40px"
+                                            <v-img :src="device.meta.category.img" alt="categoryImg" contain height="40px"
                                                 width="40px" />
                                         </v-col>
                                         <v-col cols="6" class="d-flex justify-start text-h5">
@@ -28,7 +27,6 @@
                                         <v-col cols="3" class="d-flex justify-end pr-5">
                                             <v-icon end icon="mdi-delete" @click.stop="deleteDevice(device)" />
                                         </v-col>
-
                                     </v-row>
                                 </template>
                             </v-expansion-panel-title>
@@ -36,10 +34,8 @@
                                 <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'"
                                     :device="device" :loadingState="false" @changeState="toggleButtonState(device)"
                                     @actionSet="(action) => addAction(action)"
-                                    @deviceUpdate="(deviceState) => device = deviceState" />
+                                    @deviceUpdate="(deviceState) => device.state = deviceState.state" />
                             </v-expansion-panel-text>
-
-
                         </v-expansion-panel>
                     </v-expansion-panels>
                 </v-row>
@@ -53,11 +49,6 @@
 </template>
   
 <script setup>
-import powerOn from '@/assets/powerOn.svg';
-import powerOff from '@/assets/powerOff.svg'
-import lightbulb from '@/assets/lightbulb.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
 import DevicesOptions from './devices/DevicesOptions.vue';
 import { ref } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
@@ -81,7 +72,6 @@ function deleteDevice(device) {
 }
 
 function addAction(action) {
-
     const { device, actionName } = action
     console.log(action)
     if (actionName === "turnOn" || actionName === "turnOff") {
@@ -101,7 +91,6 @@ function toggleButtonState(device) {
         return d
     })
 }
-
 
 const addSelectedDevice = () => {
     if (selectedDevice.value !== '') {
@@ -125,21 +114,6 @@ function handleUpdate() {
     }
     routineStore.updateRoutine(updatedRoutine)
 }
-
-
-function categoryImg(device) {
-    switch (device.category) {
-        case 'Luces':
-            return lightbulb;
-        case 'Horno':
-            return oven;
-        case 'Aire Acondicionado':
-            return airConditioner;
-        default:
-            return lightbulb;
-    }
-};
-
 
 </script>
   

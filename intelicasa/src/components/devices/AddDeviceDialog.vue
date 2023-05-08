@@ -45,12 +45,6 @@ const deviceName = ref('')
 
 const newDeviceForm = ref(null)
 
-async function validateForm(form) {
-    const result = await form.validate()
-    if (result.valid) {
-        handleSave()
-    }
-}
 
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
@@ -64,6 +58,13 @@ watch(dialog, (value) => {
         deviceName.value = ''
     }
 })
+
+async function validateForm(form) {
+    const result = await form.validate()
+    if (result.valid) {
+        handleSave()
+    }
+}
 
 async function handleSave() {
     console.log(selectedCategory.value)

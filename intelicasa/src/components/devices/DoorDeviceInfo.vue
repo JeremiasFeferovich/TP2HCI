@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 import mopMode from '@/assets/vacuum/mopMode.png';
@@ -29,12 +29,12 @@ const modeItems = ref([
     { name: 'Trapear', value: 'mop', img: mopMode }])
 
 
-const deviceState = ref({
+const deviceState = {
     id: props.device.id,
     name: props.device.name,
-    category: props.device.category,
+    category: props.device.meta.category,
     state: JSON.parse(JSON.stringify(props.device.state))
-})
+}
 
 const props = defineProps({
     device: Object,
@@ -86,7 +86,7 @@ const lockText = computed(() => {
 const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open" })
     emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock" })
 })

@@ -1,6 +1,9 @@
 <template>
     <TitleComponent title="Rutinas" />
     <v-sheet class="viewSheet" color="secondary">
+        <v-row justify="center">
+            <p class="text-h6" v-if="!routineStore.routines.length">Aún no tienes rutinas</p>
+        </v-row>
         <v-row v-if="!loading" v-for="(routine, index) in routineStore.routines" :key="index">
             <RoutineCard :name="routine.name" :routine="routine" @remove-routine="removeRoutine(routine)"
                 :allDevices="deviceStore.devices" />

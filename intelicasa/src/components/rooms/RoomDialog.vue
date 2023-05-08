@@ -13,87 +13,78 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-col align="center">
-              <v-row cols="12" class="fill-space">
-                <v-text-field v-model="roomName" label="Nombre de la habitación*" required />
-              </v-row>
+            <v-form @submit.prevent validate-on="input" ref="newRoomForm">
+              <v-col align="center">
+                <v-row cols="12" class="fill-space">
+                  <v-text-field :rules="nameRules" class="mb-3" v-model="roomName" label="Nombre de la habitación*" required />
+                </v-row>
 
-              <v-list class="mb-3">
-                <v-list-item-subtitle>Dispositivos seleccionados</v-list-item-subtitle>
-                <v-divider length="75%"/>
-                
-                <v-card v-if="selectedDevices.length === 0" >
-                  <div class="pa-2 text-center text-h6 bg-secondary rounded-xl rounded-be-0 mt-3 mb-3 w-50 h-50">
-                    <p style="font-size: 14px;">Todavía no se han seleccionado dispositivos.</p>
-                  </div>
-                </v-card>
-
-                <v-alert
-                  v-if="attemptSave && selectedDevices.length === 0"
-                  v-model="attemptSave"
-                  border="start"
-                  variant="tonal"
-                  closable
-                  close-label="Close Alert"
-                  color="warning"
-                  title="Advertencia"
-                  max-width="80%"
-                  max-height="70px"
-                  class="mt-2 mb-2"
-                >
-                  Se requiere seleccionar al menos un dispositivo para crear una habitación.
-                </v-alert>
-                  
-                <v-list-item v-for="(device, index) in selectedDevices" :key="index">
-                  <v-card class="pa-2">
-                    <v-row align="center">
-                      <v-col cols="3" class="py-3 px-0">
-                        <v-img class="categoryImg" :src="device.meta.category.img" alt="categoryImg" contain />
-                      </v-col>
-                      <v-col cols="6">
-                        <v-list-item-title class="text-h5">{{ device.name }}</v-list-item-title>
-                      </v-col>
-                      <v-col cols="2" class="text-end">
-                        <v-btn icon size="small" color="error" @click="removeSelectedDevice(device)">
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
+                <v-list class="mb-3">
+                  <v-list-item-subtitle>Dispositivos seleccionados</v-list-item-subtitle>
+                  <v-divider length="75%" />
+                  <!--
+                  <v-card v-if="selectedDevices.length === 0">
+                    <div class="pa-2 text-center text-h6 bg-secondary rounded-xl rounded-be-0 mt-3 mb-3 w-50 h-50">
+                      <p style="font-size: 14px;">Todavía no se han seleccionado dispositivos.</p>
+                    </div>
                   </v-card>
-                </v-list-item>
-                <v-divider length="75%"/>
-              </v-list>
+                  <v-alert v-if="attemptSave && selectedDevices.length === 0" v-model="attemptSave" border="start"
+                    variant="tonal" closable close-label="Close Alert" color="warning" title="Advertencia" max-width="80%"
+                    max-height="70px" class="mt-2 mb-2">
+                    Se requiere seleccionar al menos un dispositivo para crear una habitación.
+                  </v-alert>
+                -->
+                  <v-list-item v-for="(device, index) in selectedDevices" :key="index">
+                    <v-card class="pa-2">
+                      <v-row align="center">
+                        <v-col cols="3" class="py-3 px-0">
+                          <v-img class="categoryImg" :src="device.meta.category.img" alt="categoryImg" contain />
+                        </v-col>
+                        <v-col cols="6">
+                          <v-list-item-title class="text-h5">{{ device.name }}</v-list-item-title>
+                        </v-col>
+                        <v-col cols="2" class="text-end">
+                          <v-btn icon size="small" color="error" @click="removeSelectedDevice(device)">
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                  </v-list-item>
+                  <v-divider length="75%" />
+                </v-list>
 
-              <v-row cols="12">
-                <v-col class="text-center">
-                  <v-list-item-subtitle>Seleccione dispositivo a agregar</v-list-item-subtitle>
-                </v-col>
-              </v-row>
+                <v-row cols="12">
+                  <v-col class="text-center">
+                    <v-list-item-subtitle>Seleccione dispositivo a agregar</v-list-item-subtitle>
+                  </v-col>
+                </v-row>
 
-              <v-row cols="12" class="fill-space">
-                <DeviceSelect v-if="showSelector" :devices="devices" :label="firstDevice ? 'Dispositivo*' : 'Dispositivo'"
-                  @update:selectedDevice="(item) => addSelectedDevice(item)" />
-              </v-row>
+                <v-row cols="12" class="fill-space">
+                  <DeviceSelect :rules="deviceRules" v-if="showSelector" :devices="devices"
+                    :label="firstDevice ? 'Dispositivo*' : 'Dispositivo'"
+                    @update:selectedDevice="(item) => addSelectedDevice(item)" />
+                </v-row>
 
-              <v-row cols="12" class="plus-btn">
-                <v-btn class="mt-3" icon="mdi-plus" density="comfortable" @click="showSelector = true" />
-              </v-row>
+                <v-row cols="12" class="plus-btn">
+                  <v-btn class="mt-3" icon="mdi-plus" density="comfortable" @click="showSelector = true" />
+                </v-row>
 
-              <v-row cols="12" class="fill-space">
-                <v-select :items="roomTypes" v-model="roomType" label="Tipo de habitación*" required />
-              </v-row>
-            </v-col>
+                <v-row cols="12" class="fill-space">
+                  <v-select :rules="roomTypeRules" :items="roomTypes" v-model="roomType" label="Tipo de habitación*" required hide-details="auto"/>
+                </v-row>
+              </v-col>
+            </v-form>
           </v-container>
-
-          <small v-if="showRequired" class="required-info">*Indica campos obligatorios</small>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn size="large" color="blue-darken-1" variant="text" @click="dialog = false; attemptSave=false; showRequired=false">
+          <v-btn size="large" color="blue-darken-1" variant="text"
+            @click="dialog = false; attemptSave = false">
             Cerrar
           </v-btn>
-          <v-btn size="large" color="blue-darken-1" variant="flat"  @click="saveRoom">
+          <v-btn size="large" color="blue-darken-1" variant="flat" @click="validateForm($refs.newRoomForm)">
             Guardar
           </v-btn>
         </v-card-actions>
@@ -112,7 +103,6 @@ const props = defineProps({
   devices: Array,
 });
 
-const showRequired = ref(false);
 const showSelector = ref(true)
 const firstDevice = ref(true)
 const dialog = ref(false)
@@ -123,12 +113,22 @@ const selectedDevices = ref([])
 const deviceInputs = ref([])
 const attemptSave = ref(false)
 
-function saveRoom() {
-  if (roomName.value === '' || roomType.value === '' || selectedDevices.value.length === 0) {
-    showRequired.value = true;
-    attemptSave.value = true;
-    return;
+const newRoomForm = ref(null)
+
+const nameRules = [(v) => !!v || 'El nombre es requerido',
+(v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
+(v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres']
+const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
+const roomTypeRules = [(v) => !!v || 'El tipo de habitación es requerido']
+
+async function validateForm(form) {
+  const result = await form.validate()
+  if (result.valid) {
+    saveRoom()
   }
+}
+
+function saveRoom() {
   const newRoom = {
     name: roomName.value,
     devices: selectedDevices.value,
@@ -189,8 +189,8 @@ function removeSelectedDevice(selectedDevice) {
 }
 
 .categoryImg {
-    height: 75px;
-    width: 75px;
-    padding: 5px 0;
+  height: 75px;
+  width: 75px;
+  padding: 5px 0;
 }
 </style>

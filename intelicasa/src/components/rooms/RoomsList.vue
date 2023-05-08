@@ -1,5 +1,8 @@
 <template>
-    <v-row v-for="(room, index) in rooms" :key="index">
+    <v-row v-if="!rooms.length" justify="center">
+        <p class="text-h6" align="center" >Aún no tienes habitaciones</p>
+    </v-row>
+    <v-row v-else v-for="(room, index) in rooms" :key="index">
         <RoomCard 
             :room="room"
             :devices="devices"

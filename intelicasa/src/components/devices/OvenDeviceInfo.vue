@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import ImageSelect from './ImageSelect.vue'
 import { useDeviceStore } from '@/stores/deviceStore';
 
@@ -74,13 +74,14 @@ const props = defineProps({
     returnAction: Boolean
 })
 
-const deviceState = ref({
+const deviceState = {
     id: props.device.id,
     name: props.device.name,
-    category: props.device.category,
+    meta: {
+        category: props.device.meta.category
+    },
     state: JSON.parse(JSON.stringify(props.device.state))
-})
-
+}
 
 const deviceStore = useDeviceStore()
 
@@ -94,7 +95,7 @@ const convectionMode = ref(convectionModes.find(x => x.value === props.device.st
 const emit = defineEmits(['actionSet', 'deviceUpdate']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature', params: [temperature.value] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setHeat', params: [heatSource.value.value] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setGrill', params: [grillMode.value.value] })
@@ -105,7 +106,7 @@ onMounted(() => {
 async function setTemperature() {
     const action = { device: { id: props.device.id }, actionName: 'setTemperature', params: [temperature.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -116,7 +117,7 @@ async function setTemperature() {
 async function setHeatSource(newHeatSource) {
     const action = { device: { id: props.device.id }, actionName: 'setHeat', params: [newHeatSource.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -130,7 +131,7 @@ async function setHeatSource(newHeatSource) {
 async function setGrillMode(newGrillMode) {
     const action = { device: { id: props.device.id }, actionName: 'setGrill', params: [newGrillMode.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -144,7 +145,7 @@ async function setGrillMode(newGrillMode) {
 async function setConvectionMode(newConvMode) {
     const action = { device: { id: props.device.id }, actionName: 'setConvection', params: [newConvMode.value] }
     emit('actionSet', action)
-    emit('deviceUpdate', deviceState.value)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {

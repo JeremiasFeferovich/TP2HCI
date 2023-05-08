@@ -10,54 +10,52 @@
       <v-card-text>
         <v-container>
           <v-col justify="center" align="center">
-            <v-row cols="12" class="fill-space">
-              <v-text-field label="Nombre de la rutina*" v-model="routineName" required />
-            </v-row>
-
-            <v-row cols="12" class="fill-space">
-              <v-expansion-panels variant="inset" :model-value="opened">
-                <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index">
-                  <v-expansion-panel-title>
-                    <template v-slot:default="{ expanded }">
-                      <v-row no-gutters>
-                        <v-col cols="4" class="d-flex justify-start">
-                          {{ device.name }}
-                        </v-col>
-                        <v-col cols="8" class="text-grey">
-                          <v-fade-transition leave-absolute>
-                            <span v-if="expanded" key="0">
-                              Configure el dispositivo
-                            </span>
-                          </v-fade-transition>
-                        </v-col>
-                      </v-row>
-                    </template>
-                  </v-expansion-panel-title>
-                  <v-expansion-panel-text>
-                    <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
-                      :loadingState="false" @changeState="toggleButtonState(device)"
-                      @actionSet="(action) => addAction(action)"
-                      @deviceUpdate="deviceState => addDeviceState(deviceState)" />
-                  </v-expansion-panel-text>
-
-
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </v-row>
-            <v-row cols="12" class="fill-space">
-              <v-select v-if="showSelector" label="Select" :items="devices" item-title="name" return-object
-                v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
-            </v-row>
+            <v-form @submit.prevent validate-on="input" ref="newRoutineForm">
+              <v-row cols="12" class="fill-space">
+                <v-text-field :rules="nameRules" label="Nombre de la rutina*" v-model="routineName" />
+              </v-row>
+              <v-row cols="12" class="fill-space">
+                <v-expansion-panels variant="inset" :model-value="opened">
+                  <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index">
+                    <v-expansion-panel-title>
+                      <template v-slot:default="{ expanded }">
+                        <v-row no-gutters>
+                          <v-col cols="4" class="d-flex justify-start">
+                            {{ device.name }}
+                          </v-col>
+                          <v-col cols="8" class="text-grey">
+                            <v-fade-transition leave-absolute>
+                              <span v-if="expanded" key="0">
+                                Configure el dispositivo
+                              </span>
+                            </v-fade-transition>
+                          </v-col>
+                        </v-row>
+                      </template>
+                    </v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                      <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
+                        :loadingState="false" @changeState="toggleButtonState(device)"
+                        @actionSet="(action) => addAction(action)"
+                        @deviceUpdate="deviceState => addDeviceState(deviceState)" />
+                    </v-expansion-panel-text>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-row>
+              <v-row cols="12" class="fill-space">
+                <v-select :rules="deviceRules" v-if="showSelector" label="Select" :items="devices" item-title="name" return-object
+                  v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
+              </v-row>
+            </v-form>
             <v-row cols="12" class="plus-btn">
               <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" flat />
             </v-row>
           </v-col>
         </v-container>
-        <small class="required">* indica campo requerido</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <CloseAndSaveBtns @closeDialog="closeDialog()" @handleSave="handleSave" />
+        <CloseAndSaveBtns @closeDialog="closeDialog()" @handleSave="validateForm($refs.newRoutineForm)" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -88,6 +86,14 @@ const showSelector = ref(true)
 const opened = ref([0])
 const devicesState = ref([])
 
+const newRoutineForm = ref(null)
+
+const nameRules = [(v) => !!v || 'El nombre es requerido',
+(v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
+(v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres']
+
+const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
+
 function toggleButtonState(device) {
   if (device.state.status === 'off') {
     device.state.status = 'on'
@@ -96,8 +102,15 @@ function toggleButtonState(device) {
   }
 }
 
-function addAction(action) {
+async function validateForm(form) {
+  const result = await form.validate()
+  if (result.valid) {
+    handleSave()
+  }
+}
 
+
+function addAction(action) {
   const { device, actionName } = action
   if (actionName === "turnOn" || actionName === "turnOff") {
     actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
@@ -109,7 +122,7 @@ function addAction(action) {
 }
 
 function addDeviceState(deviceState) {
-  devicesState.value = devicesState.value.filter(d => d.id !== deviceState.id)
+  devicesState.value = devicesState.value.filter(d => !d || d.id !== deviceState.id)
   devicesState.value.push(deviceState)
 }
 

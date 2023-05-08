@@ -7,7 +7,7 @@
         return-object 
         v-model="selectedDevice" 
         variant="outlined" 
-        hide-details auto hide-selected>
+        hide-details="auto" auto hide-selected>
             <template v-slot:selection="{item}"> 
                 <v-row no-gutters align="center">
                     <p class="text-h6 ml-5">{{ item.value.name }}</p>
