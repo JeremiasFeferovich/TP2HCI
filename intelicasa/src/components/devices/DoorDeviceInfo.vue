@@ -28,6 +28,14 @@ const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
     { name: 'Trapear', value: 'mop', img: mopMode }])
 
+
+const deviceState = ref({
+    id: props.device.id,
+    name: props.device.name,
+    category: props.device.category,
+    state: JSON.parse(JSON.stringify(props.device.state))
+})
+
 const props = defineProps({
     device: Object,
     disabled: Boolean,
@@ -75,7 +83,13 @@ const lockText = computed(() => {
     }
 })
 
-const emit = defineEmits(['actionSet']);
+const emit = defineEmits(['actionSet', 'deviceUpdate']);
+
+onMounted(() => {
+    emit('deviceUpdate', deviceState.value)
+    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open" })
+    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock" })
+})
 
 async function setDoorState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open" }
@@ -89,12 +103,12 @@ async function setDoorState() {
     }
 }
 
-async function setLockState(){
+async function setLockState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock" }
     emit('actionSet', action)
-    if(!props.returnAction){
+    if (!props.returnAction) {
         loading.value = true
-        if(await deviceStore.triggerEvent(action)){
+        if (await deviceStore.triggerEvent(action)) {
             props.device.state.lock = props.device.state.lock === "locked" ? "unlocked" : "locked";
         }
         loading.value = false

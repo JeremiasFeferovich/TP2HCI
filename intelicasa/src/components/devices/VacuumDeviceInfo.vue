@@ -45,6 +45,15 @@ const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
     { name: 'Trapear', value: 'mop', img: mopMode }])
 
+
+const deviceState = ref({
+    id: props.device.id,
+    name: props.device.name,
+    category: props.device.category,
+    state: JSON.parse(JSON.stringify(props.device.state))
+})
+
+
 const props = defineProps({
     device: Object,
     disabled: Boolean,
@@ -101,11 +110,24 @@ const status = computed(() => {
 
 const location = ref(rooms.value.find(x => x.is = props.device.state.location))
 
-const emit = defineEmits(['actionSet']);
+const emit = defineEmits(['actionSet', 'deviceUpdate']);
+
+onMounted(() => {
+    emit('deviceUpdate', deviceState.value)
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] } })
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'setLocation', params: [newLocation.id] } })
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'start' } })
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'pause' } })
+    emit('actionSet', { device: { device: { id: props.device.id }, actionName: 'dock' } })
+
+})
+
+
 
 async function setMode(newMode) {
     const action = { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState.value)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -118,6 +140,7 @@ async function setMode(newMode) {
 async function setLocation(newLocation) {
     const action = { device: { id: props.device.id }, actionName: 'setLocation', params: [newLocation.id] }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState.value)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -131,6 +154,7 @@ async function setLocation(newLocation) {
 async function startCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'start' }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState.value)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -142,6 +166,7 @@ async function startCleaning() {
 async function pauseCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'pause' }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState.value)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -153,6 +178,7 @@ async function pauseCleaning() {
 async function dock() {
     const action = { device: { id: props.device.id }, actionName: 'dock' }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState.value)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
