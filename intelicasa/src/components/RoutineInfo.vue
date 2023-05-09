@@ -72,7 +72,11 @@ function deleteRoutine() {
 }
 
 function deleteDevice(device) {
-  routine.devices = routine.devices.filter(d => d.name !== device.name)
+  routine.meta.devicesState = routine.meta.devicesState.filter(d => d.id !== device.id)
+  routine.actions = routine.actions.filter(action => action.device.id !== device.id)
+  if (routine.meta.devicesState.length === 0) {
+    emit('delete-routine')
+  }
 }
 
 function addAction(action) {

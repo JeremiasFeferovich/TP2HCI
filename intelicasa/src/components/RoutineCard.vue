@@ -16,7 +16,7 @@
             </v-col>
         </v-row>
     </v-card>
-    <v-dialog v-model="openDialog" width="50%">
+    <v-dialog v-model="openDialog" width="40%">
         <RoutineInfo :routine="routine" :allDevices="allDevices" @delete-routine="removeRoutine" />
     </v-dialog>
 </template>

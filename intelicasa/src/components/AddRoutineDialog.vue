@@ -20,15 +20,14 @@
                     <v-expansion-panel-title>
                       <template v-slot:default="{ expanded }">
                         <v-row no-gutters>
-                          <v-col cols="4" class="d-flex justify-start">
+                          <v-col cols="3">
+                            <v-img :src="device.meta.category.img" alt="categoryImg" contain height="40px" width="40px" />
+                          </v-col>
+                          <v-col cols="6" class="d-flex justify-start text-h5">
                             {{ device.name }}
                           </v-col>
-                          <v-col cols="8" class="text-grey">
-                            <v-fade-transition leave-absolute>
-                              <span v-if="expanded" key="0">
-                                Configure el dispositivo
-                              </span>
-                            </v-fade-transition>
+                          <v-col cols="3" class="d-flex justify-end pr-5">
+                            <v-icon end icon="mdi-delete" @click.stop="deleteDevice(device)" />
                           </v-col>
                         </v-row>
                       </template>
@@ -94,6 +93,7 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _']
 
 
+
 const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
 
 function toggleButtonState(device) {
@@ -103,6 +103,12 @@ function toggleButtonState(device) {
     device.state.status = 'off'
   }
 }
+
+function deleteDevice(device) {
+  selectedDevices.value = selectedDevices.value.filter(d => d.id !== device.id)
+  actions.value = actions.value.filter(action => action.device.id !== device.id)
+}
+
 
 async function validateForm(form) {
   const result = await form.validate()
