@@ -95,9 +95,7 @@ const emit = defineEmits(['closeDialog'])
 function closeDialog() {
     emit('closeDialog')
 }
-function closeDialog() {
-    emit('closeDialog')
-}
+
 </script>
   
 <style scoped>
