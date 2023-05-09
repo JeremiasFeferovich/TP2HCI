@@ -1,12 +1,9 @@
 <template>
-    <TitleComponent title="Habitaciones"/>
-    <v-sheet class="viewSheet" color="secondary" >        
-        <RoomsList v-if="!loading" 
-            :rooms="roomStore.rooms"
-            :devices="deviceStore.devices"
-        /> 
+    <TitleComponent title="Habitaciones" />
+    <v-sheet class="viewSheet" color="secondary">
+        <RoomsList v-if="!loading" :rooms="roomStore.rooms" :devices="deviceStore.devices" />
     </v-sheet>
-    <RoomDialog v-if="!loading" :devices="deviceStore.devices"/>
+    <RoomDialog v-if="!loading" :devices="deviceStore.devices" />
 </template>
 
 
@@ -26,7 +23,6 @@ onMounted(async () => {
     loading.value = true;
     await roomStore.fetchRooms();
     await deviceStore.fetchDevices();
-    console.log(roomStore.rooms)
     loading.value = false;
 })
 

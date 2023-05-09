@@ -137,7 +137,6 @@ function saveRoom() {
     devices: selectedDevices.value,
     type: roomType.value,
   }
-  console.log(newRoom)
   roomStore.addRoom(newRoom);
   dialog.value = false;
   // Reset form values;
@@ -149,13 +148,11 @@ function saveRoom() {
 }
 
 function addSelectedDevice(selectedDevice) {
-  console.log("selected device is: " + selectedDevice.value)
   if (selectedDevice.value !== '') {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
     selectedDevices.value.push(selectedDevice)
     showSelector.value = false
   }
-  console.log("selected devices: " + selectedDevices)
 }
 
 function removeSelectedDevice(selectedDevice) {
@@ -164,7 +161,6 @@ function removeSelectedDevice(selectedDevice) {
     selectedDevices.value.pop(selectedDevice)
     showSelector.value = false
   }
-  console.log("selected devices: " + selectedDevices)
 }
 </script>
 

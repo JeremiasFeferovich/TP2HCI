@@ -19,15 +19,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
-import mopMode from '@/assets/vacuum/mopMode.png';
-import vacuumMode from '@/assets/vacuum/vacuumMode.png';
-
 import livingRoom from '@/assets/living.svg';
-
-const modeItems = ref([
-    { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
-    { name: 'Trapear', value: 'mop', img: mopMode }])
-
 
 const deviceState = {
     id: props.device.id,
@@ -47,11 +39,6 @@ const props = defineProps({
 const deviceStore = useDeviceStore()
 
 const loading = ref(false)
-
-const mode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
-const rooms = ref([
-    { name: 'Living', id: "dc21c4175eec5558", img: livingRoom },
-])
 
 const doorImg = computed(() => {
     if (props.device.state.status === "closed") {
@@ -96,6 +83,7 @@ onMounted(() => {
 async function setDoorState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
@@ -108,6 +96,7 @@ async function setDoorState() {
 async function setLockState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] }
     emit('actionSet', action)
+    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {

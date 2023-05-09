@@ -91,7 +91,11 @@ function addSelectedDevice(selectedDevice) {
 }
 
 const emit = defineEmits(['closeDialog'])
+const emit = defineEmits(['closeDialog'])
 
+function closeDialog() {
+    emit('closeDialog')
+}
 function closeDialog() {
     emit('closeDialog')
 }

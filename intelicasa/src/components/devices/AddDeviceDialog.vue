@@ -68,12 +68,10 @@ async function validateForm(form) {
 }
 
 async function handleSave() {
-    console.log(selectedCategory.value)
     const device = {
         name: deviceName.value,
         category: selectedCategory.value
     }
-    console.log(device)
     deviceStore.addDevice(device);
     selectedCategory.value = null
     deviceName.value = ''
