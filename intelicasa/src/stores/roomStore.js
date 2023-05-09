@@ -1,8 +1,11 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { RoomApi } from "@/api/room";
+import { useDeviceStore } from "./deviceStore";
 
 export const useRoomStore = defineStore('room', () => {
+
+    const deviceStore = useDeviceStore()
     // State - ref
     const rooms = ref([]);
 
@@ -26,16 +29,19 @@ export const useRoomStore = defineStore('room', () => {
     async function deleteRoom(room){
         const deletedRoom = await RoomApi.remove(room.id)
         fetchRooms()
+        deviceStore.fetchDevices()
     }
 
     async function deleteDeviceFromRoom(device) {
         const deletedDevice = await RoomApi.removeDevice(device.id)
         fetchRooms()
+        deviceStore.fetchDevices()
     }
 
     async function addDeviceToRoom(room, device) {
         const addedDevice = await RoomApi.addDevice(room.id, device)
         fetchRooms()
+        deviceStore.fetchDevices()
     }
 
 

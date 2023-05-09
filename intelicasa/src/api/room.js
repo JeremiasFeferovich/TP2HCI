@@ -1,6 +1,5 @@
 import { Api } from "./api.js"
 
-
 class RoomApi{
 
     static getUrl(slug){ 
@@ -48,6 +47,7 @@ class RoomApi{
 
     static async addDevice(id, device){
         return await Api.post(`${RoomApi.getUrl(id)}/devices/${device.id}`)
+
     }
 
 }

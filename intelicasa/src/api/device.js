@@ -51,37 +51,25 @@ class DeviceApi {
 
     static async getAll() {
         const devices = await Api.get(DeviceApi.getUrl())
-        // return devices.map(device => {
-        //     const category = this.categories.find(category => category.value === device.type.name);
-        //     return {
-        //         ...device,
-        //         category: category,
-        //         favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
-        //     };
-        // });
         return devices
     }
 
     static async getDevice(id) {
         const device = await Api.get(DeviceApi.getUrl(id))
         const category = this.categories.find(category => category.value === device.type.name);
-        // return {
-        //     ...device,
-        //     category: category,
-        //     favorite: device.meta && device.meta.favorite ? device.meta.favorite : false
-        // };
         return device
     }
+
+    static async updateDevice(device) {
+        const updatedDevice = await Api.put(DeviceApi.getUrl(device.id), {name: device.name, meta: { ...device.meta}})
+        return updatedDevice
+    }
+
 
     static async triggerEvent(event) {
         return await Api.put(`${Api.baseUrl}/devices/${event.device.id}/${event.actionName}`, event.params)
     }
 
-    /*
-        static async triggerEvent(deviceId, event, data) {
-            return await Api.put(`${Api.baseUrl}/devices/${deviceId}/${event}`,data)
-        }
-    */
     static async toggleFavorite(device) {
         return await Api.put(`${Api.baseUrl}/devices/${device.id}`, { name: device.name, meta: { ...device.meta, favorite: !device.meta.favorite } })
     }

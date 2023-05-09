@@ -82,13 +82,18 @@ export const useDeviceStore = defineStore('device', () => {
         fetchDevices()
     }
 
+    async function updateDevice(device) {
+        const updatedDevice = await DeviceApi.updateDevice(device);
+        fetchDevices()
+    }
+
     async function triggerEvent(event) {
         return await DeviceApi.triggerEvent(event);
     }
 
     return {
         devices, categories,
-        fetchDevices, addDevice, fetchDevice, deleteDevice, fetchCategories, triggerEvent
+        fetchDevices, addDevice, fetchDevice, updateDevice, deleteDevice, fetchCategories, triggerEvent
     }
 
 })

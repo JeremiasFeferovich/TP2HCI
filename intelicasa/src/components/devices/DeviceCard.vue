@@ -16,7 +16,7 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <v-dialog v-model="openDialog" width="40%">
+        <v-dialog v-model="openDialog" width="50%">
             <DeviceDialog :device="props.device" :loadingState="loadingState" @changeState="toggleButtonState"
                 :categoryImg="categoryImg" @delete="deleteDevice" />
         </v-dialog>
@@ -113,8 +113,6 @@ const batteryImg = computed(() => {
     justify-content: center;
     align-items: center;
 }
-
-
 
 .categoryImg {
     height: 75px;

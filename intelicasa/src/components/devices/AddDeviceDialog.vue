@@ -13,7 +13,7 @@
                 <v-card-text>
                     <v-container class="fill-space">
                         <v-row >
-                            <v-text-field :rules="nameRules" label="Device name*" v-model="deviceName" aria-required />
+                            <v-text-field :rules="nameRules" label="Device name*" v-model="deviceName" />
                         </v-row>
                         <v-row>
                             <ImageSelect :rules="categoryRules" :items="categories"

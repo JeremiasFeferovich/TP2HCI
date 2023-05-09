@@ -13,7 +13,7 @@
             <div class="pa-3 ml-3 subtitle-text" color="red">Dispositivos conectados:</div>
         </v-row>
         <v-container fluid>
-            <v-row v-for="(device, index) in room.devices" :key="index" align="center">
+            <v-row v-for="(device, index) in devicesShown" :key="index" align="center">
                 <v-col cols="12" class="device-card ml-4">
                     <DeviceCard :device="device" />
                 </v-col>
@@ -22,11 +22,11 @@
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-col>
-                <v-divider/>
+                <v-divider />
             </v-row>
             <v-row cols="12" class="fill-space">
-              <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices" item-title="name" return-object v-model="selectedDevice"
-                @update:modelValue="addSelectedDevice" />
+                <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices" item-title="name"
+                    return-object v-model="selectedDevice" @update:model-value="addSelectedDevice(selectedDevice)" />
             </v-row>
             <v-row>
                 <v-col cols="12" class="text-center">
@@ -34,56 +34,67 @@
                 </v-col>
             </v-row>
         </v-container>
-
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn size="large" color="blue-darken-1" variant="flat"  @click="closeDialog">
-            Guardar
-          </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn size="large" color="blue-darken-1" variant="flat" @click="closeDialog">
+                Guardar
+            </v-btn>
         </v-card-actions>
 
     </v-card>
 </template>
   
 <script setup>
-    import DeviceCard from '@/components/devices/DeviceCard.vue';
-    import { useRoomStore } from '@/stores/roomStore';
-    import { ref, computed } from 'vue';
-    import CloseAndSaveBtns from '@/components/CloseAndSaveBtns.vue';
+import DeviceCard from '@/components/devices/DeviceCard.vue';
+import { useRoomStore } from '@/stores/roomStore';
+import { ref, computed } from 'vue';
 
-    const roomsStore = useRoomStore();
+const roomsStore = useRoomStore();
 
-    const props = defineProps({
-        room: Object,
-        devices: Array
-    });
-    /* filter the devices that they dont have the room attribute*/
-    const availableDevices = computed(() => {
-        return props.devices.filter(device => !device.room);
-    });
+const props = defineProps({
+    room: Object,
+    devices: Array
+});
 
-    const selectedDevice = ref('');
-    const showSelector = ref(false);
+const devicesShown = computed(() => {
+    return props.room.devices;
+});
 
-    function deleteRoom() {
-        roomsStore.deleteRoom(props.room);
+/* filter the devices that they dont have the room attribute*/
+const availableDevices = computed(() => {
+    return props.devices.filter(device => !device.room || device.room.id !== props.room.id);
+});
+
+const selectedDevice = ref(null)
+const showSelector = ref(false)
+
+function deleteRoom() {
+    roomsStore.deleteRoom(props.room)
+}
+
+function removeDevice(device) {
+    roomsStore.deleteDeviceFromRoom(device)
+}
+/*
+function handleSave() {
+    if (selectedDevice.value) {
+        addSelectedDevice(selectedDevice.value)
     }
+    closeDialog();
+}*/
 
-    function removeDevice(device) {
-        roomsStore.deleteDeviceFromRoom(device);
-    }
+function addSelectedDevice(selectedDevice) {
+    console.log(selectedDevice)
+    roomsStore.addDeviceToRoom(props.room, selectedDevice)
+    selectedDevice.value = null
+    showSelector.value = false
+}
 
-    function addSelectedDevice(selectedDevice) {
-        console.log(selectedDevice);
-        roomsStore.addDeviceToRoom(props.room, selectedDevice);
-        showSelector.value = false;
-    }
+const emit = defineEmits(['closeDialog'])
 
-    const emit = defineEmits(['closeDialog'])
-
-    function closeDialog() {
-        emit('closeDialog')
-    }
+function closeDialog() {
+    emit('closeDialog')
+}
 </script>
   
 <style scoped>

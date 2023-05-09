@@ -118,7 +118,9 @@ const newRoomForm = ref(null)
 
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
-(v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres']
+(v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
+(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _']
+
 const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
 const roomTypeRules = [(v) => !!v || 'El tipo de habitación es requerido']
 
