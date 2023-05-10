@@ -120,7 +120,7 @@ export const useRoutineStore = defineStore('routine', () => {
         fetchRoutines()
     }
     async function deleteRoutine(routine) {
-        const deletedRoutine = await RoutineApi.remove(routine)
+        const deletedRoutine = await RoutineApi.delete(routine)
         fetchRoutines()
     }
 

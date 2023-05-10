@@ -25,11 +25,11 @@ class RoomApi{
         return updatedRoom
     }
 
-    static async remove(id){
+    static async delete(id){
         return await Api.delete(RoomApi.getUrl(id))
     }
 
-    static async removeDevice(id) {
+    static async deleteDevice(id) {
         return await Api.delete(`${RoomApi.getUrl()}/devices/${id}`)
     }
 

@@ -1,14 +1,31 @@
 <template>
   <v-card class="routine-card-info" flat>
     <v-row>
-      <v-card-title>
-        <p class="text-h5">{{ routine.name }}</p>
-      </v-card-title>
+      <v-btn class="square-btn" v-model="routine.meta.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
+        size="large" variant="text" :loading="loadingFav" rounded="xl">
+        <img :src="favoriteBtnImg" alt="fav button" />
+      </v-btn>
+      <v-card-title v-if="!editingName" class="text-h4">{{ routine.name }}</v-card-title>
+      <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoutineForm">
+        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
+          @blur="validateForm($refs.editRoutineForm)" />
+        <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoutineForm)">
+          <v-icon icon="mdi-check" size="20px" />
+        </v-btn>
+      </v-form>
+      <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
+        <v-icon icon="mdi-pencil" size="20px" />
+      </v-btn>
       <v-col class="mr-1" align="end">
-        <v-icon end icon="mdi-delete" @click="deleteRoutine" />
+        <v-icon end icon="mdi-delete" @click="openDialog = true" />
       </v-col>
     </v-row>
+
     <v-container>
+      <v-row>
+        <v-divider />
+        <div class="pa-4 subtitle-text">Dispositivos conectados:</div>
+      </v-row>
       <v-col justify="center" align="center">
         <v-row cols="12" class="fill-space">
           <v-expansion-panels variant="inset">
@@ -35,25 +52,40 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
+
         </v-row>
+      </v-col>
+    </v-container>
+    <v-row class="mt-1 mb-1">
+      <v-divider />
+    </v-row>
+    <v-container>
+      <v-col>
         <v-row cols="12" class="fill-space">
           <v-select v-if="showSelector" label="Select"
             :items="allDevices.filter(device => !routineStore.routinesDevicesStatus[routine.id].find(deviceState => deviceState.id === device.id))"
             item-title="name" return-object v-model="selectedDevice" @update:modelValue="addDevice" />
         </v-row>
         <v-row cols="12" class="plus-btn">
-          <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" flat />
+          <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" />
         </v-row>
       </v-col>
     </v-container>
   </v-card>
+  <v-dialog v-model="openDialog" width="auto">
+    <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta rutina?" @cancelAction="openDialog = false"
+      @confirmAction="deleteRoutine" />
+  </v-dialog>
 </template>
   
 <script setup>
 import DevicesOptions from './devices/DevicesOptions.vue';
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
-
+import ConfirmationDialog from './ConfirmationDialog.vue';
+import favoriteYes from '@/assets/favoriteYes.svg'
+import favoriteNo from '@/assets/favoriteNo.svg'
+import { RoutineApi } from '@/api/routine';
 const routineStore = useRoutineStore();
 
 const { routine, allDevices } = defineProps({
@@ -64,6 +96,17 @@ const { routine, allDevices } = defineProps({
 const selectedDevice = ref('');
 const emit = defineEmits(['delete-routine']);
 const showSelector = ref(false);
+const openDialog = ref(false);
+const editingName = ref(false);
+const editRoutineForm = ref(null);
+const loadingFav = ref(false);
+const updatedName = ref(routine.name);
+const nameRules = [(v) => !!v || 'El nombre es requerido',
+(v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
+(v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
+(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
+(v) => (!routineStore.routines.find(routine => routine.name === v) || routine.name === v) || 'Ya existe una rutina con ese nombre']
+
 
 function deleteRoutine() {
   emit('delete-routine');
@@ -74,6 +117,18 @@ function deleteDevice(device) {
   if (routine.actions.length === 0) {
     emit('delete-routine')
   }
+}
+
+const favoriteBtnImg = computed(() => {
+  return routine.meta.favorite ? favoriteYes : favoriteNo;
+})
+
+async function toggleButtonFavorite() {
+  loadingFav.value = true
+  if (await RoutineApi.toggleFavorite(routine)) {
+    routine.meta.favorite = !routine.meta.favorite
+  }
+  loadingFav.value = false
 }
 
 function addAction(newAction) {
@@ -123,6 +178,20 @@ const addDevice = () => {
 function handleUpdate() {
   routineStore.updateRoutine(routine)
 }
+function editName() {
+  const updatedRoutine = { ...routine, name: updatedName.value }
+  routine.name = updatedRoutine.name
+  console.log(updatedRoutine)
+  routineStore.updateRoutine(updatedRoutine);
+  editingName.value = false
+}
+
+async function validateForm(form) {
+  const result = await form.validate()
+  if (result.valid) {
+    editName()
+  }
+}
 
 </script>
   
@@ -142,6 +211,14 @@ function handleUpdate() {
 .device-card {
   max-width: 70%;
   margin: auto;
+}
+
+.subtitle-text {
+  color: rgb(121, 121, 121);
+}
+
+.editName {
+  min-width: 200px;
 }
 
 .subtitle-text {

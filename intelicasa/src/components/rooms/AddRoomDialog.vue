@@ -45,7 +45,7 @@
                           <v-list-item-title class="text-h5">{{ device.name }}</v-list-item-title>
                         </v-col>
                         <v-col cols="2" class="text-end">
-                          <v-btn icon size="small" color="error" @click="removeSelectedDevice(device)">
+                          <v-btn icon size="small" color="error" @click="deleteSelectedDevice(device)">
                             <v-icon>mdi-close</v-icon>
                           </v-btn>
                         </v-col>
@@ -170,11 +170,11 @@ function addSelectedDevice(selectedDevice) {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
     selectedDevices.value.push(selectedDevice)
     showSelector.value = false
-    /* remove selected device from availabledevicesnames*/
+    /* delete selected device from availabledevicesnames*/
   }
 }
 
-function removeSelectedDevice(selectedDevice) {
+function deleteSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
     /* remoce selected device from selected devices*/

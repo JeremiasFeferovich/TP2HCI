@@ -1,41 +1,56 @@
 import { Api } from "./api.js"
 
 
-class RoutineApi{
+class RoutineApi {
 
-    static getUrl(slug){ 
-        return `${Api.baseUrl}/routines${slug ? `/${slug}` : ''}`
-    }
+  static getUrl(slug) {
+    return `${Api.baseUrl}/routines${slug ? `/${slug}` : ''}`
+  }
 
-    static async add(routine){
-        routine.actions.forEach(action => {
-            action.device = { id: action.device.id}
-        });
-        return await Api.post(RoutineApi.getUrl(), routine)
-    }
+  static async add(routine) {
+    routine.actions.forEach(action => {
+      action.device = { id: action.device.id }
+    });
+    return await Api.post(RoutineApi.getUrl(), routine)
+  }
 
-    static async update(routine){
-        routine.actions.forEach(action => {
-            action.device = { id: action.device.id}
-        });
-        return await Api.put(RoutineApi.getUrl(routine.id), routine)
-    }
+  static async update(routine) {
+    routine.actions.forEach(action => {
+      action.device = { id: action.device.id }
+    });
+    return await Api.put(RoutineApi.getUrl(routine.id), routine)
+  }
 
-    static async remove(routine){
-        return await Api.delete(RoutineApi.getUrl(routine.id))
-    }
+  static async delete(routine) {
+    return await Api.delete(RoutineApi.getUrl(routine.id))
+  }
 
-    static async execute(routine){
-        return await Api.put(`${RoutineApi.getUrl(routine.id)}/execute`, routine)
-    }
+  static async execute(routine) {
+    return await Api.put(`${RoutineApi.getUrl(routine.id)}/execute`, routine)
+  }
 
-    static async get(id){
-        return await Api.get(RoutineApi.getUrl(id))
-    }
+  static async get(id) {
+    return await Api.get(RoutineApi.getUrl(id))
+  }
 
-    static async getAll(){
-        return await Api.get(RoutineApi.getUrl())
-    }
+  static async getAll() {
+    return await Api.get(RoutineApi.getUrl())
+  }
+
+  static async toggleFavorite(routine) {
+    routine.actions.forEach(action => {
+      action.device = { id: action.device.id }
+    });
+    return await Api.put(`${Api.baseUrl}/routines/${routine.id}`,
+      {
+        name: routine.name,
+        actions: routine.actions,
+        meta: {
+          devicesState: routine.meta.devicesState,
+          favorite: !routine.meta.favorite
+        }
+      })
+  }
 
 }
 

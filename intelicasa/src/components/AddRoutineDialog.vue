@@ -14,6 +14,10 @@
               <v-row cols="12" class="fill-space">
                 <v-text-field :rules="nameRules" label="Nombre de la rutina*" v-model="routineName" />
               </v-row>
+              <v-row justify="center" class="mb-2">
+                <div class="pa-2 subtitle-text">Dispositivos conectados:</div>
+                <v-divider />
+              </v-row>
               <v-row cols="12" class="fill-space">
                 <v-expansion-panels variant="inset" :model-value="opened">
                   <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index">
@@ -35,7 +39,8 @@
                     <v-expansion-panel-text>
                       <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
                         :loadingState="false" @changeState="toggleButtonState(device)"
-                        @actionSet="(action) => addAction(action)"/>
+                        @actionSet="(action) => addAction(action)"
+                        @deviceUpdate="deviceState => addDeviceState(deviceState)" />
                     </v-expansion-panel-text>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -45,8 +50,8 @@
                   return-object v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
               </v-row>
             </v-form>
-            <v-row cols="12" class="plus-btn">
-              <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" flat />
+            <v-row cols="12" class="plus-btn mt-6">
+              <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" />
             </v-row>
           </v-col>
         </v-container>
@@ -82,6 +87,7 @@ const selectedDevice = ref('')
 const selectedDevices = ref([])
 const showSelector = ref(true)
 const opened = ref([0])
+const devicesState = ref([])
 
 const newRoutineForm = ref(null)
 
@@ -126,6 +132,12 @@ function addAction(action) {
   actions.value.push(action)
 }
 
+function addDeviceState(deviceState) {
+  devicesState.value = devicesState.value.filter(d => !d || d.id !== deviceState.id)
+  devicesState.value.push(deviceState)
+}
+
+
 function closeDialog() {
   dialog.value = false
   selectedDevices.value = []
@@ -136,13 +148,17 @@ function handleSave() {
   const routine = {
     name: routineName.value,
     actions: actions.value,
-    meta: {}
+    meta: {
+      devicesState: devicesState.value,
+      favorite: false
+    }
   }
   emit('save-routine', routine)
   selectedDevices.value = []
   dialog.value = false
   routineName.value = ''
   actions.value = []
+  devicesState.value = []
   selectedDevice.value = ''
 }
 
@@ -180,5 +196,9 @@ const addSelectedDevice = () => {
 
 .required {
   color: red;
+}
+
+.subtitle-text {
+  color: rgb(121, 121, 121);
 }
 </style>

@@ -4,21 +4,22 @@
             <v-col class="ml-10" cols="1">
                 <img :src="typeImg" alt="typeImg" style="max-height: 100%; max-width: 100%; padding: 5px;" />
             </v-col>
-            <v-col >
+            <v-col>
                 <v-card-title>
                     <p class="text-h4">{{ room.name }}</p>
                 </v-card-title>
             </v-col>
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
-                    <p class="text-data text-h6">{{ room.devices? room.devices.length : "No hay " }} dispositivos conectados</p>
+                    <p class="text-data text-h6">{{ room.devices ? room.devices.length : "No hay " }} dispositivos conectados
+                    </p>
                     <p class="text-data text-h6">{{ onDevices.length }} dispositivos encendidos</p>
                 </v-card-text>
             </v-col>
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room" :devices="devices" @close-dialog="openDialog=false"/>
+        <RoomInfo :room="room" :devices="devices" @close-dialog="openDialog = false" />
     </v-dialog>
 </template>
 
@@ -61,7 +62,7 @@ const typeImg = computed(() => {
     }
 });
 
-const emit = defineEmits(['remove-room']);
+const emit = defineEmits(['delete-room']);
 
 </script>
 
