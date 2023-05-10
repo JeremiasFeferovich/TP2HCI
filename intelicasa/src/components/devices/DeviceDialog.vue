@@ -12,8 +12,8 @@
                     </v-btn>
                     <v-card-title v-if="!editingName" class="text-h5">{{ device.name }}</v-card-title>
                     <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editDeviceForm">
-                        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
-                            @blur="validateForm($refs.editDeviceForm)" />
+                        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined"
+                            hide-details="auto" @blur="validateForm($refs.editDeviceForm)" />
                         <v-btn class="square-btn" variant="text" @click="validateForm($refs.editDeviceForm)">
                             <v-icon icon="mdi-check" size="20px" />
                         </v-btn>
@@ -24,7 +24,7 @@
                 </v-row>
             </v-col>
             <v-col cols="2" justify="center" align="center">
-                <v-btn class="square-btn" variant="text" @click="deleteDevice">
+                <v-btn class="square-btn" variant="text" @click="openDialog = true">
                     <v-icon icon="mdi-delete" size="30px" />
                 </v-btn>
             </v-col>
@@ -34,6 +34,10 @@
             <DevicesOptions :disabled="disabled" :device="device" :loadingState="loadingState"
                 @changeState="toggleButtonState" />
         </v-card-text>
+        <v-dialog v-model="openDialog" width="auto">
+            <ConfirmationDialog message="¿Estás seguro que deseas eliminar este dispositivo?"
+                @cancelAction="openDialog = false" @confirmAction="deleteDevice" />
+        </v-dialog>
     </v-card>
 </template>
 
@@ -46,6 +50,7 @@ import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import { DeviceApi } from "@/api/device";
 import { useDeviceStore } from '@/stores/deviceStore';
 import { onMounted } from 'vue';
+import ConfirmationDialog from '../ConfirmationDialog.vue';
 
 const deviceStore = useDeviceStore();
 
@@ -60,7 +65,7 @@ const disabled = computed(() => props.device.state.status === 'off' ? true : fal
 const editingName = ref(false);
 const updatedName = ref(props.device.name);
 const editDeviceForm = ref(null)
-
+const openDialog = ref(false)
 
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
@@ -132,7 +137,7 @@ function toggleButtonState() {
     padding: 0;
 }
 
-.editName{
+.editName {
     min-width: 200px;
 }
 </style>
