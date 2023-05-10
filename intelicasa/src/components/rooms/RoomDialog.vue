@@ -64,7 +64,7 @@
                 <v-row cols="12" class="fill-space">
                   <DeviceSelect v-if="showSelector"
                     :rules="deviceRules"  
-                    :devices="availableDevices"
+                    :devices="availableDevices.filter((device) => !selectedDevices.includes(device))"
                     :label="firstDevice ? 'Dispositivo*' : 'Dispositivo'"
                     @update:selectedDevice="(item) => addSelectedDevice(item)" />
                 </v-row>
@@ -109,6 +109,7 @@ const props = defineProps({
 const availableDevices = computed(() => {
     return props.devices.filter(device => !device.room);
 });
+
 
 const showSelector = ref(true)
 const firstDevice = ref(true)
@@ -155,12 +156,13 @@ function saveRoom() {
 
 function closeDialog() {
   dialog.value = false;
+  showSelector.value = true
   roomName.value = '';
   roomType.value = '';
   deviceInputs.value = [null];
   attemptSave.value = false
+  
   selectedDevices.value = []
-
 }
 
 function addSelectedDevice(selectedDevice) {
@@ -168,8 +170,7 @@ function addSelectedDevice(selectedDevice) {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
     selectedDevices.value.push(selectedDevice)
     showSelector.value = false
-    /* remove selected device from availabledevices*/
-    availableDevices.value.splice(availableDevices.value.indexOf(selectedDevice), 1)
+    /* remove selected device from availabledevicesnames*/
   }
 }
 
@@ -180,7 +181,6 @@ function removeSelectedDevice(selectedDevice) {
     selectedDevices.value.splice(selectedDevices.value.indexOf(selectedDevice), 1)
     showSelector.value = false
     /* add selected device to available devices*/
-    availableDevices.value.push(selectedDevice)
   }
 }
 </script>

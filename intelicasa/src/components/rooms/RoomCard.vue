@@ -12,7 +12,7 @@
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
                     <p class="text-data text-h6">{{ room.devices? room.devices.length : "No hay " }} dispositivos conectados</p>
-                    <p class="text-data text-h6">3 dispositivos encendidos (to do)</p>
+                    <p class="text-data text-h6">{{ onDevices.length }} dispositivos encendidos</p>
                 </v-card-text>
             </v-col>
         </v-row>
@@ -38,6 +38,10 @@ const props = defineProps({
     room: Object,
     devices: Array
 })
+
+const onDevices = computed(() => {
+    return props.devices.filter(device => device.state.status === 'on');
+});
 
 
 const typeImg = computed(() => {
