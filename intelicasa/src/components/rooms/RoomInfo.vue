@@ -45,7 +45,7 @@
     </v-container>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn size="large" color="blue-darken-1" variant="flat" @click="closeDialog">
+      <v-btn size="large" color="blue-darken-1" variant="flat" @click="handleSave">
         Guardar
       </v-btn>
     </v-card-actions>
@@ -69,17 +69,22 @@ const props = defineProps({
   room: Object,
   devices: Array
 });
-
+/*
 const devicesShown = computed(() => {
+  console.log(props.room.devices)
   return props.room.devices;
-});
+});*/
 
 const openDialog = ref(false);
 /* filter the devices that they dont have the room attribute*/
 const availableDevices = computed(() => {
-  return props.devices.filter(device => !device.room || device.room.id !== props.room.id);
+  return props.devices.filter(device => !device.room && !newDevices.value.includes(device));
 });
 
+const devicesShown = ref(roomsStore.rooms.find(room => room.id === props.room.id).devices)
+const newDevices = ref([])
+
+const deletedDevices = ref([])
 const selectedDevice = ref(null)
 const showSelector = ref(false)
 const editingName = ref(false);
@@ -108,19 +113,29 @@ function deleteRoom() {
 }
 
 function deleteDevice(device) {
-  roomsStore.deleteDeviceFromRoom(device)
+  let wasNew = false
+  devicesShown.value = devicesShown.value.filter(dev => dev.id !== device.id)
+  if (newDevices.value.includes(device)) {
+    wasNew = true
+  }
+  wasNew ? newDevices.value = newDevices.value.filter(dev => dev.id !== device.id) :   deletedDevices.value = [...deletedDevices.value, device]
 }
-/*
-function handleSave() {
-    if (selectedDevice.value) {
-        addSelectedDevice(selectedDevice.value)
-    }
-    closeDialog();
-}*/
 
-function addSelectedDevice(selectedDevice) {
-  roomsStore.addDeviceToRoom(props.room, selectedDevice)
-  selectedDevice.value = null
+function handleSave() {
+    newDevices.value.forEach(device => {
+      roomsStore.addDeviceToRoom(props.room, device)
+    })  
+    deletedDevices.value.forEach(device => {
+      roomsStore.deleteDeviceFromRoom(device)
+    })
+    closeDialog();
+}
+
+function addSelectedDevice(newDevice) {
+  newDevices.value = [...newDevices.value, newDevice]
+  devicesShown.value = [...devicesShown.value, newDevice]
+//  roomsStore.addDeviceToRoom(props.room, selectedDevice)
+  selectedDevice.value = ''
   showSelector.value = false
 }
 
