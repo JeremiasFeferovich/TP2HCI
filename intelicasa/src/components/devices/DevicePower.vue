@@ -5,7 +5,7 @@
             <p class="text-h6">Estado</p>
         </v-col>
         <v-col cols="6" align="center">
-            <v-btn v-model="isOn" @click="changeState" toggle size="large" variant="text" class="square-btn rounded-circle"
+            <v-btn @click="changeState" toggle size="large" variant="text" class="square-btn rounded-circle"
                 :loading="loadingState">
                 <img :src="powerBtnImg" alt="powerState" />
             </v-btn>
@@ -17,9 +17,7 @@
 
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
-import { computed, ref, onMounted } from 'vue';
-
-const isOn = ref(props.device.state.status)
+import { computed, ref, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     device: Object,
@@ -29,8 +27,8 @@ const props = defineProps({
 
 const emit = defineEmits(['changeState', 'actionSet']);
 
-onMounted(() => {
-    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn', params: [] })
+onBeforeUnmount(() => {
+    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOn' : 'turnOff', params: [] })
 })
 
 function changeState() {

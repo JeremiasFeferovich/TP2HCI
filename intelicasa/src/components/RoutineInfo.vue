@@ -1,6 +1,5 @@
 <template>
-  <v-card class="routine-card-info" flat v-click-outside="handleUpdate">
-
+  <v-card class="routine-card-info" flat>
     <v-row>
       <v-card-title>
         <p class="text-h5">{{ routine.name }}</p>
@@ -12,8 +11,9 @@
     <v-container>
       <v-col justify="center" align="center">
         <v-row cols="12" class="fill-space">
-          <v-expansion-panels variant="inset" :model-value="opened">
-            <v-expansion-panel mandatory v-for="(device, index) in routine.meta.devicesState" :key="index">
+          <v-expansion-panels variant="inset">
+            <v-expansion-panel mandatory v-for="(device, index) in routineStore.routinesDevicesStatus[routine.id]"
+              :key="index">
               <v-expansion-panel-title>
                 <template v-slot:default="{ expanded }">
                   <v-row no-gutters>
@@ -31,16 +31,14 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
-                  :loadingState="false" @changeState="toggleButtonState(device)"
-                  @actionSet="(action) => addAction(action)"
-                  @deviceUpdate="(deviceState) => addDeviceState(deviceState)" />
+                  :loadingState="false" @actionSet="(action) => addAction(action)" />
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-row>
         <v-row cols="12" class="fill-space">
           <v-select v-if="showSelector" label="Select"
-            :items="allDevices.filter(device => !routine.meta.devicesState.find(deviceState => deviceState.id === device.id))"
+            :items="allDevices.filter(device => !routineStore.routinesDevicesStatus[routine.id].find(deviceState => deviceState.id === device.id))"
             item-title="name" return-object v-model="selectedDevice" @update:modelValue="addDevice" />
         </v-row>
         <v-row cols="12" class="plus-btn">
@@ -53,7 +51,7 @@
   
 <script setup>
 import DevicesOptions from './devices/DevicesOptions.vue';
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
 
 const routineStore = useRoutineStore();
@@ -72,48 +70,50 @@ function deleteRoutine() {
 }
 
 function deleteDevice(device) {
-  routine.meta.devicesState = routine.meta.devicesState.filter(d => d.id !== device.id)
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
-  if (routine.meta.devicesState.length === 0) {
+  if (routine.actions.length === 0) {
     emit('delete-routine')
   }
 }
 
-function addAction(action) {
-  const { device, actionName } = action
-  if (actionName === "turnOn" || actionName === "turnOff") {
-    routine.actions = routine.actions.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
-
-  } else {
-    routine.actions = routine.actions.filter(action => action.device.id !== device.id || action.actionName !== actionName)
+function addAction(newAction) {
+  let found = false
+  const deviceIndex = routine.actions.findIndex(action => action.device.id === newAction.device.id)
+  if (deviceIndex !== -1) {
+    routine.actions.forEach(action => {
+      if (action.device.id === newAction.device.id) {
+        if ((action.actionName === "turnOn" || action.actionName === "turnOff") && (newAction.actionName === "turnOn" || newAction.actionName === "turnOff")
+          || (action.actionName === "lock" || action.actionName === "unlock") && (newAction.actionName === "lock" || newAction.actionName === "unlock")
+          || (action.actionName === "open" || action.actionName === "close") && (newAction.actionName === "open" || newAction.actionName === "close")
+          || (action.actionName === "start" || action.actionName === "pause" || action.actionName === "dock") && (newAction.actionName === "start" || newAction.actionName === "pause" || newAction.actionName === "dock")) {
+          action.actionName = newAction.actionName;
+          found = true
+        } else if (action.actionName === newAction.actionName) {
+          action.params = newAction.params;
+          found = true
+        }
+      }
+    })
   }
-  routine.actions.push(action)
-}
-
-function addDeviceState(deviceState) {
-  routine.meta.devicesState = routine.meta.devicesState.map(d => {
-    if (d.id === deviceState.id) {
-      d.state = deviceState.state
+  if (!found || deviceIndex === -1) {
+    routine.actions.push(newAction)
+  }
+  routineStore.routinesDevicesStatus[routine.id].forEach(device => {
+    if (device.id === newAction.device.id) {
+      device.state = { ...device.state, ...routineStore.getStateFromAction(newAction) }
     }
-    return d
   })
 }
 
+onUnmounted(() => {
+  handleUpdate()
+})
 
-function toggleButtonState(device) {
-  routine.meta.devicesState = routine.meta.devicesState.map(d => {
-    if (d.id === device.id) {
-      d.state.status = d.state.status === 'on' ? 'off' : 'on'
-    }
-    return d
-  })
-}
 
 const addDevice = () => {
   if (selectedDevice.value !== '') {
     selectedDevice.value = allDevices.find(device => device.name === selectedDevice.value.name);
-
-    routine.meta.devicesState.push(selectedDevice.value)
+    routineStore.routinesDevicesStatus[routine.id].push(selectedDevice.value)
     selectedDevice.value = ''
     showSelector.value = false
   }
@@ -121,15 +121,7 @@ const addDevice = () => {
 }
 
 function handleUpdate() {
-  const updatedRoutine = {
-    id: routine.id,
-    name: routine.name,
-    actions: routine.actions,
-    meta: {
-      devicesState: routine.meta.devicesState
-    }
-  }
-  routineStore.updateRoutine(updatedRoutine)
+  routineStore.updateRoutine(routine)
 }
 
 </script>

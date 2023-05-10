@@ -8,7 +8,6 @@
                 <div class="image-container">
                     <v-img v-for="(category, index) in categories" :key="category.id" :src="category.img" alt="categoryImg"
                         contain height="40px" width="40px" />
-
                 </div>
             </v-col>
             <v-col cols="2">
@@ -26,9 +25,6 @@
 import { ref, computed } from 'vue';
 import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
-import lightbulb from '@/assets/lightbulb.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
 import RoutineInfo from './RoutineInfo.vue';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useDeviceStore } from '@/stores/deviceStore';
@@ -37,7 +33,16 @@ const routineStore = useRoutineStore();
 const deviceStore = useDeviceStore();
 
 const categories = computed(() => {
-    return prop.routine.meta.devicesState.map(deviceState => deviceState.meta.category)
+    const categoryIds = new Set(routineStore.routinesDevicesStatus[prop.routine.id].map(device => device.meta.category.id));
+    const cats = [];
+
+    categoryIds.forEach(id => {
+        const category = deviceStore.categories.find(c => c.id === id);
+        if (category && !cats.some(c => c.id === category.id)) {
+            cats.push(category);
+        }
+    });
+    return cats;
 })
 
 const openDialog = ref(false);
@@ -45,21 +50,11 @@ const openDialog = ref(false);
 const buttonState = ref(false);
 const loading = ref(false);
 
-const powerBtnImg = computed(() => {
-    return buttonState.value ? powerOn : powerOff;
-})
-
 const prop = defineProps({
     name: String,
     routine: Object,
     allDevices: Array
 })
-
-function toggleButtonState() {
-    loading.value = true
-    setTimeout(() => (loading.value = false), 1000)
-    buttonState.value = !buttonState.value;
-}
 
 const emit = defineEmits(['remove-routine', 'update-routine']);
 

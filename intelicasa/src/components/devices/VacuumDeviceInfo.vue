@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import ImageSelect from './ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
@@ -44,17 +44,6 @@ import livingRoom from '@/assets/living.svg';
 const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
     { name: 'Trapear', value: 'mop', img: mopMode }])
-
-
-const deviceState = {
-    id: props.device.id,
-    name: props.device.name,
-    meta: {
-        category: props.device.meta.category
-    },
-    state: JSON.parse(JSON.stringify(props.device.state))
-}
-
 
 const props = defineProps({
     device: Object,
@@ -93,7 +82,6 @@ const batteryImg = computed(() => {
     } else {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}`
     }
-
 })
 
 const status = computed(() => {
@@ -107,84 +95,108 @@ const status = computed(() => {
         default:
             return "Desconocido"
     }
-}
-);
+});
 
 const location = ref(rooms.value.find(x => x.is = props.device.state.location))
 
-const emit = defineEmits(['actionSet', 'deviceUpdate']);
+const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState)
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'start', params: [] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'pause', params: [] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'dock', params: [] })
+    switch (props.device.state.status) {
+        case "inactive":
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'pause', params: [] })
+            break
+        case "docked":
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'dock', params: [] })
+            break
+        case "active":
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'start', params: [] })
+            break
+    }
 })
 
-
+onUnmounted(() => {
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
+    emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
+    switch (props.device.state.status) {
+        case "inactive":
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'pause', params: [] })
+            break
+        case "docked":
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'dock', params: [] })
+            break
+        case "active":
+            emit('actionSet', { device: { id: props.device.id }, actionName: 'start', params: [] })
+            break
+    }
+})
 
 async function setMode(newMode) {
     const action = { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
-        await deviceStore.triggerEvent(action)
+        if (await deviceStore.triggerEvent(action)) {
+            mode.value = newMode;
+            props.device.state.mode = newMode.value;
+        }
+        loading.value = false
+    } else {
         mode.value = newMode;
         props.device.state.mode = newMode.value;
-        loading.value = false
     }
 }
 
 async function setLocation(newLocation) {
     const action = { device: { id: props.device.id }, actionName: 'setLocation', params: [newLocation.id] }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            location.value = newLocation;
-            props.device.state.location = newLocation.id;
-        }
+        //Location es por default null, no se puede hacer el if porque la primera vez no se actualizaria
+        await deviceStore.triggerEvent(action)
         loading.value = false
     }
+    location.value = newLocation;
+    props.device.state.location = newLocation.id;
 }
 
 async function startCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'start' }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
-        await deviceStore.triggerEvent(action)
-        await deviceStore.fetchDevice(props.device.id)
+        if (await deviceStore.triggerEvent(action)) {
+            props.device.state.status = 'active'
+        }
         loading.value = false
+    } else {
+        props.device.state.status = 'active'
     }
 }
 
 async function pauseCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'pause' }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
-        await deviceStore.triggerEvent(action)
-        await deviceStore.fetchDevice(props.device.id)
+        // No hacemos el if, porque igual hay que hacer un fetch para obtener si
+        if (await deviceStore.triggerEvent(action)) {
+            props.device.state.status = 'inactive'
+        }
         loading.value = false
+    } else {
+        props.device.state.status = 'inactive'
     }
 }
 
 async function dock() {
     const action = { device: { id: props.device.id }, actionName: 'dock' }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
-        await deviceStore.triggerEvent(action)
-        await deviceStore.fetchDevice(props.device.id)
+        if (await deviceStore.triggerEvent(action)) {
+            props.device.state.status = 'docked'
+        }
         loading.value = false
+    } else {
+        props.device.state.status = 'docked'
     }
 }
 
