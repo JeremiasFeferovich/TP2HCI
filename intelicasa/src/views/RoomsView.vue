@@ -3,13 +3,13 @@
     <v-sheet class="viewSheet" color="secondary">
         <RoomsList v-if="!loading" :rooms="roomStore.rooms" :devices="deviceStore.devices" />
     </v-sheet>
-    <RoomDialog v-if="!loading" :devices="deviceStore.devices" />
+    <AddRoomDialog v-if="!loading" :devices="deviceStore.devices" />
 </template>
 
 
 <script setup>
 import TitleComponent from '@/components/TitleComponent.vue';
-import RoomDialog from '@/components/rooms/RoomDialog.vue';
+import AddRoomDialog from '@/components/rooms/AddRoomDialog.vue';
 import RoomsList from '@/components/rooms/RoomsList.vue';
 import { useRoomStore } from '@/stores/roomStore';
 import { onMounted, ref } from 'vue';
