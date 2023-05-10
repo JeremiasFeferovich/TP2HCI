@@ -149,7 +149,8 @@ function handleSave() {
     name: routineName.value,
     actions: actions.value,
     meta: {
-      devicesState: devicesState.value
+      devicesState: devicesState.value,
+      favorite: false
     }
   }
   emit('save-routine', routine)

@@ -1,6 +1,10 @@
 <template>
   <v-card class="routine-card-info" flat>
     <v-row>
+      <v-btn class="square-btn" v-model="routine.meta.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
+        size="large" variant="text" :loading="loadingFav" rounded="xl">
+        <img :src="favoriteBtnImg" alt="fav button" />
+      </v-btn>
       <v-card-title v-if="!editingName" class="text-h4">{{ routine.name }}</v-card-title>
       <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoutineForm">
         <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
@@ -76,10 +80,12 @@
   
 <script setup>
 import DevicesOptions from './devices/DevicesOptions.vue';
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
 import ConfirmationDialog from './ConfirmationDialog.vue';
-
+import favoriteYes from '@/assets/favoriteYes.svg'
+import favoriteNo from '@/assets/favoriteNo.svg'
+import { RoutineApi } from '@/api/routine';
 const routineStore = useRoutineStore();
 
 const { routine, allDevices } = defineProps({
@@ -93,6 +99,7 @@ const showSelector = ref(false);
 const openDialog = ref(false);
 const editingName = ref(false);
 const editRoutineForm = ref(null);
+const loadingFav = ref(false);
 const updatedName = ref(routine.name);
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
@@ -110,6 +117,18 @@ function deleteDevice(device) {
   if (routine.actions.length === 0) {
     emit('delete-routine')
   }
+}
+
+const favoriteBtnImg = computed(() => {
+  return routine.meta.favorite ? favoriteYes : favoriteNo;
+})
+
+async function toggleButtonFavorite() {
+  loadingFav.value = true
+  if (await RoutineApi.toggleFavorite(routine)) {
+    routine.meta.favorite = !routine.meta.favorite
+  }
+  loadingFav.value = false
 }
 
 function addAction(newAction) {
