@@ -11,9 +11,20 @@
             </v-col>
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
-                    <p class="text-data text-h6">{{ room.devices ? room.devices.length : "No hay " }} dispositivos conectados
+                    <p class="text-data text-h6">
+                        {{ room.devices ? 
+                            room.devices.length === 1 ? 
+                            "1 dispositivo conectado" : 
+                            room.devices.length + " dispositivos conectados" 
+                            :"No hay dispositivos encendidos" 
+                        }}
                     </p>
-                    <p class="text-data text-h6">{{ onDevices.length }} dispositivos encendidos</p>
+                    <p class="text-data text-h6">
+                        {{ onDevices.length === 1 ? 
+                            "1 dispositivo encendido" 
+                            : onDevices.length + " dispositivos encendidos"
+                        }}
+                    </p>
                 </v-card-text>
             </v-col>
         </v-row>
@@ -41,8 +52,10 @@ const props = defineProps({
 })
 
 const onDevices = computed(() => {
-    return props.devices.filter(device => device.state.status === 'on');
+    console.log(props.room.devices)
+    return props.room.devices? props.room.devices.filter(device => device.state.status === 'on') : []
 });
+console.log(onDevices)
 
 
 const typeImg = computed(() => {

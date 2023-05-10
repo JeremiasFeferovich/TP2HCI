@@ -20,6 +20,15 @@ export const useRoomStore = defineStore('room', () => {
         rooms.value = fetchedRooms
         return fetchedRooms
     }
+
+    async function fetchRoom(roomId){
+        const fetchedRoom = await RoomApi.get(roomId)
+        const index = rooms.value.findIndex(room => room.id === roomId)
+        if( index !== -1){
+            rooms.value[index] = fetchedRoom
+        }
+        return fetchRoom
+    }
     async function addRoom(room){
         const addedRoom = await RoomApi.add(room)
         fetchRooms()
@@ -51,7 +60,7 @@ export const useRoomStore = defineStore('room', () => {
 
     return{
         rooms,
-        fetchRooms,addRoom,deleteRoom, deleteDeviceFromRoom, addDeviceToRoom, updateRoom
+        fetchRoom,fetchRooms,addRoom,deleteRoom, deleteDeviceFromRoom, addDeviceToRoom, updateRoom
     }
 
 })
