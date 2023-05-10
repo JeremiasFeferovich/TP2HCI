@@ -32,14 +32,14 @@ export const useRoutineStore = defineStore('routine', () => {
 
             for (const deviceId in devices) {
                 const device = devices[deviceId];
-        
+
                 const deviceStatus = {
                     id: device.id,
                     name: device.name,
                     meta: device.meta,
                     state: {}
                 }
-                if (device.type.name === 'vacuum'){
+                if (device.type.name === 'vacuum') {
                     deviceStatus.room = device.room
                 }
                 devicesActions[device.id].forEach(action => {
@@ -110,7 +110,9 @@ export const useRoutineStore = defineStore('routine', () => {
     async function fetchRoutines() {
         const fetchedRoutines = await RoutineApi.getAll()
         routines.value = fetchedRoutines
-        routinesDevicesStatus.value = getRoutinesDevicesStatus()
+        if (fetchedRoutines && fetchedRoutines.length > 0) {
+            routinesDevicesStatus.value = getRoutinesDevicesStatus()
+        }
         return routines
     }
     async function addRoutine(routine) {

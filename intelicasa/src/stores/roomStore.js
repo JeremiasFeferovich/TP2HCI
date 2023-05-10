@@ -12,26 +12,28 @@ export const useRoomStore = defineStore('room', () => {
     // Getters - computed
     const getRooms = computed(() => rooms.value)
     // Actions - funciones Javascript
-    async function fetchRooms(){
+    async function fetchRooms() {
         const fetchedRooms = await RoomApi.getAll()
-        fetchedRooms.forEach(async room => {
-            room.devices = await RoomApi.getDevices(room.id)
-        });
+        if (fetchedRooms) {
+            fetchedRooms.forEach(async room => {
+                room.devices = await RoomApi.getDevices(room.id)
+            });
+        }
         rooms.value = fetchedRooms
         return fetchedRooms
     }
-    async function addRoom(room){
+    async function addRoom(room) {
         const addedRoom = await RoomApi.add(room)
         fetchRooms()
     }
-    
-    async function deleteRoom(room){
+
+    async function deleteRoom(room) {
         const deletedRoom = await RoomApi.remove(room.id)
         fetchRooms()
         deviceStore.fetchDevices()
     }
 
-    async function updateRoom(room){
+    async function updateRoom(room) {
         const updatedRoom = await RoomApi.update(room)
         fetchRooms()
     }
@@ -49,9 +51,9 @@ export const useRoomStore = defineStore('room', () => {
     }
 
 
-    return{
+    return {
         rooms,
-        fetchRooms,addRoom,deleteRoom, deleteDeviceFromRoom, addDeviceToRoom, updateRoom
+        fetchRooms, addRoom, deleteRoom, deleteDeviceFromRoom, addDeviceToRoom, updateRoom
     }
 
 })

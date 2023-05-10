@@ -1,5 +1,18 @@
 
 class Api {
+
+    static _isConnected = false;
+  
+    static get isConnected() {
+      return this._isConnected;
+    }
+    
+    static set isConnected(value) {
+      this._isConnected = value;
+      const event = new CustomEvent('api-connection-changed', { detail: value });
+      window.dispatchEvent(event);
+    }
+
     static get baseUrl() {
         return 'http://localhost:8080/api'
     }
@@ -9,11 +22,11 @@ class Api {
             const response = await fetch(url, init)
             const text = await response.text()
             const json = JSON.parse(text)
+            Api.isConnected = true
             return json.result
         } catch (error) {
-            console.error(error)
+            Api.isConnected = false
         }
-
     }
 
     static async get(url) {
