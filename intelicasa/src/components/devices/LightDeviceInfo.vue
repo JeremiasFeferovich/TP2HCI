@@ -69,7 +69,7 @@ async function updateColor() {
     updateTimeout.value = setTimeout(async () => {
         if (!props.returnAction) {
             loading.value = true;
-            if (deviceStore.triggerEvent(action)) {
+            if (await deviceStore.triggerEvent(action)) {
                 props.device.state.color = color.value;
             }
             loading.value = false;

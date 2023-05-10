@@ -1,7 +1,7 @@
 <template>
     <TitleComponent title="Dispositivos" />
     <v-sheet class="viewSheet" color="secondary">
-        <v-row v-if="!deviceStore.devices.length" justify="center">
+        <v-row v-if="deviceStore.devices && !deviceStore.devices.length" justify="center">
             <p class="text-h6" align="center">Aún no tienes dispositivos</p>
         </v-row>
         <DevicesList v-else v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
@@ -14,7 +14,7 @@
 <script setup>
 import TitleComponent from '@/components/TitleComponent.vue';
 import AddDeviceDialog from '@/components/devices/AddDeviceDialog.vue';
-import { ref, watch, computed } from 'vue';
+import { ref } from 'vue';
 
 import DevicesList from '@/components/devices/DevicesList.vue';
 import { useDeviceStore } from '@/stores/deviceStore';

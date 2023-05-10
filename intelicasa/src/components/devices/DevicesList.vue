@@ -2,7 +2,7 @@
     <!-- <input v-if="showSearchbar" class="search-bar" v-model="text" type="text" placeholder="Buscar"> -->
     <v-text-field v-if="showSearchbar" v-model="searchText" placeholder="Buscar" type="text"
         variant="outlined"></v-text-field>
-    <v-row v-if="devices.length && !shownDevices.length" justify="center">
+    <v-row v-if="devices && devices.length && !shownDevices.length" justify="center">
         <p class="text-h6" align="center">No hay dispositivos con ese nombre</p>
     </v-row>
     <v-row>
@@ -20,7 +20,7 @@ import DeviceCard from './DeviceCard.vue'
 const searchText = ref('');
 
 const shownDevices = computed(() => {
-    return props.devices.filter(device => device.name.toLowerCase().includes(searchText.value.toLowerCase()))
+    return props.devices ? props.devices.filter(device => device.name.toLowerCase().includes(searchText.value.toLowerCase())) : null
 })
 
 const props = defineProps({

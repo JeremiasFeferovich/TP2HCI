@@ -31,23 +31,25 @@ export const useDeviceStore = defineStore('device', () => {
     async function fetchCategories() {
         if (!categories.value.length) {
             const fetchedCategories = await DeviceApi.getCategories();
-            const categoriesValues = [
-                { name: "Aire Acondicionado", value: "ac", img: airConditioner },
-                { name: "Luces", value: "lamp", img: lightbulb },
-                { name: "Horno", value: "oven", img: oven },
-                { name: "Aspiradora", value: "vacuum", img: vacuum },
-                { name: "Puerta", value: "door", img: door }
-            ];
+            if (fetchedCategories) {
+                const categoriesValues = [
+                    { name: "Aire Acondicionado", value: "ac", img: airConditioner },
+                    { name: "Luces", value: "lamp", img: lightbulb },
+                    { name: "Horno", value: "oven", img: oven },
+                    { name: "Aspiradora", value: "vacuum", img: vacuum },
+                    { name: "Puerta", value: "door", img: door }
+                ];
 
-            const filteredCategories = fetchedCategories.filter((fetchedCategory) =>
-                categoriesValues.some((category) => category.value === fetchedCategory.name)
-            );
+                const filteredCategories = fetchedCategories.filter((fetchedCategory) =>
+                    categoriesValues.some((category) => category.value === fetchedCategory.name)
+                );
 
-            const updatedCategories = filteredCategories.map((filteredCategory) => {
-                const category = categoriesValues.find((category) => category.value === filteredCategory.name);
-                return { ...filteredCategory, img: category.img, name: category.name, value: category.value };
-            });
-            categories.value = updatedCategories;
+                const updatedCategories = filteredCategories.map((filteredCategory) => {
+                    const category = categoriesValues.find((category) => category.value === filteredCategory.name);
+                    return { ...filteredCategory, img: category.img, name: category.name, value: category.value };
+                });
+                categories.value = updatedCategories;
+            }
         }
         return categories.value;
     }
