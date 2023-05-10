@@ -14,6 +14,10 @@
               <v-row cols="12" class="fill-space">
                 <v-text-field :rules="nameRules" label="Nombre de la rutina*" v-model="routineName" />
               </v-row>
+              <v-row justify="center" class="mb-2">
+                <div class="pa-2 subtitle-text">Dispositivos conectados:</div>
+                <v-divider />
+              </v-row>
               <v-row cols="12" class="fill-space">
                 <v-expansion-panels variant="inset" :model-value="opened">
                   <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index">
@@ -46,8 +50,8 @@
                   return-object v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
               </v-row>
             </v-form>
-            <v-row cols="12" class="plus-btn">
-              <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" flat />
+            <v-row cols="12" class="plus-btn mt-6">
+              <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" />
             </v-row>
           </v-col>
         </v-container>
@@ -191,5 +195,9 @@ const addSelectedDevice = () => {
 
 .required {
   color: red;
+}
+
+.subtitle-text {
+  color: rgb(121, 121, 121);
 }
 </style>
