@@ -62,7 +62,8 @@
                 </v-row>
 
                 <v-row cols="12" class="fill-space">
-                  <DeviceSelect :rules="deviceRules" v-if="showSelector" :devices="devices"
+                  <DeviceSelect v-if="showSelector" :rules="deviceRules"
+                    :devices="availableDevices.filter((device) => !selectedDevices.includes(device))"
                     :label="firstDevice ? 'Dispositivo*' : 'Dispositivo'"
                     @update:selectedDevice="(item) => addSelectedDevice(item)" />
                 </v-row>
@@ -82,7 +83,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn size="large" color="blue-darken-1" variant="text" @click="dialog = false; attemptSave = false">
+          <v-btn size="large" color="blue-darken-1" variant="text" @click="closeDialog">
             Cerrar
           </v-btn>
           <v-btn size="large" color="blue-darken-1" variant="flat" @click="validateForm($refs.newRoomForm)">
@@ -104,6 +105,11 @@ const props = defineProps({
   devices: Array,
 });
 
+const availableDevices = computed(() => {
+  return props.devices.filter(device => !device.room);
+});
+
+
 const showSelector = ref(true)
 const firstDevice = ref(true)
 const dialog = ref(false)
@@ -119,7 +125,8 @@ const newRoomForm = ref(null)
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
-(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _']
+(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
+(v) => !roomStore.rooms.some(room => room.name === v) || 'Ya existe una habitación con ese nombre']
 
 const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
 const roomTypeRules = [(v) => !!v || 'El tipo de habitación es requerido']
@@ -147,19 +154,33 @@ function saveRoom() {
   selectedDevices.value = []
 }
 
+function closeDialog() {
+  dialog.value = false;
+  showSelector.value = true
+  roomName.value = '';
+  roomType.value = '';
+  deviceInputs.value = [null];
+  attemptSave.value = false
+
+  selectedDevices.value = []
+}
+
 function addSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
     selectedDevices.value.push(selectedDevice)
     showSelector.value = false
+    /* remove selected device from availabledevicesnames*/
   }
 }
 
 function removeSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
-    selectedDevices.value.pop(selectedDevice)
+    /* remoce selected device from selected devices*/
+    selectedDevices.value.splice(selectedDevices.value.indexOf(selectedDevice), 1)
     showSelector.value = false
+    /* add selected device to available devices*/
   }
 }
 </script>

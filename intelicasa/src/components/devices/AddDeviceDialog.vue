@@ -12,7 +12,7 @@
             <v-form @submit.prevent validate-on="input" ref="newDeviceForm">
                 <v-card-text>
                     <v-container class="fill-space">
-                        <v-row >
+                        <v-row>
                             <v-text-field :rules="nameRules" label="Device name*" v-model="deviceName" />
                         </v-row>
                         <v-row>
@@ -48,7 +48,8 @@ const newDeviceForm = ref(null)
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
-(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _']
+(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
+(v) => !deviceStore.devices.some(device => device.name === v) || 'Ya existe un dispositivo con ese nombre']
 
 
 const categoryRules = [(v) => !!v || 'La categoría es requerida']

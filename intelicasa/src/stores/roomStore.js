@@ -31,6 +31,11 @@ export const useRoomStore = defineStore('room', () => {
         deviceStore.fetchDevices()
     }
 
+    async function updateRoom(room){
+        const updatedRoom = await RoomApi.update(room)
+        fetchRooms()
+    }
+
     async function deleteDeviceFromRoom(device) {
         const deletedDevice = await RoomApi.removeDevice(device.id)
         fetchRooms()
@@ -46,7 +51,7 @@ export const useRoomStore = defineStore('room', () => {
 
     return{
         rooms,
-        fetchRooms,addRoom,deleteRoom, deleteDeviceFromRoom, addDeviceToRoom
+        fetchRooms,addRoom,deleteRoom, deleteDeviceFromRoom, addDeviceToRoom, updateRoom
     }
 
 })

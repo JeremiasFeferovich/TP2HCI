@@ -1,9 +1,18 @@
 <template>
     <v-card class="room-card-info" flat>
         <v-row>
-            <v-card-title>
-                <p class="text-h5">{{ room.name }}</p>
-            </v-card-title>
+
+            <v-card-title v-if="!editingName" class="text-h4">{{ room.name }}</v-card-title>
+                    <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoomForm">
+                        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
+                            @blur="validateForm($refs.editRoomForm)" />
+                        <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoomForm)">
+                            <v-icon icon="mdi-check" size="20px" />
+                        </v-btn>
+                    </v-form>
+                    <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
+                        <v-icon icon="mdi-pencil" size="20px" />
+                    </v-btn>
             <v-col class="mr-1" align="end">
                 <v-icon end icon="mdi-delete" @click="deleteRoom" />
             </v-col>
@@ -67,6 +76,25 @@ const availableDevices = computed(() => {
 
 const selectedDevice = ref(null)
 const showSelector = ref(false)
+const editingName = ref(false);
+const updatedName = ref(props.room.name);
+const editRoomForm = ref(null)
+const nameRules = [(v) => !!v || 'El nombre es requerido',
+(v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
+(v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
+(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _']
+
+function editName() {
+    const updatedRoom = { ...props.room, name: updatedName.value }
+    roomsStore.updateRoom(updatedRoom);
+    editingName.value = false
+}
+async function validateForm(form) {
+    const result = await form.validate()
+    if (result.valid) {
+        editName()
+    }
+}
 
 function deleteRoom() {
     roomsStore.deleteRoom(props.room)
@@ -112,5 +140,9 @@ function closeDialog() {
 
 .subtitle-text {
     color: rgb(121, 121, 121);
+}
+
+.editName{
+    min-width: 200px;
 }
 </style>
