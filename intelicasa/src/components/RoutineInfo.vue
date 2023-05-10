@@ -5,7 +5,7 @@
         <p class="text-h5">{{ routine.name }}</p>
       </v-card-title>
       <v-col class="mr-1" align="end">
-        <v-icon end icon="mdi-delete" @click="deleteRoutine" />
+        <v-icon end icon="mdi-delete" @click="openDialog = true" />
       </v-col>
     </v-row>
     <v-container>
@@ -47,12 +47,17 @@
       </v-col>
     </v-container>
   </v-card>
+  <v-dialog v-model="openDialog" width="auto">
+    <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta rutina?" @cancelAction="openDialog = false"
+      @confirmAction="deleteRoutine" />
+  </v-dialog>
 </template>
   
 <script setup>
 import DevicesOptions from './devices/DevicesOptions.vue';
 import { ref, onUnmounted } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
+import ConfirmationDialog from './ConfirmationDialog.vue';
 
 const routineStore = useRoutineStore();
 
@@ -64,6 +69,7 @@ const { routine, allDevices } = defineProps({
 const selectedDevice = ref('');
 const emit = defineEmits(['delete-routine']);
 const showSelector = ref(false);
+const openDialog = ref(false);
 
 function deleteRoutine() {
   emit('delete-routine');

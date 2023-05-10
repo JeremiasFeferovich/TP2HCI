@@ -16,7 +16,7 @@
         </v-row>
     </v-card>
     <v-dialog v-model="openDialog" width="40%">
-        <RoutineInfo :routine="routine" :allDevices="allDevices" @delete-routine="removeRoutine" />
+        <RoutineInfo :routine="routine" :allDevices="allDevices" @delete-routine="deleteRoutine" />
     </v-dialog>
 </template>
 
@@ -56,11 +56,11 @@ const prop = defineProps({
     allDevices: Array
 })
 
-const emit = defineEmits(['remove-routine', 'update-routine']);
+const emit = defineEmits(['delete-routine', 'update-routine']);
 
-function removeRoutine() {
+function deleteRoutine() {
     openDialog.value = false;
-    emit('remove-routine');
+    emit('delete-routine');
 }
 
 function executeRoutine(routine) {

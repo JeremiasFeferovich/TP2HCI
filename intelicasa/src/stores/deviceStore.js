@@ -67,7 +67,7 @@ export const useDeviceStore = defineStore('device', () => {
     }
 
     async function deleteDevice(device) {
-        const deletedDevice = await DeviceApi.remove(device.id);
+        const deletedDevice = await DeviceApi.delete(device.id);
         if (deletedDevice) {
             routineStore.routines.forEach(routine => {
                 routine.actions = routine.actions.filter(action => action.device.id !== device.id);

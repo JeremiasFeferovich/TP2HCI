@@ -3,18 +3,18 @@
         <v-row>
 
             <v-card-title v-if="!editingName" class="text-h4">{{ room.name }}</v-card-title>
-                    <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoomForm">
-                        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
-                            @blur="validateForm($refs.editRoomForm)" />
-                        <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoomForm)">
-                            <v-icon icon="mdi-check" size="20px" />
-                        </v-btn>
-                    </v-form>
-                    <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
-                        <v-icon icon="mdi-pencil" size="20px" />
-                    </v-btn>
+            <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoomForm">
+                <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined"
+                    hide-details="auto" @blur="validateForm($refs.editRoomForm)" />
+                <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoomForm)">
+                    <v-icon icon="mdi-check" size="20px" />
+                </v-btn>
+            </v-form>
+            <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
+                <v-icon icon="mdi-pencil" size="20px" />
+            </v-btn>
             <v-col class="mr-1" align="end">
-                <v-icon end icon="mdi-delete" @click="deleteRoom" />
+                <v-icon end icon="mdi-delete" @click="openDialog = true" />
             </v-col>
         </v-row>
         <v-row>
@@ -27,7 +27,7 @@
                     <DeviceCard :device="device" />
                 </v-col>
                 <v-col class="text-end mr-8">
-                    <v-btn icon size="small" color="error" @click="removeDevice(device)">
+                    <v-btn icon size="small" color="error" @click="deleteDevice(device)">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-col>
@@ -51,12 +51,17 @@
         </v-card-actions>
 
     </v-card>
+    <v-dialog v-model="openDialog" width="auto">
+        <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta habitación?" @cancelAction="openDialog = false"
+            @confirmAction="deleteRoom" />
+    </v-dialog>
 </template>
   
 <script setup>
 import DeviceCard from '@/components/devices/DeviceCard.vue';
 import { useRoomStore } from '@/stores/roomStore';
 import { ref, computed } from 'vue';
+import ConfirmationDialog from '../ConfirmationDialog.vue';
 
 const roomsStore = useRoomStore();
 
@@ -69,6 +74,7 @@ const devicesShown = computed(() => {
     return props.room.devices;
 });
 
+const openDialog = ref(false);
 /* filter the devices that they dont have the room attribute*/
 const availableDevices = computed(() => {
     return props.devices.filter(device => !device.room || device.room.id !== props.room.id);
@@ -100,7 +106,7 @@ function deleteRoom() {
     roomsStore.deleteRoom(props.room)
 }
 
-function removeDevice(device) {
+function deleteDevice(device) {
     roomsStore.deleteDeviceFromRoom(device)
 }
 /*
@@ -142,7 +148,7 @@ function closeDialog() {
     color: rgb(121, 121, 121);
 }
 
-.editName{
+.editName {
     min-width: 200px;
 }
 </style>
