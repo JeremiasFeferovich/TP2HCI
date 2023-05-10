@@ -25,10 +25,12 @@
                 <v-divider />
             </v-row>
             <p class="text-h6" align="center"
-                v-if="deviceStore.devices.length && !deviceStore.devices.filter(device => device.meta.favorite).length">Aún
-                no tienes dispositivos favoritos</p>
+                v-if="deviceStore.devices && deviceStore.devices.length && !deviceStore.devices.filter(device => device.meta.favorite).length">
+                Aún no tienes dispositivos favoritos</p>
+            <p class="text-h6" align="center" v-else-if="!deviceStore.devices || !deviceStore.devices.length">Aún no tienes
+                dispositivos</p>
             <DevicesList v-if="!loading" :showSearchbar="false"
-                :devices="deviceStore.devices.filter(device => device.meta.favorite)"
+                :devices="deviceStore.devices && deviceStore.devices.filter(device => device.meta.favorite)"
                 @delete="(device) => deleteDevice(device)" />
         </v-sheet>
     </v-container>
@@ -65,8 +67,6 @@ function deleteRoutine(routine) {
 }
 </script>
 
-<style scoped>
-.v-container {
+<style scoped>.v-container {
     padding: 0;
-}
-</style>
+}</style>

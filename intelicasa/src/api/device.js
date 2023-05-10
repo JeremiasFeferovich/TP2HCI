@@ -24,7 +24,9 @@ class DeviceApi {
 
     static async getCategories() {
         this.allCategories = await Api.get(`${Api.baseUrl}/devicetypes`)
-        return this.allCategories.map(category => { return {id: category.id, name: category.name}})
+        if (this.allCategories) {
+            return this.allCategories.map(category => { return { id: category.id, name: category.name } })
+        }
     }
 
 
@@ -61,7 +63,7 @@ class DeviceApi {
     }
 
     static async updateDevice(device) {
-        const updatedDevice = await Api.put(DeviceApi.getUrl(device.id), {name: device.name, meta: { ...device.meta}})
+        const updatedDevice = await Api.put(DeviceApi.getUrl(device.id), { name: device.name, meta: { ...device.meta } })
         return updatedDevice
     }
 
