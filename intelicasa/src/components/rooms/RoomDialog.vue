@@ -62,7 +62,9 @@
                 </v-row>
 
                 <v-row cols="12" class="fill-space">
-                  <DeviceSelect :rules="deviceRules" v-if="showSelector" :devices="devices"
+                  <DeviceSelect v-if="showSelector"
+                    :rules="deviceRules"  
+                    :devices="availableDevices"
                     :label="firstDevice ? 'Dispositivo*' : 'Dispositivo'"
                     @update:selectedDevice="(item) => addSelectedDevice(item)" />
                 </v-row>
@@ -82,7 +84,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn size="large" color="blue-darken-1" variant="text" @click="dialog = false; attemptSave = false">
+          <v-btn size="large" color="blue-darken-1" variant="text" @click="closeDialog">
             Cerrar
           </v-btn>
           <v-btn size="large" color="blue-darken-1" variant="flat" @click="validateForm($refs.newRoomForm)">
@@ -102,6 +104,10 @@ import DeviceSelect from '@/components/rooms/DeviceSelect.vue';
 const roomStore = useRoomStore();
 const props = defineProps({
   devices: Array,
+});
+
+const availableDevices = computed(() => {
+    return props.devices.filter(device => !device.room);
 });
 
 const showSelector = ref(true)
@@ -147,19 +153,34 @@ function saveRoom() {
   selectedDevices.value = []
 }
 
+function closeDialog() {
+  dialog.value = false;
+  roomName.value = '';
+  roomType.value = '';
+  deviceInputs.value = [null];
+  attemptSave.value = false
+  selectedDevices.value = []
+
+}
+
 function addSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
     selectedDevices.value.push(selectedDevice)
     showSelector.value = false
+    /* remove selected device from availabledevices*/
+    availableDevices.value.splice(availableDevices.value.indexOf(selectedDevice), 1)
   }
 }
 
 function removeSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
     selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
-    selectedDevices.value.pop(selectedDevice)
+    /* remoce selected device from selected devices*/
+    selectedDevices.value.splice(selectedDevices.value.indexOf(selectedDevice), 1)
     showSelector.value = false
+    /* add selected device to available devices*/
+    availableDevices.value.push(selectedDevice)
   }
 }
 </script>
