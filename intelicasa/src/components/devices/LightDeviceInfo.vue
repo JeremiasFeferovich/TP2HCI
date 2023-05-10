@@ -18,7 +18,7 @@
         </v-col>
         <v-col cols="6" align="center">
             <v-btn :disabled="disabled || loading" class="square-btn rounded-circle" variant="outlined"
-                @click="showColorPicker = true" :style="{ backgroundColor: device.state.color }"></v-btn>
+                @click="showColorPicker = true" :style="{ backgroundColor: color }"></v-btn>
             <v-dialog class="ma-0" v-model="showColorPicker" width="auto" align="centers">
                 <v-color-picker :disabled="loading" v-model="color" hide-inputs @update:model-value="updateColor"
                     class="ma-0 px-2 pt-2" mode="hex" />
@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onUnmounted, onMounted, defineEmits, onBeforeUnmount } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 const deviceStore = useDeviceStore();
@@ -37,40 +37,36 @@ const showColorPicker = ref(false);
 
 const loading = ref(false);
 
-const intensity = ref(props.device.state.brightness);
-const color = ref(props.device.state.color);
-const updateTimeout = ref(null);
-
-const deviceState = {
-    id: props.device.id,
-    name: props.device.name,
-    meta: {
-        category: props.device.meta.category
-    },
-    state: JSON.parse(JSON.stringify(props.device.state))
-}
-
 const props = defineProps({
     device: Object,
     disabled: Boolean,
     returnAction: Boolean
 })
 
-const emit = defineEmits(['actionSet', 'deviceUpdate']);
+const intensity = ref(props.device.state.brightness);
+const color = ref(props.device.state.color);
+const updateTimeout = ref(null);
+
+const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState)
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+    if (props.returnAction) {
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+    }
+})
+
+onUnmounted(() => {
+    if (props.returnAction) {
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+    }
 })
 
 async function updateColor() {
     const action = { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] }
     clearTimeout(updateTimeout.value);
     updateTimeout.value = setTimeout(async () => {
-        emit('actionSet', action)
-        deviceState.state.color = JSON.parse(JSON.stringify(color.value))
-        emit('deviceUpdate', deviceState)
         if (!props.returnAction) {
             loading.value = true;
             if (deviceStore.triggerEvent(action)) {
@@ -83,9 +79,6 @@ async function updateColor() {
 
 async function updateIntensity() {
     const action = { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] }
-    emit('actionSet', action)
-    deviceState.state.brightness = JSON.parse(JSON.stringify(intensity.value))
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
@@ -94,6 +87,7 @@ async function updateIntensity() {
 }
 
 </script>
+
 
 <style scoped>
 .square-btn {

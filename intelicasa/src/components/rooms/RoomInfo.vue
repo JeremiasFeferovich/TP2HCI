@@ -84,7 +84,6 @@ function handleSave() {
 }*/
 
 function addSelectedDevice(selectedDevice) {
-    console.log(selectedDevice)
     roomsStore.addDeviceToRoom(props.room, selectedDevice)
     selectedDevice.value = null
     showSelector.value = false

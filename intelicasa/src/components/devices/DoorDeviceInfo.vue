@@ -16,19 +16,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onUnmounted, onMounted } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
-
-import livingRoom from '@/assets/living.svg';
-
-const deviceState = {
-    id: props.device.id,
-    name: props.device.name,
-    meta: {
-        category: props.device.meta.category
-    },
-    state: JSON.parse(JSON.stringify(props.device.state))
-}
 
 const props = defineProps({
     device: Object,
@@ -72,37 +61,47 @@ const lockText = computed(() => {
     }
 })
 
-const emit = defineEmits(['actionSet', 'deviceUpdate']);
+const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
-    emit('deviceUpdate', deviceState)
-    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] })
+    if (props.returnAction) {
+        emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] })
+    }
 })
+
+onUnmounted(() => {
+    if (props.returnAction) {
+        emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] })
+    }
+})
+
+
 
 async function setDoorState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             props.device.state.status = props.device.state.status === "opened" ? "closed" : "opened";
         }
         loading.value = false
+    } else {
+        props.device.state.status = props.device.state.status === "opened" ? "closed" : "opened";
     }
 }
 
 async function setLockState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] }
-    emit('actionSet', action)
-    emit('deviceUpdate', deviceState)
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             props.device.state.lock = props.device.state.lock === "locked" ? "unlocked" : "locked";
         }
         loading.value = false
+    } else {
+        props.device.state.lock = props.device.state.lock === "locked" ? "unlocked" : "locked";
     }
 }
 
