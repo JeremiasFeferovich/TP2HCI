@@ -5,8 +5,7 @@
             <p class="text-h6" v-if="!routineStore.routines || !routineStore.routines.length">Aún no tienes rutinas</p>
         </v-row>
         <v-row v-if="!loading" v-for="(routine, index) in routineStore.routines" :key="index">
-            <RoutineCard :name="routine.name" :routine="routine" @delete-routine="deleteRoutine(routine)"
-                :allDevices="deviceStore.devices" />
+            <RoutineCard :name="routine.name" :routine="routine" :allDevices="deviceStore.devices" />
         </v-row>
     </v-sheet>
     <AddRoutineDialog :devices="deviceStore.devices" :categories="deviceStore.categories" @save-routine="addRoutine" />
@@ -29,10 +28,6 @@ const loading = ref(false)
 
 function addRoutine(routine) {
     routineStore.addRoutine(routine);
-}
-
-function deleteRoutine(routine) {
-    routineStore.deleteRoutine(routine);
 }
 
 onMounted(async () => {

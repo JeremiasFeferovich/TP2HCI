@@ -46,8 +46,9 @@
                 </v-expansion-panels>
               </v-row>
               <v-row cols="12" class="fill-space">
-                <v-select :rules="deviceRules" v-if="showSelector" label="Select" :items="devices" item-title="name"
-                  return-object v-model="selectedDevice" @update:modelValue="addSelectedDevice" />
+                <ImageSelect v-if="showSelector" :rules="deviceRules"
+                  :items="devices.map(device => ({ name: device.name, img: device.meta.category.img }))"
+                  @update:selected-item="(device) => addSelectedDevice(device)" label="Select" />
               </v-row>
             </v-form>
             <v-row cols="12" class="plus-btn mt-6">
@@ -69,6 +70,7 @@ import { ref } from 'vue'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import AddBtn from './AddBtn.vue'
 import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
+import ImageSelect from './devices/ImageSelect.vue';
 
 
 const prop = defineProps({
@@ -162,15 +164,11 @@ function handleSave() {
   selectedDevice.value = ''
 }
 
-const addSelectedDevice = () => {
-  if (selectedDevice.value !== '') {
-    selectedDevice.value = prop.devices.find(device => device.name === selectedDevice.value.name);
-
-    selectedDevices.value.push(selectedDevice.value)
-    selectedDevice.value = ''
-    showSelector.value = false
-  }
-
+const addSelectedDevice = (selected) => {
+  selectedDevice.value = prop.devices.find(device => device.name === selected.name);
+  selectedDevices.value.push(selectedDevice.value)
+  selectedDevice.value = ''
+  showSelector.value = false
 }
 
 </script>

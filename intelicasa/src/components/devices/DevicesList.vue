@@ -1,5 +1,4 @@
 <template>
-    <!-- <input v-if="showSearchbar" class="search-bar" v-model="text" type="text" placeholder="Buscar"> -->
     <v-text-field v-if="showSearchbar" v-model="searchText" placeholder="Buscar" type="text"
         variant="outlined"></v-text-field>
     <v-row v-if="deviceStore.devices && deviceStore.devices.length && !shownDevices.length" justify="center">

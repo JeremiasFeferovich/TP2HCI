@@ -11,22 +11,33 @@
             </v-col>
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
-                    <p class="text-data text-h6">{{ room.devices ? room.devices.length : "No hay " }} dispositivos conectados
+                    <p class="text-data text-h6">
+                        {{ room.devices ? 
+                            room.devices.length === 1 ? 
+                            "1 dispositivo conectado" : 
+                            room.devices.length + " dispositivos conectados" 
+                            :"No hay dispositivos encendidos" 
+                        }}
                     </p>
-                    <p class="text-data text-h6">{{ onDevices.length }} dispositivos encendidos</p>
+                    <p class="text-data text-h6">
+                        {{ onDevices.length === 1 ? 
+                            "1 dispositivo encendido" 
+                            : onDevices.length + " dispositivos encendidos"
+                        }}
+                    </p>
                 </v-card-text>
             </v-col>
         </v-row>
     </v-card>
-    <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room" :devices="devices" @close-dialog="openDialog = false" />
-    </v-dialog>
+    <!-- <v-dialog v-model="openDialog" width="50%"> -->
+        <RoomInfo v-model="openDialog" :room="room" :devices="devices" @close-dialog="openDialog = false" />
+    <!-- </v-dialog> -->
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import RoomInfo from '@/components/rooms/RoomInfo.vue';
-
+import { useRoomStore } from '@/stores/roomStore';
 import dormitorio from '@/assets/dormitorio.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
@@ -35,13 +46,16 @@ import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
 
 const openDialog = ref(false);
+
+const roomStore = useRoomStore()
+
 const props = defineProps({
     room: Object,
     devices: Array
 })
 
 const onDevices = computed(() => {
-    return props.devices.filter(device => device.state.status === 'on');
+    return props.room.devices? props.room.devices.filter(device => device.state.status === 'on') : []
 });
 
 

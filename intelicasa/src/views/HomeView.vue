@@ -6,29 +6,36 @@
                 Rutinas destacadas
                 <v-divider />
             </v-row>
-            <p class="text-h6" align="center"
-                v-if="routineStore.routines.length && !routineStore.routines.filter(routine => routine.meta.favorite).length">
-                Aún no tienes rutinas favoritos</p>
+            <v-btn class="text-h6" align="center" variant="text"
+                v-if="routineStore.routines.length && !routineStore.routines.filter(routine => routine.meta.favorite).length"
+                :to="{ name: 'routines' }" value="routines">
+                Aún no tienes rutinas destacadas. Haga click aquí para seleccionar una.
+            </v-btn>
+            <v-btn class="text-h6" align="center" variant="text" v-if="!routineStore.routines.length"
+                :to="{ name: 'routines' }" value="routines">
+                Aún no tienes rutinas. Haga click aquí para agregar una.
+            </v-btn>
             <v-row v-if="!loading"
                 v-for="(routine, index) in routineStore.routines.filter(routine => routine.meta.favorite)"
                 :key="routine.id">
                 <RoutineCard :name="routine.name" :routine="routine" @delete-routine="deleteRoutine(routine)"
                     :allDevices="deviceStore.devices" />
             </v-row>
-            <DevicesList v-if="!loading" :showSearchbar="false"
-                :devices="deviceStore.devices.filter(device => device.meta.favorite)"
-                @delete="(device) => deleteDevice(device)" />
         </v-sheet>
         <v-sheet class="viewSheet" color="secondary">
             <v-row justify="center" class="mb-5 text-h4">
                 Dispositivos destacados
                 <v-divider />
             </v-row>
-            <p class="text-h6" align="center"
-                v-if="deviceStore.devices && deviceStore.devices.length && !deviceStore.devices.filter(device => device.meta.favorite).length">
-                Aún no tienes dispositivos favoritos</p>
-            <p class="text-h6" align="center" v-else-if="!deviceStore.devices || !deviceStore.devices.length">Aún no tienes
-                dispositivos</p>
+            <v-btn class="text-h6" align="center" variant="text"
+                v-if="deviceStore.devices.length && !deviceStore.devices.filter(device => device.meta.favorite).length"
+                :to="{ name: 'devices' }" value="devices">
+                Aún no tienes dispositivos destacados. Haga click aquí para seleccionar uno.
+            </v-btn>
+            <v-btn class="text-h6" align="center" variant="text" v-if="!deviceStore.devices.length"
+                :to="{ name: 'devices' }" value="devices">
+                Aún no tienes dispositivos. Haga click aquí para agregar uno.
+            </v-btn>
             <DevicesList v-if="!loading" :showSearchbar="false"
                 :devices="deviceStore.devices && deviceStore.devices.filter(device => device.meta.favorite)"
                 @delete="(device) => deleteDevice(device)" />
@@ -67,6 +74,8 @@ function deleteRoutine(routine) {
 }
 </script>
 
-<style scoped>.v-container {
+<style scoped>
+.v-container {
     padding: 0;
-}</style>
+}
+</style>

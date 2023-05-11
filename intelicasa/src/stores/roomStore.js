@@ -22,7 +22,16 @@ export const useRoomStore = defineStore('room', () => {
         rooms.value = fetchedRooms
         return fetchedRooms
     }
-    async function addRoom(room) {
+
+    async function fetchRoom(roomId){
+        const fetchedRoom = await RoomApi.get(roomId)
+        const index = rooms.value.findIndex(room => room.id === roomId)
+        if( index !== -1){
+            rooms.value[index] = fetchedRoom
+        }
+        return fetchRoom
+    }
+    async function addRoom(room){
         const addedRoom = await RoomApi.add(room)
         fetchRooms()
     }
@@ -38,14 +47,14 @@ export const useRoomStore = defineStore('room', () => {
         fetchRooms()
     }
 
-    async function deleteDeviceFromRoom(device) {
-        const deletedDevice = await RoomApi.deleteDevice(device.id)
+    async function removeDeviceFromRoom(device) {
+        const removedDevice = await RoomApi.removeDevice(device.id)
         fetchRooms()
         deviceStore.fetchDevices()
     }
 
-    async function addDeviceToRoom(room, device) {
-        const addedDevice = await RoomApi.addDevice(room.id, device)
+    async function addDeviceToRoom(id, device) {
+        const addedDevice = await RoomApi.addDevice(id, device)
         fetchRooms()
         deviceStore.fetchDevices()
     }
@@ -53,7 +62,7 @@ export const useRoomStore = defineStore('room', () => {
 
     return {
         rooms,
-        fetchRooms, addRoom, deleteRoom, deleteDeviceFromRoom, addDeviceToRoom, updateRoom
+        fetchRoom,fetchRooms,addRoom,deleteRoom, removeDeviceFromRoom, addDeviceToRoom, updateRoom
     }
 
 })
