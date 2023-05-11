@@ -95,7 +95,7 @@ const { routine, allDevices } = defineProps({
 });
 
 const selectedDevice = ref('');
-const emit = defineEmits(['delete-routine']);
+const emit = defineEmits(['close-dialog']);
 const showSelector = ref(false);
 const openDialog = ref(false);
 const editingName = ref(false);
@@ -110,13 +110,16 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 
 
 function deleteRoutine() {
-  emit('delete-routine');
+  routineStore.deleteRoutine(routine)
+  emit('close-dialog');
 }
 
 function deleteDevice(device) {
+  routineStore.routinesDevicesStatus[routine.id] = routineStore.routinesDevicesStatus[routine.id].filter(deviceState => deviceState.id !== device.id)
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
   if (routine.actions.length === 0) {
-    emit('delete-routine')
+    routineStore.deleteRoutine(routine)
+    emit('close-dialog')
   }
 }
 
@@ -162,7 +165,9 @@ function addAction(newAction) {
 }
 
 onUnmounted(() => {
-  handleUpdate()
+  if (routineStore.routinesDevicesStatus[routine.id].length > 0) {
+    handleUpdate()
+  }
 })
 
 
