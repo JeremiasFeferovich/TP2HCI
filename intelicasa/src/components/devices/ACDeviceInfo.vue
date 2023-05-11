@@ -136,7 +136,6 @@ async function setMode(newMode) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             mode.value = newMode;
-            props.device.state.mode = newMode.value;
         }
         loading.value = false
     } else {
@@ -150,9 +149,7 @@ async function setVerticalSwing() {
     if (!props.returnAction) {
         const action = { device: { id: props.device.id }, actionName: 'setVerticalSwing', params: [newVerticalSwing] }
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.verticalSwing = newVerticalSwing;
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.verticalSwing = newVerticalSwing;
@@ -164,9 +161,7 @@ async function setHorizontalSwing() {
     if (!props.returnAction) {
         const action = { device: { id: props.device.id }, actionName: 'setHorizontalSwing', params: [newHorizontalSwing] }
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.horizontalSwing = newHorizontalSwing;
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.horizontalSwing = newHorizontalSwing;
@@ -178,9 +173,7 @@ async function setFanSpeed() {
     if (!props.returnAction) {
         const action = { device: { id: props.device.id }, actionName: 'setFanSpeed', params: [newFanSpeed] }
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.fanSpeed = newFanSpeed;
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.fanSpeed = newFanSpeed;

@@ -69,9 +69,7 @@ async function updateColor() {
     updateTimeout.value = setTimeout(async () => {
         if (!props.returnAction) {
             loading.value = true;
-            if (await deviceStore.triggerEvent(action)) {
-                props.device.state.color = color.value;
-            }
+            await deviceStore.triggerEvent(action)
             loading.value = false;
         }
     }, 250); // wait for 250ms before sending the request

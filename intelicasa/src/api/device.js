@@ -10,6 +10,8 @@ class DeviceApi {
 
     static allCategories = []
 
+    static eventSource = null
+
     static categories = [
         { name: "Aire Acondicionado", value: "ac", img: airConditioner },
         { name: "Luces", value: "lamp", img: lightbulb },
@@ -29,6 +31,14 @@ class DeviceApi {
         }
     }
 
+    static startEventListeners(deviceId) {
+        this.eventSource = new EventSource(this.getUrl(`${deviceId ? `${deviceId}/` : ''}events`))
+        return this.eventSource
+    }
+
+    static stopEventListeners() {
+        this.eventSource.close();
+    }
 
     static async add(device) {
         if (!this.allCategories.length) {

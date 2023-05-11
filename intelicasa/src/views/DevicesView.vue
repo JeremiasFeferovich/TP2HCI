@@ -4,7 +4,7 @@
         <v-row v-if="deviceStore.devices && !deviceStore.devices.length" justify="center">
             <p class="text-h6" align="center">Aún no tienes dispositivos.</p>
         </v-row>
-        <DevicesList v-else v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
+        <DevicesList v-else v-if="!loading" :showSearchbar="true"
             @delete="(device) => deleteDevice(device)" />
     </v-sheet>
     <AddDeviceDialog v-if="!loading" objectTitle="Add Device" :categories="deviceStore.categories"
