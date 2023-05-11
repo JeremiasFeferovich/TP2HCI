@@ -15,9 +15,6 @@
                 <RoutineCard :name="routine.name" :routine="routine" @delete-routine="deleteRoutine(routine)"
                     :allDevices="deviceStore.devices" />
             </v-row>
-            <DevicesList v-if="!loading" :showSearchbar="false"
-                :devices="deviceStore.devices.filter(device => device.meta.favorite)"
-                @delete="(device) => deleteDevice(device)" />
         </v-sheet>
         <v-sheet class="viewSheet" color="secondary">
             <v-row justify="center" class="mb-5 text-h4">
@@ -67,6 +64,8 @@ function deleteRoutine(routine) {
 }
 </script>
 
-<style scoped>.v-container {
+<style scoped>
+.v-container {
     padding: 0;
-}</style>
+}
+</style>
