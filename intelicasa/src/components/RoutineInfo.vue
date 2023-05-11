@@ -62,9 +62,9 @@
     <v-container>
       <v-col>
         <v-row cols="12" class="fill-space">
-          <v-select v-if="showSelector" label="Select"
-            :items="allDevices.filter(device => !routineStore.routinesDevicesStatus[routine.id].find(deviceState => deviceState.id === device.id))"
-            item-title="name" return-object v-model="selectedDevice" @update:modelValue="addDevice" />
+          <ImageSelect v-if="showSelector"
+            :items="allDevices.filter(device => !routineStore.routinesDevicesStatus[routine.id].find(deviceState => deviceState.id === device.id)).map(device => ({ name: device.name, img: device.meta.category.img }))"
+            @update:selected-item="(device) => addDevice(device)" label="Select" />
         </v-row>
         <v-row cols="12" class="plus-btn">
           <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" />
@@ -86,6 +86,7 @@ import ConfirmationDialog from './ConfirmationDialog.vue';
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 import { RoutineApi } from '@/api/routine';
+import ImageSelect from './devices/ImageSelect.vue';
 const routineStore = useRoutineStore();
 
 const { routine, allDevices } = defineProps({
@@ -94,7 +95,7 @@ const { routine, allDevices } = defineProps({
 });
 
 const selectedDevice = ref('');
-const emit = defineEmits(['delete-routine']);
+const emit = defineEmits(['close-dialog']);
 const showSelector = ref(false);
 const openDialog = ref(false);
 const editingName = ref(false);
@@ -109,13 +110,16 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 
 
 function deleteRoutine() {
-  emit('delete-routine');
+  routineStore.deleteRoutine(routine)
+  emit('close-dialog');
 }
 
 function deleteDevice(device) {
+  routineStore.routinesDevicesStatus[routine.id] = routineStore.routinesDevicesStatus[routine.id].filter(deviceState => deviceState.id !== device.id)
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
   if (routine.actions.length === 0) {
-    emit('delete-routine')
+    routineStore.deleteRoutine(routine)
+    emit('close-dialog')
   }
 }
 
@@ -161,18 +165,17 @@ function addAction(newAction) {
 }
 
 onUnmounted(() => {
-  handleUpdate()
+  if (routineStore.routinesDevicesStatus[routine.id].length > 0) {
+    handleUpdate()
+  }
 })
 
 
-const addDevice = () => {
-  if (selectedDevice.value !== '') {
-    selectedDevice.value = allDevices.find(device => device.name === selectedDevice.value.name);
-    routineStore.routinesDevicesStatus[routine.id].push(selectedDevice.value)
-    selectedDevice.value = ''
-    showSelector.value = false
-  }
-
+const addDevice = (selected) => {
+  selectedDevice.value = allDevices.find(device => device.name === selected.name);
+  routineStore.routinesDevicesStatus[routine.id].push(selectedDevice.value)
+  selectedDevice.value = ''
+  showSelector.value = false
 }
 
 function handleUpdate() {
