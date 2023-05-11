@@ -37,7 +37,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import RoomInfo from '@/components/rooms/RoomInfo.vue';
-
+import { useRoomStore } from '@/stores/roomStore';
 import dormitorio from '@/assets/dormitorio.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
@@ -46,16 +46,17 @@ import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
 
 const openDialog = ref(false);
+
+const roomStore = useRoomStore()
+
 const props = defineProps({
     room: Object,
     devices: Array
 })
 
 const onDevices = computed(() => {
-    console.log(props.room.devices)
     return props.room.devices? props.room.devices.filter(device => device.state.status === 'on') : []
 });
-console.log(onDevices)
 
 
 const typeImg = computed(() => {

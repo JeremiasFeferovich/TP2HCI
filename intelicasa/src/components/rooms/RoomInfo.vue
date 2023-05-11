@@ -34,8 +34,10 @@
         <v-divider />
       </v-row>
       <v-row cols="12" class="fill-space">
-        <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices.concat(deletedDevices).filter(device => !newDevices.includes(device))" item-title="name"
-          return-object v-model="selectedDevice" @update:model-value="addSelectedDevice(selectedDevice)" />
+        <DeviceSelect v-if="showSelector || !devicesShown.length" 
+        :label= "'Dispositivos disponibles'"
+        :devices="availableDevices.concat(deletedDevices).filter(device => !newDevices.includes(device))"  
+        @update:selected-device="(item) => addSelectedDevice(item)" />
       </v-row>
       <v-row>
         <v-col cols="12" class="text-center">
@@ -62,6 +64,7 @@ import DeviceCard from '@/components/devices/DeviceCard.vue';
 import { useRoomStore } from '@/stores/roomStore';
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
+import DeviceSelect from './DeviceSelect.vue';
 
 const roomsStore = useRoomStore();
 
@@ -69,13 +72,9 @@ const props = defineProps({
   room: Object,
   devices: Array
 });
-/*
-const devicesShown = computed(() => {
-  console.log(props.room.devices)
-  return props.room.devices;
-});*/
 
 const openDialog = ref(false);
+
 /* filter the devices that they dont have the room attribute*/
 const availableDevices = computed(() => {
   return props.devices.filter(device => !device.room);
@@ -83,7 +82,6 @@ const availableDevices = computed(() => {
 
 const devicesShown = ref(roomsStore.rooms.find(room => room.id === props.room.id).devices)
 const newDevices = ref([])
-
 const deletedDevices = ref([])
 const selectedDevice = ref(null)
 const showSelector = ref(false)
@@ -134,7 +132,6 @@ function handleSave() {
 function addSelectedDevice(newDevice) {
   newDevices.value = [...newDevices.value, newDevice]
   devicesShown.value = [...devicesShown.value, newDevice]
-//  roomsStore.addDeviceToRoom(props.room, selectedDevice)
   selectedDevice.value = ''
   showSelector.value = false
 }
@@ -142,7 +139,7 @@ function addSelectedDevice(newDevice) {
 const emit = defineEmits(['closeDialog'])
 
 function closeDialog() {
-  emit('closeDialog')
+  emit('closeDialog', newDevices)
 }
 
 </script>

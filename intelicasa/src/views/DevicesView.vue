@@ -2,7 +2,7 @@
     <TitleComponent title="Dispositivos" />
     <v-sheet class="viewSheet" color="secondary">
         <v-row v-if="deviceStore.devices && !deviceStore.devices.length" justify="center">
-            <p class="text-h6" align="center">Aún no tienes dispositivos</p>
+            <p class="text-h6" align="center">Aún no tienes dispositivos.</p>
         </v-row>
         <DevicesList v-else v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
             @delete="(device) => deleteDevice(device)" />
