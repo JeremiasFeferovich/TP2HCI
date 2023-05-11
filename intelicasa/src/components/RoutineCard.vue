@@ -33,12 +33,12 @@ const routineStore = useRoutineStore();
 const deviceStore = useDeviceStore();
 
 const categories = computed(() => {
-    const categoryIds = new Set(routineStore.routinesDevicesStatus[prop.routine.id].map(device => device.meta.category.id));
+    const categoryIds = routineStore.routinesDevicesStatus[prop.routine.id].map(device => device.meta.category.id);
     const cats = [];
 
     categoryIds.forEach(id => {
         const category = deviceStore.categories.find(c => c.id === id);
-        if (category && !cats.some(c => c.id === category.id)) {
+        if (category) {
             cats.push(category);
         }
     });
