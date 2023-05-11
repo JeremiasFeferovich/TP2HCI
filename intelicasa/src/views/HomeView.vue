@@ -80,6 +80,8 @@ function deleteRoutine(routine) {
 }
 </script>
 
-<style scoped>.v-container {
+<style scoped>
+.v-container {
     padding: 0;
-}</style>
+}
+</style>
