@@ -47,7 +47,7 @@ import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
 
-const roomTypeImg = { ['Dormitorio'] : dormitorio, ['Cocina'] : cocina, ['Living'] : living, ['Baño'] : baño, ['Patio'] : patio, ['Otro'] : otro }
+const roomTypeImg = { ['Dormitorio']: dormitorio, ['Cocina']: cocina, ['Living']: living, ['Baño']: baño, ['Patio']: patio, ['Otro']: otro }
 
 const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
@@ -66,9 +66,7 @@ const loading = ref(false)
 
 const mode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
 const rooms = ref(roomStore.rooms.map(x => ({ name: x.meta.type, id: x.id, img: roomTypeImg[x.meta.type] })))
-console.log(roomStore.rooms)
-console.log(rooms.value)
-    
+
 const batteryImg = computed(() => {
     if (props.device.state.batteryLevel < 10) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-10`

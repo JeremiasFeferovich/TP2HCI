@@ -8,7 +8,7 @@
             <RoutineCard :name="routine.name" :routine="routine" :allDevices="deviceStore.devices" />
         </v-row>
     </v-sheet>
-    <AddRoutineDialog :devices="deviceStore.devices" :categories="deviceStore.categories" @save-routine="addRoutine" />
+    <AddRoutineDialog :devices="deviceStore.devices" :categories="deviceStore.categories" />
 </template>
 
 <script setup>
@@ -25,10 +25,6 @@ const routineStore = useRoutineStore();
 
 
 const loading = ref(false)
-
-function addRoutine(routine) {
-    routineStore.addRoutine(routine);
-}
 
 onMounted(async () => {
     loading.value = true

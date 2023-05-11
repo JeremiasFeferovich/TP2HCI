@@ -165,7 +165,7 @@ function addAction(newAction) {
 }
 
 onUnmounted(() => {
-  if (routineStore.routinesDevicesStatus[routine.id].length > 0) {
+  if (routineStore.routinesDevicesStatus[routine.id]) {
     handleUpdate()
   }
 })
@@ -184,7 +184,6 @@ function handleUpdate() {
 function editName() {
   const updatedRoutine = { ...routine, name: updatedName.value }
   routine.name = updatedRoutine.name
-  console.log(updatedRoutine)
   routineStore.updateRoutine(updatedRoutine);
   editingName.value = false
 }

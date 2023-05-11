@@ -81,8 +81,6 @@ const prop = defineProps({
   categories: Array
 })
 
-const emit = defineEmits(['save-routine'])
-
 const dialog = ref(false)
 
 const actions = ref([])
@@ -159,7 +157,8 @@ function handleSave() {
       favorite: false
     }
   }
-  emit('save-routine', routine)
+  routineStore.addRoutine(routine);
+
   selectedDevices.value = []
   dialog.value = false
   routineName.value = ''
