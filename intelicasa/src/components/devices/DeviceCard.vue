@@ -1,5 +1,5 @@
 <template>
-    <v-card class="ma-0 py-2 px-5" @click.stop="openDialog = true">
+    <v-card class="ma-0 py-2 px-5" :disabled="loadingState" @click.stop="openDialog = true">
         <v-row align="center">
             <v-col cols="3" align="center" class="py-3 px-0">
                 <v-img class="categoryImg" :src="categoryImg" alt="categoryImg" contain />
@@ -32,6 +32,9 @@ import powerOff from '@/assets/powerOff.svg'
 
 import DeviceDialog from './DeviceDialog.vue'
 import { DeviceApi } from '@/api/device';
+import { useDeviceStore } from '@/stores/deviceStore';
+
+const deviceStore = useDeviceStore();
 
 const loadingState = ref(false);
 const openDialog = ref(false);
@@ -48,9 +51,7 @@ const powerBtnImg = computed(() => {
 
 async function toggleButtonState() {
     loadingState.value = true
-    if (await DeviceApi.triggerEvent({ device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn' })) {
-        props.device.state.status = props.device.state.status === 'on' ? 'off' : 'on';
-    }
+    await deviceStore.triggerEvent({ device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn' })
     loadingState.value = false;
 }
 

@@ -35,7 +35,8 @@
       </v-row>
       <v-row cols="12" class="fill-space">
         <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices" item-title="name"
-          return-object v-model="selectedDevice" @update:model-value="addSelectedDevice(selectedDevice)" />
+          return-object v-model="selectedDevice" @update:model-value="addSelectedDevice(selectedDevice)"
+          @update:menu="" />
       </v-row>
       <v-row>
         <v-col cols="12" class="text-center">
@@ -62,6 +63,10 @@ import DeviceCard from '@/components/devices/DeviceCard.vue';
 import { useRoomStore } from '@/stores/roomStore';
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
+import { watch } from 'vue';
+import { useDeviceStore } from '@/stores/deviceStore';
+
+const deviceStore = useDeviceStore();
 
 const roomsStore = useRoomStore();
 
@@ -78,7 +83,7 @@ const devicesShown = computed(() => {
 const openDialog = ref(false);
 /* filter the devices that they dont have the room attribute*/
 const availableDevices = computed(() => {
-  return props.devices.filter(device => !device.room && !newDevices.value.includes(device));
+  return deviceStore.devices.concat(deletedDevices.value).filter(device => (!device.room && !newDevices.value.includes(device)))
 });
 
 const devicesShown = ref(roomsStore.rooms.find(room => room.id === props.room.id).devices)
@@ -122,19 +127,21 @@ function deleteDevice(device) {
 }
 
 function handleSave() {
-    newDevices.value.forEach(device => {
-      roomsStore.addDeviceToRoom(props.room, device)
-    })  
-    deletedDevices.value.forEach(device => {
-      roomsStore.deleteDeviceFromRoom(device)
-    })
-    closeDialog();
+  newDevices.value.forEach(device => {
+    roomsStore.addDeviceToRoom(props.room, device)
+  })
+  deletedDevices.value.forEach(device => {
+    roomsStore.deleteDeviceFromRoom(device)
+  })
+  closeDialog();
 }
 
 function addSelectedDevice(newDevice) {
-  newDevices.value = [...newDevices.value, newDevice]
   devicesShown.value = [...devicesShown.value, newDevice]
-//  roomsStore.addDeviceToRoom(props.room, selectedDevice)
+  deletedDevices.value = deletedDevices.value.splice(deletedDevices.value.findIndex(device => device.id === newDevice.id), 1)
+  newDevices.value = [...newDevices.value, newDevice]
+
+  //  roomsStore.addDeviceToRoom(props.room, selectedDevice)
   selectedDevice.value = ''
   showSelector.value = false
 }

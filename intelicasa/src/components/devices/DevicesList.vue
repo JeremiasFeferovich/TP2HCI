@@ -2,7 +2,7 @@
     <!-- <input v-if="showSearchbar" class="search-bar" v-model="text" type="text" placeholder="Buscar"> -->
     <v-text-field v-if="showSearchbar" v-model="searchText" placeholder="Buscar" type="text"
         variant="outlined"></v-text-field>
-    <v-row v-if="devices && devices.length && !shownDevices.length" justify="center">
+    <v-row v-if="deviceStore.devices && deviceStore.devices.length && !shownDevices.length" justify="center">
         <p class="text-h6" align="center">No hay dispositivos con ese nombre</p>
     </v-row>
     <v-row>
@@ -14,18 +14,28 @@
 
 <script setup>
 
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import DeviceCard from './DeviceCard.vue'
+import { DeviceApi } from '@/api/device';
+import { useDeviceStore, } from '@/stores/deviceStore';
 
+const deviceStore = useDeviceStore();
 const searchText = ref('');
 
 const shownDevices = computed(() => {
-    return props.devices ? props.devices.filter(device => device.name.toLowerCase().includes(searchText.value.toLowerCase())) : null
+    return deviceStore.devices ? deviceStore.devices.filter(device => device.name.toLowerCase().includes(searchText.value.toLowerCase())) : null
 })
 
 const props = defineProps({
-    devices: Array,
     showSearchbar: Boolean,
+})
+
+onMounted(() =>{
+    deviceStore.startEventListeners();
+})
+
+onUnmounted(() =>{
+    deviceStore.stopEventListeners();
 })
 
 const emit = defineEmits(['delete'])
