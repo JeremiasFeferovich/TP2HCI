@@ -35,11 +35,19 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import ImageSelect from './ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
+import { useRoomStore } from '@/stores/roomStore';
 
 import mopMode from '@/assets/vacuum/mopMode.png';
 import vacuumMode from '@/assets/vacuum/vacuumMode.png';
 
-import livingRoom from '@/assets/living.svg';
+import dormitorio from '@/assets/dormitorio.svg';
+import cocina from '@/assets/cocina.svg';
+import living from '@/assets/living.svg';
+import baño from '@/assets/baño.svg';
+import patio from '@/assets/patio.svg';
+import otro from '@/assets/otro.svg';
+
+const roomTypeImg = { ['Dormitorio']: dormitorio, ['Cocina']: cocina, ['Living']: living, ['Baño']: baño, ['Patio']: patio, ['Otro']: otro }
 
 const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
@@ -52,13 +60,12 @@ const props = defineProps({
 })
 
 const deviceStore = useDeviceStore()
+const roomStore = useRoomStore()
 
 const loading = ref(false)
 
 const mode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
-const rooms = ref([
-    { name: 'Living', id: "dc21c4175eec5558", img: livingRoom },
-])
+const rooms = ref(roomStore.rooms.map(x => ({ name: x.meta.type, id: x.id, img: roomTypeImg[x.meta.type] })))
 
 const batteryImg = computed(() => {
     if (props.device.state.batteryLevel < 10) {
@@ -139,7 +146,6 @@ async function setMode(newMode) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             mode.value = newMode;
-            props.device.state.mode = newMode.value;
         }
         loading.value = false
     } else {
@@ -164,9 +170,7 @@ async function startCleaning() {
     const action = { device: { id: props.device.id }, actionName: 'start' }
     if (!props.returnAction) {
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.status = 'active'
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.status = 'active'
@@ -178,9 +182,7 @@ async function pauseCleaning() {
     if (!props.returnAction) {
         loading.value = true
         // No hacemos el if, porque igual hay que hacer un fetch para obtener si
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.status = 'inactive'
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.status = 'inactive'
@@ -191,9 +193,7 @@ async function dock() {
     const action = { device: { id: props.device.id }, actionName: 'dock' }
     if (!props.returnAction) {
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.status = 'docked'
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.status = 'docked'

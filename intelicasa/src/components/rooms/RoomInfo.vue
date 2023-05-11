@@ -37,7 +37,8 @@
           <DeviceSelect v-if="showSelector || !devicesShown.length" 
           :label= "'Dispositivos disponibles'"
           :devices="availableDevices.filter(device => !devicesShown.includes(device))"  
-          @update:selected-device="(item) => addSelectedDevice(item)" />
+          @update:selected-device="(item) => addSelectedDevice(item)"
+          @update:menu="" />
         </v-row>
         <v-row>
           <v-col cols="12" class="text-center">
@@ -62,6 +63,10 @@ import { useRoomStore } from '@/stores/roomStore';
 import { useDeviceStore } from '@/stores/deviceStore'
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
+import { watch } from 'vue';
+import { useDeviceStore } from '@/stores/deviceStore';
+
+const deviceStore = useDeviceStore();
 import DeviceSelect from './DeviceSelect.vue';
 
 

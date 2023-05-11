@@ -13,10 +13,11 @@ export const useRoutineStore = defineStore('routine', () => {
 
     function getRoutinesDevicesStatus() {
         const routinesDevicesStatus = [];
-        const devices = {}
-        const devicesActions = {};
-
+        
         routines.value.forEach(routine => {
+            const devices = []
+            const devicesActions = {};
+
             routine.actions.forEach(action => {
                 const deviceId = action.device.id;
 

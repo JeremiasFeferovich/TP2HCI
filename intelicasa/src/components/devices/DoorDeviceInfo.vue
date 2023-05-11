@@ -83,9 +83,7 @@ async function setDoorState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.status === "opened" ? "close" : "open", params: [] }
     if (!props.returnAction) {
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.status = props.device.state.status === "opened" ? "closed" : "opened";
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.status = props.device.state.status === "opened" ? "closed" : "opened";
@@ -96,9 +94,7 @@ async function setLockState() {
     const action = { device: { id: props.device.id }, actionName: props.device.state.lock === "locked" ? "unlock" : "lock", params: [] }
     if (!props.returnAction) {
         loading.value = true
-        if (await deviceStore.triggerEvent(action)) {
-            props.device.state.lock = props.device.state.lock === "locked" ? "unlocked" : "locked";
-        }
+        await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
         props.device.state.lock = props.device.state.lock === "locked" ? "unlocked" : "locked";

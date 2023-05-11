@@ -115,7 +115,6 @@ async function setHeatSource(newHeatSource) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             heatSource.value = newHeatSource;
-            props.device.state.heat = newHeatSource.value;
         }
         loading.value = false
     } else {
@@ -130,7 +129,6 @@ async function setGrillMode(newGrillMode) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             grillMode.value = newGrillMode;
-            props.device.state.grill = newGrillMode.value;
         }
         loading.value = false
     } else {
@@ -145,7 +143,6 @@ async function setConvectionMode(newConvMode) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             convectionMode.value = newConvMode;
-            props.device.state.convection = newConvMode.value;
         }
         loading.value = false
     } else {

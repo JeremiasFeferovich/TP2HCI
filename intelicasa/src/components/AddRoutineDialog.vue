@@ -71,14 +71,15 @@ import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import AddBtn from './AddBtn.vue'
 import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
 import ImageSelect from './devices/ImageSelect.vue';
+import { useRoutineStore } from '@/stores/routineStore';
 
+
+const routineStore = useRoutineStore();
 
 const prop = defineProps({
   devices: Array,
   categories: Array
 })
-
-const emit = defineEmits(['save-routine'])
 
 const dialog = ref(false)
 
@@ -96,7 +97,8 @@ const newRoutineForm = ref(null)
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
-(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _']
+(v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
+(v) => !routineStore.routines.find(routine => routine.name === v) || 'Ya existe una rutina con ese nombre']
 
 
 
@@ -155,7 +157,8 @@ function handleSave() {
       favorite: false
     }
   }
-  emit('save-routine', routine)
+  routineStore.addRoutine(routine);
+
   selectedDevices.value = []
   dialog.value = false
   routineName.value = ''
