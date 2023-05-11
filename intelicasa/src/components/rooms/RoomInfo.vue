@@ -34,7 +34,7 @@
         <v-divider />
       </v-row>
       <v-row cols="12" class="fill-space">
-        <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices" item-title="name"
+        <v-select v-if="showSelector" label="Dispositivos disponible" :items="availableDevices.concat(deletedDevices).filter(device => !newDevices.includes(device))" item-title="name"
           return-object v-model="selectedDevice" @update:model-value="addSelectedDevice(selectedDevice)" />
       </v-row>
       <v-row>
@@ -78,7 +78,7 @@ const devicesShown = computed(() => {
 const openDialog = ref(false);
 /* filter the devices that they dont have the room attribute*/
 const availableDevices = computed(() => {
-  return props.devices.filter(device => !device.room && !newDevices.value.includes(device));
+  return props.devices.filter(device => !device.room);
 });
 
 const devicesShown = ref(roomsStore.rooms.find(room => room.id === props.room.id).devices)
