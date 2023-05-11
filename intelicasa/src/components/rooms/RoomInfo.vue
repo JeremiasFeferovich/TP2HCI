@@ -64,14 +64,12 @@ import { useDeviceStore } from '@/stores/deviceStore'
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
 import { watch } from 'vue';
-import { useDeviceStore } from '@/stores/deviceStore';
 
 const deviceStore = useDeviceStore();
 import DeviceSelect from './DeviceSelect.vue';
 
 
 const roomsStore = useRoomStore()
-const deviceStore = useDeviceStore()
 
 const props = defineProps({
   room: Object,
