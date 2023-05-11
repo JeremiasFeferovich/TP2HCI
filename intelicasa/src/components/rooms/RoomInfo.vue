@@ -1,62 +1,59 @@
 <template>
-  <v-card class="room-card-info" flat>
-    <v-row>
-
-      <v-card-title v-if="!editingName" class="text-h4">{{ room.name }}</v-card-title>
-      <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoomForm">
-        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
-          @blur="validateForm($refs.editRoomForm)" />
-        <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoomForm)">
-          <v-icon icon="mdi-check" size="20px" />
-        </v-btn>
-      </v-form>
-      <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
-        <v-icon icon="mdi-pencil" size="20px" />
-      </v-btn>
-      <v-col class="mr-1" align="end">
-        <v-icon end icon="mdi-delete" @click="openDialog = true" />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-divider />
-      <div class="pa-3 ml-3 subtitle-text">Dispositivos conectados:</div>
-    </v-row>
-    <v-container fluid>
-      <v-row v-for="(device, index) in devicesShown" :key="index" align="center">
-        <v-col cols="12" class="device-card ml-4">
-          <DeviceCard :device="device" />
-        </v-col>
-        <v-col class="text-end mr-8">
-          <v-btn icon size="small" color="error" @click="deleteDevice(device)">
-            <v-icon>mdi-close</v-icon>
+  <v-dialog width="50%" >
+    <v-card class="room-card-info" flat :disabled="loading">
+      <v-row>
+        <v-card-title v-if="!editingName" class="text-h4">{{ room.name }}</v-card-title>
+        <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoomForm">
+          <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
+            @blur="validateForm($refs.editRoomForm)" />
+          <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoomForm)">
+            <v-icon icon="mdi-check" size="20px" />
           </v-btn>
+        </v-form>
+        <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
+          <v-icon icon="mdi-pencil" size="20px" />
+        </v-btn>
+        <v-col class="mr-1" align="end">
+          <v-icon end icon="mdi-delete" @click="openDialog = true" />
         </v-col>
-        <v-divider />
-      </v-row>
-      <v-row cols="12" class="fill-space">
-        <DeviceSelect v-if="showSelector || !devicesShown.length" 
-        :label= "'Dispositivos disponibles'"
-        :devices="availableDevices.concat(deletedDevices).filter(device => !newDevices.includes(device))"  
-        @update:selected-device="(item) => addSelectedDevice(item)" />
       </v-row>
       <v-row>
-        <v-col cols="12" class="text-center">
-          <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" />
-        </v-col>
+        <v-divider />
+        <div class="pa-3 ml-3 subtitle-text">Dispositivos conectados:</div>
       </v-row>
-    </v-container>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn size="large" color="blue-darken-1" variant="flat" @click="handleSave">
-        Guardar
-      </v-btn>
-    </v-card-actions>
+      <v-container fluid>
+        <v-row v-for="(device, index) in devicesShown" :key="index" align="center">
+          <v-col cols="12" class="device-card ml-4">
+            <DeviceCard :device="device" />
+          </v-col>
+          <v-col class="text-end mr-8">
+            <v-btn icon size="small" color="error" @click="removeDevice(device)">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-col>
+          <v-divider />
+        </v-row>
+        <v-row cols="8" class="fill-space">
+          <DeviceSelect v-if="showSelector || !devicesShown.length" 
+          :label= "'Dispositivos disponibles'"
+          :devices="availableDevices.filter(device => !devicesShown.includes(device))"  
+          @update:selected-device="(item) => addSelectedDevice(item)" />
+        </v-row>
+        <v-row>
+          <v-col cols="12" class="text-center">
+            <v-btn icon="mdi-plus" density="comfortable" @click="showSelector = true" />
+          </v-col>
+        </v-row>
+      </v-container>
 
-  </v-card>
-  <v-dialog v-model="openDialog" width="auto">
-    <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta habitación?" @cancelAction="openDialog = false"
-      @confirmAction="deleteRoom" />
+
+    </v-card>
+    <v-dialog v-model="openDialog" width="auto">
+      <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta habitación?" @cancelAction="openDialog = false"
+        @confirmAction="deleteRoom" />
+    </v-dialog>
   </v-dialog>
+
 </template>
   
 <script setup>
@@ -65,7 +62,7 @@ import { useRoomStore } from '@/stores/roomStore';
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
 import DeviceSelect from './DeviceSelect.vue';
-
+import { load } from 'webfontloader';
 const roomsStore = useRoomStore();
 
 const props = defineProps({
@@ -81,9 +78,6 @@ const availableDevices = computed(() => {
 });
 
 const devicesShown = ref(roomsStore.rooms.find(room => room.id === props.room.id).devices)
-const newDevices = ref([])
-const deletedDevices = ref([])
-const selectedDevice = ref(null)
 const showSelector = ref(false)
 const editingName = ref(false);
 const updatedName = ref(props.room.name);
@@ -93,10 +87,13 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
 (v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
 (v) => (!roomsStore.rooms.find(room => room.name === v) || props.room.name === v) || 'Ya existe una habitación con ese nombre']
+const loading = ref(false)
 
-function editName() {
+async function editName() {
   const updatedRoom = { ...props.room, name: updatedName.value }
-  roomsStore.updateRoom(updatedRoom);
+  loading.value = true
+  await roomsStore.updateRoom(updatedRoom);
+  loading.value = false
   editingName.value = false
 }
 async function validateForm(form) {
@@ -106,40 +103,28 @@ async function validateForm(form) {
   }
 }
 
-function deleteRoom() {
-  roomsStore.deleteRoom(props.room)
+async function deleteRoom() {
+  loading.value = true
+  await roomsStore.deleteRoom(props.room)
+  loading.value = false
 }
 
-function deleteDevice(device) {
-  let wasNew = false
+async function removeDevice(device) {
   devicesShown.value = devicesShown.value.filter(dev => dev.id !== device.id)
-  if (newDevices.value.includes(device)) {
-    wasNew = true
-  }
-  wasNew ? newDevices.value = newDevices.value.filter(dev => dev.id !== device.id) :   deletedDevices.value = [...deletedDevices.value, device]
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 500)
+  await roomsStore.removeDeviceFromRoom(device)
+  // loading.value = false
 }
 
-function handleSave() {
-    newDevices.value.forEach(device => {
-      roomsStore.addDeviceToRoom(props.room, device)
-    })  
-    deletedDevices.value.forEach(device => {
-      roomsStore.deleteDeviceFromRoom(device)
-    })
-    closeDialog();
-}
-
-function addSelectedDevice(newDevice) {
-  newDevices.value = [...newDevices.value, newDevice]
+async function addSelectedDevice(newDevice) {
   devicesShown.value = [...devicesShown.value, newDevice]
-  selectedDevice.value = ''
+  loading.value = true
+  await roomsStore.addDeviceToRoom(props.room.id, newDevice)
+  loading.value = false
   showSelector.value = false
-}
-
-const emit = defineEmits(['closeDialog'])
-
-function closeDialog() {
-  emit('closeDialog', newDevices)
 }
 
 </script>

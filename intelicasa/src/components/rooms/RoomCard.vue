@@ -29,9 +29,9 @@
             </v-col>
         </v-row>
     </v-card>
-    <v-dialog v-model="openDialog" width="50%">
-        <RoomInfo :room="room" :devices="devices" @close-dialog="openDialog = false" />
-    </v-dialog>
+    <!-- <v-dialog v-model="openDialog" width="50%"> -->
+        <RoomInfo v-model="openDialog" :room="room" :devices="devices" @close-dialog="openDialog = false" />
+    <!-- </v-dialog> -->
 </template>
 
 <script setup>
