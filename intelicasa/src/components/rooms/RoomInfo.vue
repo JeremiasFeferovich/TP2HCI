@@ -112,11 +112,8 @@ async function deleteRoom() {
 async function removeDevice(device) {
   devicesShown.value = devicesShown.value.filter(dev => dev.id !== device.id)
   loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 500)
   await roomsStore.removeDeviceFromRoom(device)
-  // loading.value = false
+  loading.value = false
 }
 
 async function addSelectedDevice(newDevice) {
