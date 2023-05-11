@@ -17,6 +17,4 @@
         rooms: Array,
         devices: Array
     })
-
-
 </script>

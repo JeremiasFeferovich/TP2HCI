@@ -12,16 +12,13 @@
             <v-col>
                 <v-card-text class="room-info mr-5 mt-1 align-end">
                     <p class="text-data text-h6">
-                        {{ room.devices ? 
-                            room.devices.length === 1 ? 
-                            "1 dispositivo conectado" : 
-                            room.devices.length + " dispositivos conectados" 
-                            :"No hay dispositivos encendidos" 
+                        {{ connectedDevices === 0 ? "No hay dispositivos conectados" :
+                            connectedDevices === 1 ? "1 dispositivo conectado" : `${connectedDevices} dispositivos conectados`
                         }}
                     </p>
                     <p class="text-data text-h6">
-                        {{ onDevices.length === 1 ? 
-                            "1 dispositivo encendido" 
+                        {{ onDevices.length === 1 ?
+                            "1 dispositivo encendido"
                             : onDevices.length + " dispositivos encendidos"
                         }}
                     </p>
@@ -29,9 +26,7 @@
             </v-col>
         </v-row>
     </v-card>
-    <!-- <v-dialog v-model="openDialog" width="50%"> -->
-        <RoomInfo v-model="openDialog" :room="room" :devices="devices" @close-dialog="openDialog = false" />
-    <!-- </v-dialog> -->
+    <RoomInfo v-model="openDialog" :room="room" :devices="devices" @close-dialog="openDialog = false" />
 </template>
 
 <script setup>
@@ -54,10 +49,11 @@ const props = defineProps({
     devices: Array
 })
 
-const onDevices = computed(() => {
-    return props.room.devices? props.room.devices.filter(device => device.state.status === 'on') : []
-});
+const allDevices = ref(props.room.devices)
 
+const onDevices = computed(() => {
+    return props.room.devices ? props.room.devices.filter(device => device.state.status === 'on') : []
+});
 
 const typeImg = computed(() => {
     switch (props.room.meta.type) {
@@ -75,6 +71,11 @@ const typeImg = computed(() => {
             return otro;
     }
 });
+
+const connectedDevices = computed(() => {
+    const idx = roomStore.rooms.findIndex(room => props.room.id === room.id)
+    return idx !== -1 && roomStore.rooms[idx] && roomStore.rooms[idx].devices ? roomStore.rooms[idx].devices.length : 0
+})
 
 const emit = defineEmits(['delete-room']);
 

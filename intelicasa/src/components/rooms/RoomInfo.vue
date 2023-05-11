@@ -59,11 +59,14 @@
 <script setup>
 import DeviceCard from '@/components/devices/DeviceCard.vue';
 import { useRoomStore } from '@/stores/roomStore';
+import { useDeviceStore } from '@/stores/deviceStore'
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
 import DeviceSelect from './DeviceSelect.vue';
-import { load } from 'webfontloader';
-const roomsStore = useRoomStore();
+
+
+const roomsStore = useRoomStore()
+const deviceStore = useDeviceStore()
 
 const props = defineProps({
   room: Object,
@@ -74,7 +77,7 @@ const openDialog = ref(false);
 
 /* filter the devices that they dont have the room attribute*/
 const availableDevices = computed(() => {
-  return props.devices.filter(device => !device.room);
+  return deviceStore.devices.filter(device => !device.room);
 });
 
 const devicesShown = ref(roomsStore.rooms.find(room => room.id === props.room.id).devices)
@@ -110,16 +113,16 @@ async function deleteRoom() {
 }
 
 async function removeDevice(device) {
-  devicesShown.value = devicesShown.value.filter(dev => dev.id !== device.id)
   loading.value = true
   await roomsStore.removeDeviceFromRoom(device)
+  devicesShown.value = devicesShown.value.filter(dev => dev.id !== device.id)
   loading.value = false
 }
 
 async function addSelectedDevice(newDevice) {
-  devicesShown.value = [...devicesShown.value, newDevice]
   loading.value = true
   await roomsStore.addDeviceToRoom(props.room.id, newDevice)
+  devicesShown.value = [...devicesShown.value, newDevice]
   loading.value = false
   showSelector.value = false
 }

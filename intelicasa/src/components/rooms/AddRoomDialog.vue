@@ -23,18 +23,6 @@
                 <v-list class="mb-3">
                   <v-list-item-subtitle>Dispositivos seleccionados</v-list-item-subtitle>
                   <v-divider length="75%" />
-                  <!--
-                  <v-card v-if="selectedDevices.length === 0">
-                    <div class="pa-2 text-center text-h6 bg-secondary rounded-xl rounded-be-0 mt-3 mb-3 w-50 h-50">
-                      <p style="font-size: 14px;">Todavía no se han seleccionado dispositivos.</p>
-                    </div>
-                  </v-card>
-                  <v-alert v-if="attemptSave && selectedDevices.length === 0" v-model="attemptSave" border="start"
-                    variant="tonal" closable close-label="Close Alert" color="warning" title="Advertencia" max-width="80%"
-                    max-height="70px" class="mt-2 mb-2">
-                    Se requiere seleccionar al menos un dispositivo para crear una habitación.
-                  </v-alert>
-                -->
                   <v-list-item v-for="(device, index) in selectedDevices" :key="index">
                     <v-card class="pa-2">
                       <v-row align="center">
