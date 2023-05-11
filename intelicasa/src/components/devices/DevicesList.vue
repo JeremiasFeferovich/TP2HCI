@@ -26,7 +26,7 @@ const shownDevices = computed(() => {
 })
 
 const props = defineProps({
-    showSearchbar: Boolean,
+    showSearchbar: Boolean
 })
 
 onMounted(() =>{
