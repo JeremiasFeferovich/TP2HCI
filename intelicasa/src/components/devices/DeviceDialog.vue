@@ -68,7 +68,6 @@ const loadingFav = ref(false);
 const disabled = computed(() => props.device.state.status === 'off' ? true : false);
 
 const editingName = ref(false);
-console.log(props.device)
 const updatedName = ref(props.device.name);
 const editDeviceForm = ref(null)
 const openDialog = ref(false)

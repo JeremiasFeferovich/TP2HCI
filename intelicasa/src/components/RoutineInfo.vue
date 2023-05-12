@@ -28,7 +28,7 @@
       </v-row>
       <v-col justify="center" align="center">
         <v-row cols="12" class="fill-space">
-          <v-expansion-panels variant="inset" :model-value="opened" v-model="expansionPanelsValues">
+          <v-expansion-panels variant="inset" v-model="expansionPanelsValues">
             <v-expansion-panel mandatory v-for="(device, index) in routineStore.routinesDevicesStatus[routine.id]"
               :key="index" :value="device.name">
 
@@ -42,7 +42,7 @@
                       {{ device.name }}
                     </v-col>
                     <v-col cols="3" class="d-flex justify-end pr-5">
-                      <v-btn icon size="small" @click="deleteDevice(device)">
+                      <v-btn icon size="small" @click="checkIfLastDevice(device)">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                     </v-col>
@@ -80,7 +80,7 @@
   </v-dialog>
   <v-dialog v-model="openDeleteDeviceDialog" width="auto">
     <ConfirmationDialog message="Si eliminas todos los dispositivos se borrará la rutina, ¿Deseas continuar?"
-      @cancelAction="openDialog = false" @confirmAction="deleteRoutine" />
+      @cancelAction="openDeleteDeviceDialog = false" @confirmAction="deleteRoutine" />
   </v-dialog>
 </template>
   
@@ -95,7 +95,6 @@ import { RoutineApi } from '@/api/routine';
 import ImageSelect from './devices/ImageSelect.vue';
 const routineStore = useRoutineStore();
 
-console.log(routineStore.routinesDevicesStatus[routine.id])
 
 const { routine, allDevices } = defineProps({
   routine: Object,
@@ -121,15 +120,22 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 
 function deleteRoutine() {
   routineStore.deleteRoutine(routine)
+  routineStore.routinesDevicesStatus.splice(routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id), 1)
   emit('close-dialog');
 }
+
+function checkIfLastDevice(device) {
+  if (new Set(routine.actions.map(action => action.device.id)).size === 1) {
+    openDeleteDeviceDialog.value = true
+  } else {
+    deleteDevice(device)
+  }
+}
+
 
 function deleteDevice(device) {
   routineStore.routinesDevicesStatus[routine.id] = routineStore.routinesDevicesStatus[routine.id].filter(deviceState => deviceState.id !== device.id)
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
-  if (routine.actions.length === 0) {
-    openDeleteDeviceDialog.value = true
-  }
 }
 
 const favoriteBtnImg = computed(() => {
