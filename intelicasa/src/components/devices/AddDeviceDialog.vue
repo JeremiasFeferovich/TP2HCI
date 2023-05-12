@@ -19,6 +19,10 @@
                             <ImageSelect :rules="categoryRules" :items="categories"
                                 @update:selected-item="(item) => selectedCategory = item" label="Tipo*" />
                         </v-row>
+                        <v-row class="mt-5">
+                            <ImageSelect :items="rooms" @update:selected-item="(item) => selectedRoom = item"
+                                label="Habitación" />
+                        </v-row>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -36,14 +40,19 @@ import ImageSelect from './ImageSelect.vue';
 import AddBtn from '../AddBtn.vue';
 import CloseAndSaveBtns from '../CloseAndSaveBtns.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
+import { useRoomStore } from '@/stores/roomStore';
 
 const deviceStore = useDeviceStore();
+const roomStore = useRoomStore();
 
 const dialog = ref(false)
 const selectedCategory = ref(null)
+const selectedRoom = ref(null)
 const deviceName = ref('')
 
 const newDeviceForm = ref(null)
+
+const rooms = ref(roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomStore.roomTypeImg[x.meta.type] })))
 
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
@@ -73,7 +82,11 @@ async function handleSave() {
         name: deviceName.value,
         category: selectedCategory.value
     }
-    deviceStore.addDevice(device);
+    await deviceStore.addDevice(device);
+    if (selectedRoom.value) {
+        await roomStore.addDeviceToRoom(selectedRoom.value.id, device)
+    }
+    selectedRoom.value = null
     selectedCategory.value = null
     deviceName.value = ''
     dialog.value = false

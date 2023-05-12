@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="50%" >
+  <v-dialog width="50%">
     <v-card class="room-card-info" flat :disabled="loading">
       <v-row>
         <v-card-title v-if="!editingName" class="text-h4">{{ room.name }}</v-card-title>
@@ -27,18 +27,16 @@
             <DeviceCard :deviceId="device.id" />
           </v-col>
           <v-col class="text-end mr-8">
-            <v-btn icon size="small" color="error" @click="removeDevice(device)">
+            <v-btn icon size="small" @click="removeDevice(device)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-col>
           <v-divider />
         </v-row>
         <v-row cols="8" class="fill-space">
-          <DeviceSelect v-if="showSelector || !devicesShown.length" 
-          :label= "'Dispositivos disponibles'"
-          :devices="availableDevices.filter(device => !devicesShown.includes(device))"  
-          @update:selected-device="(item) => addSelectedDevice(item)"
-          @update:menu="" />
+          <DeviceSelect v-if="showSelector || !devicesShown.length" :label="'Dispositivos disponibles'"
+            :devices="availableDevices.filter(device => !devicesShown.includes(device))"
+            @update:selected-device="(item) => addSelectedDevice(item)" @update:menu="" />
         </v-row>
         <v-row>
           <v-col cols="12" class="text-center">
@@ -52,7 +50,6 @@
         @confirmAction="deleteRoom" />
     </v-dialog>
   </v-dialog>
-
 </template>
   
 <script setup>

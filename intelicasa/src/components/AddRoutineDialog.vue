@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="70%">
+  <v-dialog v-model="dialog" width="70%" v-click-outside="resetForm">
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
@@ -30,8 +30,11 @@
                           <v-col cols="6" class="d-flex justify-start text-h5">
                             {{ device.name }}
                           </v-col>
+
                           <v-col cols="3" class="d-flex justify-end pr-5">
-                            <v-icon end icon="mdi-delete" @click.stop="deleteDevice(device)" />
+                            <v-btn icon size="small" @click="deleteDevice(device)">
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
                           </v-col>
                         </v-row>
                       </template>
@@ -39,7 +42,7 @@
                     <v-expansion-panel-text>
                       <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
                         :loadingState="false" @changeState="toggleButtonState(device)"
-                        @actionSet="(action) => addAction(action)"/>
+                        @actionSet="(action) => addAction(action)" />
                     </v-expansion-panel-text>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -121,9 +124,28 @@ async function validateForm(form) {
   }
 }
 
+watch(dialog, (value) => {
+  if (!value) {
+    resetForm()
+  }
+})
+
+
+
+function resetForm() {
+  console.log('reset')
+  selectedDevices.value = []
+  dialog.value = false
+  routineName.value = ''
+  actions.value = []
+  devicesState.value = []
+  selectedDevice.value = ''
+  showSelector.value = false
+}
 
 function addAction(action) {
   const { device, actionName } = action
+
   if (actionName === "turnOn" || actionName === "turnOff") {
     actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
   } else {
@@ -133,9 +155,7 @@ function addAction(action) {
 }
 
 function closeDialog() {
-  dialog.value = false
-  selectedDevices.value = []
-  selectedDevice.value = ''
+  resetForm()
 }
 
 async function handleSave() {
@@ -157,6 +177,7 @@ async function handleSave() {
 }
 
 const addSelectedDevice = (selected) => {
+  console.log(selected)
   selectedDevice.value = prop.devices.find(device => device.name === selected.name);
   selectedDevices.value.push(selectedDevice.value)
   selectedDevice.value = ''

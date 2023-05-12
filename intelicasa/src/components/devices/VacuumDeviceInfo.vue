@@ -40,16 +40,7 @@ import { useRoomStore } from '@/stores/roomStore';
 
 import mopMode from '@/assets/vacuum/mopMode.png';
 import vacuumMode from '@/assets/vacuum/vacuumMode.png';
-
-import dormitorio from '@/assets/dormitorio.svg';
-import cocina from '@/assets/cocina.svg';
-import living from '@/assets/living.svg';
-import baño from '@/assets/baño.svg';
-import patio from '@/assets/patio.svg';
-import otro from '@/assets/otro.svg';
 import { watch } from 'vue';
-
-const roomTypeImg = { ['Dormitorio']: dormitorio, ['Cocina']: cocina, ['Living']: living, ['Baño']: baño, ['Patio']: patio, ['Otro']: otro }
 
 const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
@@ -65,7 +56,7 @@ const deviceStore = useDeviceStore()
 const roomStore = useRoomStore()
 
 const loading = ref(false)
-const rooms = ref(roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomTypeImg[x.meta.type] })))
+const rooms = ref(roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomStore.roomTypeImg[x.meta.type] })))
 
 const localMode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
 const localLocation = ref(rooms.value.find(x => x.is = props.device.state.location))
