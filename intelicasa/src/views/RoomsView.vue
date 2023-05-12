@@ -22,6 +22,7 @@ const deviceStore = useDeviceStore();
 onMounted(async () => {
     loading.value = true;
     await roomStore.fetchRooms();
+    await deviceStore.fetchDevices();
     loading.value = false;
 })
 

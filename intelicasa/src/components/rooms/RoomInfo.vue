@@ -60,10 +60,10 @@ import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
 import DeviceSelect from './DeviceSelect.vue';
 
-
-
 const roomsStore = useRoomStore()
 const deviceStore = useDeviceStore();
+
+const emit = defineEmits(['closeDialog']);
 
 const props = defineProps({
   room: Object
@@ -106,6 +106,8 @@ async function deleteRoom() {
   loading.value = true
   await roomsStore.deleteRoom(props.room)
   loading.value = false
+  openDialog.value = false
+  emit('closeDialog')
 }
 
 async function removeDevice(device) {
