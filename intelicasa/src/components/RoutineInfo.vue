@@ -77,6 +77,10 @@
     <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta rutina?" @cancelAction="openDialog = false"
       @confirmAction="deleteRoutine" />
   </v-dialog>
+  <v-dialog v-model="openDeleteDeviceDialog" width="auto">
+    <ConfirmationDialog message="Si eliminas todos los dispositivos se borrará la rutina, ¿Deseas continuar?"
+      @cancelAction="openDialog = false" @confirmAction="deleteRoutine" />
+  </v-dialog>
 </template>
   
 <script setup>
@@ -101,6 +105,7 @@ const selectedDevice = ref('');
 const emit = defineEmits(['close-dialog']);
 const showSelector = ref(false);
 const openDialog = ref(false);
+const openDeleteDeviceDialog = ref(false);
 const editingName = ref(false);
 const editRoutineForm = ref(null);
 const loadingFav = ref(false);
@@ -121,8 +126,7 @@ function deleteDevice(device) {
   routineStore.routinesDevicesStatus[routine.id] = routineStore.routinesDevicesStatus[routine.id].filter(deviceState => deviceState.id !== device.id)
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
   if (routine.actions.length === 0) {
-    routineStore.deleteRoutine(routine)
-    emit('close-dialog')
+    openDeleteDeviceDialog.value = true
   }
 }
 
