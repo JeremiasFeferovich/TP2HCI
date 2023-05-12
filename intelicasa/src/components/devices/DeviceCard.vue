@@ -5,19 +5,19 @@
                 <v-img class="categoryImg" :src="categoryImg" alt="categoryImg" contain />
             </v-col>
             <v-col cols="6" class="text-center" align-self="center">
-                <v-card-title class="text-h5">{{ props.device.name }}</v-card-title>
+                <v-card-title class="text-h5">{{ device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
                 <v-icon v-if="device.meta.category.name === 'Aspiradora'" :icon="batteryImg" size="35" />
                 <v-icon v-else-if="device.meta.category.name === 'Puerta'" :icon="doorImg" size="40" />
-                <v-btn v-else class="square-btn rounded-circle" v-model="props.device.state.status"
+                <v-btn v-else class="square-btn rounded-circle" v-model="device.state.status"
                     @click.stop="toggleButtonState" variant="text" :loading="loadingState">
                     <img :src="powerBtnImg" contain alt="powerState" />
                 </v-btn>
             </v-col>
         </v-row>
         <v-dialog v-model="openDialog" width="50%">
-            <DeviceDialog :device="props.device" :loadingState="loadingState" @changeState="toggleButtonState"
+            <DeviceDialog :device="device" :loadingState="loadingState" @changeState="toggleButtonState"
                 :categoryImg="categoryImg" @delete="deleteDevice" />
         </v-dialog>
     </v-card>
@@ -31,7 +31,6 @@ import powerOn from '@/assets/powerOn.svg';
 import powerOff from '@/assets/powerOff.svg'
 
 import DeviceDialog from './DeviceDialog.vue'
-import { DeviceApi } from '@/api/device';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 const deviceStore = useDeviceStore();
@@ -39,19 +38,21 @@ const deviceStore = useDeviceStore();
 const loadingState = ref(false);
 const openDialog = ref(false);
 
+const device = computed(() => deviceStore.getDevice(props.deviceId));
+
 const props = defineProps({
-    device: Object,
+    deviceId: String,
 })
 
-const categoryImg = computed(() => props.device.meta.category.img);
+const categoryImg = computed(() => device.value.meta.category.img);
 
 const powerBtnImg = computed(() => {
-    return props.device.state.status === 'on' ? powerOn : powerOff;
+    return device.value.state.status === 'on' ? powerOn : powerOff;
 })
 
 async function toggleButtonState() {
     loadingState.value = true
-    await deviceStore.triggerEvent({ device: { id: props.device.id }, actionName: props.device.state.status === 'on' ? 'turnOff' : 'turnOn' })
+    await deviceStore.triggerEvent({ device: { id: device.value.id }, actionName: device.value.state.status === 'on' ? 'turnOff' : 'turnOn' })
     loadingState.value = false;
 }
 
@@ -63,35 +64,35 @@ function deleteDevice() {
 }
 
 const doorImg = computed(() => {
-    if (props.device.state.status === 'opened') {
+    if (device.value.state.status === 'opened') {
         return 'mdi-door-open'
-    } else if (props.device.state.status === 'closed' && props.device.state.lock === 'locked') {
+    } else if (device.value.state.status === 'closed' && device.value.state.lock === 'locked') {
         return 'mdi-door-closed-lock'
     } else
         return 'mdi-door-closed'
 })
 
 const batteryImg = computed(() => {
-    if (props.device.state.batteryLevel < 10) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-10`
-    } else if (props.device.state.batteryLevel < 20) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-20`
-    } else if (props.device.state.batteryLevel < 30) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-30`
-    } else if (props.device.state.batteryLevel < 40) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-40`
-    } else if (props.device.state.batteryLevel < 50) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-50`
-    } else if (props.device.state.batteryLevel < 60) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-60`
-    } else if (props.device.state.batteryLevel < 70) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-70`
-    } else if (props.device.state.batteryLevel < 80) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-80`
-    } else if (props.device.state.batteryLevel < 90) {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-90`
+    if (device.value.state.batteryLevel < 10) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-10`
+    } else if (device.value.state.batteryLevel < 20) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-20`
+    } else if (device.value.state.batteryLevel < 30) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-30`
+    } else if (device.value.state.batteryLevel < 40) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-40`
+    } else if (device.value.state.batteryLevel < 50) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-50`
+    } else if (device.value.state.batteryLevel < 60) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-60`
+    } else if (device.value.state.batteryLevel < 70) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-70`
+    } else if (device.value.state.batteryLevel < 80) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-80`
+    } else if (device.value.state.batteryLevel < 90) {
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-90`
     } else {
-        return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}`
+        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}`
     }
 
 })

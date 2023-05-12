@@ -10,8 +10,8 @@
         :returnAction="returnAction" @actionSet="(action) => emitAction(action)" />
     <VacuumDeviceInfo v-else-if="device.meta.category.name === 'Aspiradora'" :device="device" :returnAction="returnAction"
         @actionSet="(action) => emitAction(action)" />
-    <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device"
-        @actionSet="(action) => emitAction(action)" :returnAction="returnAction" />
+    <DoorDeviceInfo v-else-if="device.meta.category.name === 'Puerta'" :device="device" :returnAction="returnAction"
+        @actionSet="(action) => emitAction(action)" />
 </template>
 
 <script setup>

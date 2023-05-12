@@ -19,13 +19,14 @@
     </v-row>
     <v-row justify="center">
         <v-sheet class="imageCont">
-            <ImageSelect :disabled="disabled || loading" label="Modo" :items="modeItems" :initial-item="mode"
+            <ImageSelect :disabled="disabled || loading" label="Modo" :items="modeItems" :initial-item="localMode"
+                :ignore-initial-item-changes="returnAction"
                 @update:selected-item="(updatedValue) => setMode(updatedValue)" />
         </v-sheet>
     </v-row>
     <v-row justify="center">
         <v-sheet class="imageCont">
-            <ImageSelect :disabled="loading" label="Ubicación" :items="rooms" :initial-item="location"
+            <ImageSelect :disabled="loading" label="Ubicación" :items="rooms" :initial-item="localLocation"
                 @update:selected-item="(updatedValue) => setLocation(updatedValue)" />
         </v-sheet>
     </v-row>
@@ -46,6 +47,8 @@ import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
+import { watch } from 'vue';
+import { onBeforeMount } from 'vue';
 
 const roomTypeImg = { ['Dormitorio']: dormitorio, ['Cocina']: cocina, ['Living']: living, ['Baño']: baño, ['Patio']: patio, ['Otro']: otro }
 
@@ -63,9 +66,21 @@ const deviceStore = useDeviceStore()
 const roomStore = useRoomStore()
 
 const loading = ref(false)
+const rooms = ref(roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomTypeImg[x.meta.type] })))
 
-const mode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
-const rooms = ref(roomStore.rooms.map(x => ({ name: x.meta.type, id: x.id, img: roomTypeImg[x.meta.type] })))
+const localMode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
+const localLocation = ref(rooms.value.find(x => x.is = props.device.state.location))
+
+const mode = computed(() => deviceStore.getDevice(props.device.id).state.mode)
+const location = computed(() => deviceStore.getDevice(props.device.id).state.location)
+
+watch(location, (newVal) => {
+    if (!props.returnAction) localLocation.value = rooms.value.find(x => x.id === newVal.id);
+})
+
+watch(mode, (newVal) => {
+    if (!props.returnAction) localMode.value = modeItems.value.find(x => x.value === newVal.value);
+})
 
 const batteryImg = computed(() => {
     if (props.device.state.batteryLevel < 10) {
@@ -104,11 +119,9 @@ const status = computed(() => {
     }
 });
 
-const location = ref(rooms.value.find(x => x.is = props.device.state.location))
-
 const emit = defineEmits(['actionSet']);
 
-onMounted(() => {
+onBeforeMount(async () => {
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
     switch (props.device.state.status) {
@@ -145,11 +158,11 @@ async function setMode(newMode) {
     if (!props.returnAction) {
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
-            mode.value = newMode;
+            localMode.value = newMode;
         }
         loading.value = false
     } else {
-        mode.value = newMode;
+        localMode.value = newMode;
         props.device.state.mode = newMode.value;
     }
 }
@@ -162,7 +175,7 @@ async function setLocation(newLocation) {
         await deviceStore.triggerEvent(action)
         loading.value = false
     }
-    location.value = newLocation;
+    localLocation.value = newLocation;
     props.device.state.location = newLocation.id;
 }
 

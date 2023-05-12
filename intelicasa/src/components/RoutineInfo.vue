@@ -52,7 +52,6 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
-
         </v-row>
       </v-col>
     </v-container>
@@ -88,6 +87,8 @@ import favoriteNo from '@/assets/favoriteNo.svg'
 import { RoutineApi } from '@/api/routine';
 import ImageSelect from './devices/ImageSelect.vue';
 const routineStore = useRoutineStore();
+
+console.log(routineStore.routinesDevicesStatus[routine.id])
 
 const { routine, allDevices } = defineProps({
   routine: Object,

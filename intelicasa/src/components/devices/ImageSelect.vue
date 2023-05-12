@@ -1,5 +1,5 @@
 <template>
-    <v-select :disabled="disabled" v-model="selectedItem" return-object variant="outlined" :items="items"
+    <v-select :disabled="disabled" v-model="localSelectedItem" return-object variant="outlined" :items="items"
         :label="props.label" hide-details="auto" auto item-title="name" hide-selected
         :menu-props="{ closeOnContentClick: true, }">
         <template v-slot:selection="{ item, index }">
@@ -23,25 +23,30 @@
 </template>
   
 <script setup>
+import { ref, computed, watch } from 'vue';
 
-import { ref, computed } from 'vue';
+const localSelectedItem = ref(props.initialItem);
+const selectedItem = computed(()=>props.initialItem);
 
-const selectedItem = ref(props.initialItem);
+watch(selectedItem, (newVal) => {
+    if (!props.ignoreInitialItemChanges) localSelectedItem.value = newVal;
+})
 
-const showSelectedOnly = computed(() => props.items.length === 1 && selectedItem.value === props.items[0])
+const showSelectedOnly = computed(() => props.items.length === 1 && localSelectedItem.value === props.items[0])
 
 const props = defineProps({
     items: Array,
     label: String,
     disabled: Boolean,
-    initialItem: Object
+    initialItem: Object,
+    ignoreInitialItemChanges: Boolean
 });
 
 const emit = defineEmits(['update:selectedItem']);
 
 function updateSelectedItem(item) {
-    selectedItem.value = item.value;
-    emit('update:selectedItem', selectedItem.value);
+    localSelectedItem.value = item.value;
+    emit('update:selectedItem', localSelectedItem.value);
 }
 
 

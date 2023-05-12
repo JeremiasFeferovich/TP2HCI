@@ -27,12 +27,12 @@
                 Dispositivos destacados
                 <v-divider />
             </v-row>
-            <v-btn class="text-h6" align="center" variant="text"
+            <v-btn class="text-h6 mb-2" align="center" variant="text"
                 v-if="deviceStore.devices.length && !deviceStore.devices.filter(device => device.meta.favorite).length"
                 :to="{ name: 'devices' }" value="devices">
                 Aún no tienes dispositivos destacados. Haga click aquí para seleccionar uno.
             </v-btn>
-            <v-btn class="text-h6" align="center" variant="text" v-if="!deviceStore.devices.length"
+            <v-btn class="text-h6 mb-2" align="center" variant="text" v-if="!deviceStore.devices.length"
                 :to="{ name: 'devices' }" value="devices">
                 Aún no tienes dispositivos. Haga click aquí para agregar uno.
             </v-btn>

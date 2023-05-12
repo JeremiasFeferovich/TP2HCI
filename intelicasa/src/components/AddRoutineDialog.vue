@@ -39,8 +39,7 @@
                     <v-expansion-panel-text>
                       <DevicesOptions :returnAction="true" :disabled="device.state.status === 'off'" :device="device"
                         :loadingState="false" @changeState="toggleButtonState(device)"
-                        @actionSet="(action) => addAction(action)"
-                        @deviceUpdate="deviceState => addDeviceState(deviceState)" />
+                        @actionSet="(action) => addAction(action)"/>
                     </v-expansion-panel-text>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -135,12 +134,6 @@ function addAction(action) {
   }
   actions.value.push(action)
 }
-
-function addDeviceState(deviceState) {
-  devicesState.value = devicesState.value.filter(d => !d || d.id !== deviceState.id)
-  devicesState.value.push(deviceState)
-}
-
 
 function closeDialog() {
   dialog.value = false

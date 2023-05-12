@@ -26,7 +26,7 @@ export const useDeviceStore = defineStore('device', () => {
     const eventSource = ref(null);
 
     // Getters - computed
-
+    const getDevice = computed(() => (deviceId) => devices.value.find(device => device.id === deviceId))
     // Actions - funciones Javascript
     async function fetchDevices() {
         const fetchedDevices = await DeviceApi.getAll()
@@ -98,8 +98,6 @@ export const useDeviceStore = defineStore('device', () => {
         eventSource.value = DeviceApi.startEventListeners(deviceId ? deviceId : null)
         eventSource.value.onmessage = (event) => {
             const eventJson = JSON.parse(event.data);
-            console.log(eventJson)
-            console.log(eventJson.event)
             const device = devices.value.find(device => device.id === eventJson.deviceId)
             const result = updateDeviceFromEvent(eventJson)
             if (result) {
@@ -149,6 +147,8 @@ export const useDeviceStore = defineStore('device', () => {
                 return { horizontalSwing: event.args.newSwing };
             case 'fanSpeedChanged':
                 return { fanSpeed: event.args.newSpeed };
+            case 'heatChanged':
+                return { heat: event.args.newHeat };
             case 'grillChanged':
                 return { grill: event.args.newGrill };
             case 'convectionChanged':
@@ -294,6 +294,7 @@ export const useDeviceStore = defineStore('device', () => {
 
     return {
         devices, categories,
+        getDevice,
         fetchDevices, addDevice, fetchDevice, updateDevice, deleteDevice, fetchCategories, triggerEvent, startEventListeners, stopEventListeners
     }
 

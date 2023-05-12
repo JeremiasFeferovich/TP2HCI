@@ -1,12 +1,12 @@
 <template>
     <v-text-field v-if="showSearchbar" v-model="searchText" placeholder="Buscar" type="text"
         variant="outlined"></v-text-field>
-    <v-row v-if="deviceStore.devices && deviceStore.devices.length && !shownDevices.length" justify="center">
+    <v-row v-if="devices.length && !shownDevices.length" justify="center">
         <p class="text-h6" align="center">No hay dispositivos con ese nombre</p>
     </v-row>
     <v-row>
         <v-col v-for="(dev, index) in shownDevices" :key="index" cols="12" sm="6" lg="3">
-            <DeviceCard :device="dev" @delete="deleteDevice(dev)" />
+            <DeviceCard :deviceId="dev.id" @delete="deleteDevice(dev)" />
         </v-col>
     </v-row>
 </template>
@@ -15,17 +15,17 @@
 
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import DeviceCard from './DeviceCard.vue'
-import { DeviceApi } from '@/api/device';
 import { useDeviceStore, } from '@/stores/deviceStore';
 
 const deviceStore = useDeviceStore();
 const searchText = ref('');
 
 const shownDevices = computed(() => {
-    return deviceStore.devices ? deviceStore.devices.filter(device => device.name.toLowerCase().includes(searchText.value.toLowerCase())) : null
+    return props.devices.filter(device => device.name.toLowerCase().includes(searchText.value.toLowerCase()))
 })
 
 const props = defineProps({
+    devices: Array,
     showSearchbar: Boolean,
 })
 

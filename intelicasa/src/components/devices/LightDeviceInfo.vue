@@ -6,8 +6,8 @@
         </v-col>
         <v-col cols="6" align="center">
             <v-sheet width="90%">
-                <v-slider :disabled="disabled || loading" hide-details v-model="intensity" step="1" @end="updateIntensity"
-                    thumb-label />
+                <v-slider :disabled="disabled || loading" hide-details v-model="localIntensity" step="1"
+                    @end="updateIntensity" thumb-label />
             </v-sheet>
         </v-col>
     </v-row>
@@ -20,7 +20,7 @@
             <v-btn :disabled="disabled || loading" class="square-btn rounded-circle" variant="outlined"
                 @click="showColorPicker = true" :style="{ backgroundColor: color }"></v-btn>
             <v-dialog class="ma-0" v-model="showColorPicker" width="auto" align="centers">
-                <v-color-picker :disabled="loading" v-model="color" hide-inputs @update:model-value="updateColor"
+                <v-color-picker :disabled="loading" v-model="localColor" hide-inputs @update:model-value="updateColor"
                     class="ma-0 px-2 pt-2" mode="hex" />
             </v-dialog>
         </v-col>
@@ -28,14 +28,9 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted, onMounted, defineEmits, onBeforeUnmount } from 'vue';
+import { ref, computed, onUnmounted, onMounted, defineEmits, onBeforeUnmount } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
-
-const deviceStore = useDeviceStore();
-
-const showColorPicker = ref(false);
-
-const loading = ref(false);
+import { watch } from 'vue';
 
 const props = defineProps({
     device: Object,
@@ -43,28 +38,47 @@ const props = defineProps({
     returnAction: Boolean
 })
 
-const intensity = ref(props.device.state.brightness);
-const color = ref(props.device.state.color);
+const deviceStore = useDeviceStore();
+
+const showColorPicker = ref(false);
+
+const loading = ref(false);
+
+const localIntensity = ref(props.device.state.brightness)
+const localColor = ref(props.device.state.color)
+
+const intensity = computed(() => deviceStore.getDevice(props.device.id).state.brightness)
+const color = computed(() => deviceStore.getDevice(props.device.id).state.color)
+
+watch(intensity, (newVal) => {
+    if (!props.returnAction) localIntensity.value = newVal;
+})
+
+watch(color, (newVal) => {
+    if (!props.returnAction) localColor.value = newVal;
+})
+
+
 const updateTimeout = ref(null);
 
 const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
     if (props.returnAction) {
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [localIntensity.value] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [localColor.value] })
     }
 })
 
 onUnmounted(() => {
     if (props.returnAction) {
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [localIntensity.value] })
+        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [localColor.value] })
     }
 })
 
 async function updateColor() {
-    const action = { device: { id: props.device.id }, actionName: 'setColor', params: [color.value] }
+    const action = { device: { id: props.device.id }, actionName: 'setColor', params: [localColor.value] }
     clearTimeout(updateTimeout.value);
     updateTimeout.value = setTimeout(async () => {
         if (!props.returnAction) {
@@ -76,7 +90,7 @@ async function updateColor() {
 }
 
 async function updateIntensity() {
-    const action = { device: { id: props.device.id }, actionName: 'setBrightness', params: [intensity.value] }
+    const action = { device: { id: props.device.id }, actionName: 'setBrightness', params: [localIntensity.value] }
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)

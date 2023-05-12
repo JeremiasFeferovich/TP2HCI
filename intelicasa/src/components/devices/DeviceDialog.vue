@@ -52,6 +52,11 @@ import { useDeviceStore } from '@/stores/deviceStore';
 import { onMounted } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
 
+const props = defineProps({
+    device: Object,
+    loadingState: Boolean,
+})
+
 const deviceStore = useDeviceStore();
 
 onMounted(() => {
@@ -63,6 +68,7 @@ const loadingFav = ref(false);
 const disabled = computed(() => props.device.state.status === 'off' ? true : false);
 
 const editingName = ref(false);
+console.log(props.device)
 const updatedName = ref(props.device.name);
 const editDeviceForm = ref(null)
 const openDialog = ref(false)
@@ -84,11 +90,6 @@ async function toggleButtonFavorite() {
     }
     loadingFav.value = false
 }
-
-const props = defineProps({
-    device: Object,
-    loadingState: Boolean,
-})
 
 const emit = defineEmits(['changeState', 'delete'])
 
