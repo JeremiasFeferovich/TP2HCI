@@ -82,9 +82,9 @@ async function handleSave() {
         name: deviceName.value,
         category: selectedCategory.value
     }
-    await deviceStore.addDevice(device);
+    const newDevice = await deviceStore.addDevice(device);
     if (selectedRoom.value) {
-        await roomStore.addDeviceToRoom(selectedRoom.value.id, device)
+        await roomStore.addDeviceToRoom(selectedRoom.value.id, newDevice)
     }
     selectedRoom.value = null
     selectedCategory.value = null
