@@ -13,9 +13,9 @@
                         </v-row>
                         <v-list class="mb-3">
                             <v-list-item-subtitle class="mb-2">Dispositivos seleccionados</v-list-item-subtitle>
-                            <v-divider length="62%" />
+                            <v-divider length="62.5%" />
                             <v-list-item v-for="(device, index) in selectedDevices" :key="index">
-                                <v-card class="pa-2 ma-1" max-width="62%">
+                                <v-card class="pa-2 ma-1" max-width="62.5%">
                                     <v-row align="center">
                                         <v-col cols="3" class="py-3 px-0">
                                             <v-img class="categoryImg" :src="device.meta.category.img" alt="categoryImg"
@@ -32,7 +32,7 @@
                                     </v-row>
                                 </v-card>
                             </v-list-item>
-                            <v-divider length="62%" />
+                            <v-divider length="62.5%" />
                         </v-list>
 
                         <v-row cols="12">
@@ -40,17 +40,19 @@
                                 <v-list-item-subtitle>Seleccione dispositivo a agregar</v-list-item-subtitle>
                             </v-col>
                         </v-row>
-
                         <v-row cols="12" class="fill-space">
-                            <ImageSelect v-if="showSelector" :items="availableDevices.filter((device) => !selectedDevices.includes(device)).
-                                map(({ id, name, meta }) => ({ id, name, meta, img: meta.category.img }))" 
-                                label="Dispositivo" @update:selected-item="(item) => addSelectedDevice(item)"/>
+                            <ImageSelect v-if="showSelector" :items="availableDevices
+                                .filter((device) => !selectedDevices.includes(device))
+                                .map((device) => ({
+                                    id: device.id,
+                                    name: device.name,
+                                    meta: device.meta,
+                                    img: device.meta.category.img,
+                                }))" label="Dispositivo" @update:selected-item="(item) => addSelectedDevice(item)" />
                         </v-row>
-
                         <v-row cols="12" class="plus-btn">
                             <v-btn class="mt-3" icon="mdi-plus" density="comfortable" @click="showSelector = true" />
                         </v-row>
-
                         <v-row cols="12" class="fill-space">
                             <ImageSelect :items="Object.keys(roomStore.roomTypeImg).reduce((acc, key) => {
                                 acc.push({ name: key, img: roomStore.roomTypeImg[key] });
@@ -154,18 +156,20 @@ function closeDialog() {
 }
 
 function addSelectedDevice(selectedDevice) {
-    if (selectedDevice.value !== '') {
-        selectedDevice.value = deviceStore.devices.find(device => device.name === selectedDevice.name);
-        selectedDevices.value.push(selectedDevice)
-        showSelector.value = false
-    }
+    selectedDevice = deviceStore.devices.find(device => device.name === selectedDevice.name);
+    selectedDevices.value.push(selectedDevice)
+    showSelector.value = false
+    /* delete selected device from availabledevicesnames*/
+
 }
 
 function deleteSelectedDevice(selectedDevice) {
     if (selectedDevice.value !== '') {
         selectedDevice.value = deviceStore.devices.find(device => device.name === selectedDevice.name);
+        /* remoce selected device from selected devices*/
         selectedDevices.value.splice(selectedDevices.value.indexOf(selectedDevice), 1)
         showSelector.value = false
+        /* add selected device to available devices*/
     }
 }
 </script>
@@ -182,8 +186,8 @@ function deleteSelectedDevice(selectedDevice) {
 }
 
 .categoryImg {
-    height: 60px;
-    width: 60px;
+    height: 75px;
+    width: 75px;
     padding: 5px 0;
 }
 </style>
