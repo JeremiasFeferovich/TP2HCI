@@ -23,8 +23,6 @@
 <script setup>
 
 import { ref, computed } from 'vue';
-import powerOn from '@/assets/powerOn.svg';
-import powerOff from '@/assets/powerOff.svg'
 import RoutineInfo from './RoutineInfo.vue';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useDeviceStore } from '@/stores/deviceStore';

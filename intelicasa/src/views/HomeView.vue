@@ -15,12 +15,7 @@
                 :to="{ name: 'routines' }" value="routines">
                 Aún no tienes rutinas. Haga click aquí para agregar una.
             </v-btn>
-            <v-row v-if="!loading"
-                v-for="(routine, index) in routineStore.routines.filter(routine => routine.meta.favorite)"
-                :key="routine.id">
-                <RoutineCard :name="routine.name" :routine="routine" @delete-routine="deleteRoutine(routine)"
-                    :allDevices="deviceStore.devices" />
-            </v-row>
+            <RoutinesList v-if="!loading" />
         </v-sheet>
         <v-sheet class="viewSheet" color="secondary">
             <v-row justify="center" class="mb-5 text-h4">
@@ -37,7 +32,7 @@
                 Aún no tienes dispositivos. Haga click aquí para agregar uno.
             </v-btn>
             <DevicesList v-if="!loading" :showSearchbar="false"
-                :devices="deviceStore.devices && deviceStore.devices.filter(device => device.meta.favorite)"
+                
                 @delete="(device) => deleteDevice(device)" />
         </v-sheet>
     </v-container>
@@ -51,7 +46,7 @@ import DevicesList from '@/components/devices/DevicesList.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { onMounted } from 'vue';
 import { useRoutineStore } from '@/stores/routineStore';
-import RoutineCard from '@/components/RoutineCard.vue';
+import RoutinesList from '@/components/RoutinesList.vue';
 
 const loading = ref(false)
 const deviceStore = useDeviceStore();

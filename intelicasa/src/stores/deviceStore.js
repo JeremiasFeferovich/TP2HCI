@@ -84,7 +84,7 @@ export const useDeviceStore = defineStore('device', () => {
                 if (routine.actions.length > 0)
                     routineStore.addRoutine(routine);
             });
-            roomStore.deleteDeviceFromRoom(device);
+            roomStore.removeDeviceFromRoom(device);
         }
         fetchDevices()
     }
