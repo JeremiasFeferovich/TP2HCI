@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import ImageSelect from './ImageSelect.vue'
 import { useDeviceStore } from '@/stores/deviceStore';
 
@@ -106,7 +106,6 @@ watch(convectionMode, (newVal) => {
     if (!props.returnAction) localConvectionMode.value = newVal;
 })
 
-
 const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
@@ -116,21 +115,14 @@ onMounted(() => {
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setConvection', params: [localConvectionMode.value.value] })
 })
 
-
-onUnmounted(() => {
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature', params: [localTemperature.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setHeat', params: [localHeatSource.value.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setGrill', params: [localGrillMode.value.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setConvection', params: [localConvectionMode.value.value] })
-})
-
-
 async function setTemperature() {
     const action = { device: { id: props.device.id }, actionName: 'setTemperature', params: [localTemperature.value] }
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
+    }else{
+        emit('actionSet', action)
     }
 }
 
@@ -143,6 +135,7 @@ async function setHeatSource(newHeatSource) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localHeatSource.value = newHeatSource;
         props.device.state.heat = newHeatSource.value;
     }
@@ -157,6 +150,7 @@ async function setGrillMode(newGrillMode) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localGrillMode.value = newGrillMode;
         props.device.state.grill = newGrillMode.value;
     }
@@ -171,6 +165,7 @@ async function setConvectionMode(newConvMode) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localConvectionMode.value = newConvMode;
         props.device.state.convection = newConvMode.value;
     }

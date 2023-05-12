@@ -131,21 +131,6 @@ onMounted(() => {
     }
 })
 
-onUnmounted(() => {
-    if (props.returnAction) {
-        const newVerticalSwing = localVerticalSwing.value === 0 ? 'auto' : Math.floor(localVerticalSwing.value)
-        const newFanSpeed = localFanSpeed.value === 0 ? 'auto' : Math.floor(localFanSpeed.value)
-        const newHorizontalSwing = localHorizontalSwing.value === -135 ? 'auto' : Math.floor(localHorizontalSwing.value)
-
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature', params: [localTemperature.value] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [localMode.value.value] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setVerticalSwing', params: [newVerticalSwing] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setHorizontalSwing', params: [newHorizontalSwing] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setFanSpeed', params: [newFanSpeed] })
-    }
-})
-
-
 async function setTemperature() {
     const action = { device: { id: props.device.id }, actionName: 'setTemperature', params: [localTemperature.value] }
     if (!props.returnAction) {
@@ -156,14 +141,15 @@ async function setTemperature() {
 }
 
 async function setMode(newMode) {
+    const action = { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] }
     if (!props.returnAction) {
-        const action = { device: { id: props.device.id }, actionName: 'setMode', params: [newMode.value] }
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             localMode.value = newMode;
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localMode.value = newMode;
         props.device.state.mode = newMode.value;
     }
@@ -171,36 +157,39 @@ async function setMode(newMode) {
 
 async function setVerticalSwing() {
     const newVerticalSwing = localVerticalSwing.value === 0 ? 'auto' : Math.floor(localVerticalSwing.value)
+    const action = { device: { id: props.device.id }, actionName: 'setVerticalSwing', params: [newVerticalSwing] }
     if (!props.returnAction) {
-        const action = { device: { id: props.device.id }, actionName: 'setVerticalSwing', params: [newVerticalSwing] }
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.verticalSwing = newVerticalSwing;
     }
 }
 
 async function setHorizontalSwing() {
     const newHorizontalSwing = localHorizontalSwing.value === -135 ? 'auto' : Math.floor(localHorizontalSwing.value)
+    const action = { device: { id: props.device.id }, actionName: 'setHorizontalSwing', params: [newHorizontalSwing] }
     if (!props.returnAction) {
-        const action = { device: { id: props.device.id }, actionName: 'setHorizontalSwing', params: [newHorizontalSwing] }
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.horizontalSwing = newHorizontalSwing;
     }
 }
 
 async function setFanSpeed() {
     const newFanSpeed = localFanSpeed.value === 0 ? 'auto' : Math.floor(localFanSpeed.value)
+    const action = { device: { id: props.device.id }, actionName: 'setFanSpeed', params: [newFanSpeed] }
     if (!props.returnAction) {
-        const action = { device: { id: props.device.id }, actionName: 'setFanSpeed', params: [newFanSpeed] }
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.fanSpeed = newFanSpeed;
     }
 }

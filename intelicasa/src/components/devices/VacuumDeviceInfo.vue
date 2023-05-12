@@ -48,7 +48,6 @@ import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
 import { watch } from 'vue';
-import { onBeforeMount } from 'vue';
 
 const roomTypeImg = { ['Dormitorio']: dormitorio, ['Cocina']: cocina, ['Living']: living, ['Baño']: baño, ['Patio']: patio, ['Otro']: otro }
 
@@ -121,23 +120,7 @@ const status = computed(() => {
 
 const emit = defineEmits(['actionSet']);
 
-onBeforeMount(async () => {
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
-    switch (props.device.state.status) {
-        case "inactive":
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'pause', params: [] })
-            break
-        case "docked":
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'dock', params: [] })
-            break
-        case "active":
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'start', params: [] })
-            break
-    }
-})
-
-onUnmounted(() => {
+onMounted(async () => {
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
     switch (props.device.state.status) {
@@ -162,6 +145,7 @@ async function setMode(newMode) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localMode.value = newMode;
         props.device.state.mode = newMode.value;
     }
@@ -174,9 +158,11 @@ async function setLocation(newLocation) {
         //Location es por default null, no se puede hacer el if porque la primera vez no se actualizaria
         await deviceStore.triggerEvent(action)
         loading.value = false
+    } else {
+        emit('actionSet', action)
+        localLocation.value = newLocation;
+        props.device.state.location = newLocation.id;
     }
-    localLocation.value = newLocation;
-    props.device.state.location = newLocation.id;
 }
 
 async function startCleaning() {
@@ -186,6 +172,7 @@ async function startCleaning() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit
         props.device.state.status = 'active'
     }
 }
@@ -198,6 +185,7 @@ async function pauseCleaning() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.status = 'inactive'
     }
 }
@@ -209,6 +197,7 @@ async function dock() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.status = 'docked'
     }
 }

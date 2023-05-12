@@ -65,13 +65,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import AddBtn from './AddBtn.vue'
 import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
 import ImageSelect from './devices/ImageSelect.vue';
 import { useRoutineStore } from '@/stores/routineStore';
-
 
 const routineStore = useRoutineStore();
 
@@ -83,6 +82,10 @@ const prop = defineProps({
 const dialog = ref(false)
 
 const actions = ref([])
+
+watch(actions, (newActions) => {
+  console.log(newActions)
+})
 
 const routineName = ref('')
 const selectedDevice = ref('')
@@ -98,8 +101,6 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
 (v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
 (v) => !routineStore.routines.find(routine => routine.name === v) || 'Ya existe una rutina con ese nombre']
-
-
 
 const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
 
@@ -126,6 +127,7 @@ async function validateForm(form) {
 
 
 function addAction(action) {
+  console.log(action)
   const { device, actionName } = action
   if (actionName === "turnOn" || actionName === "turnOff") {
     actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
@@ -141,7 +143,7 @@ function closeDialog() {
   selectedDevice.value = ''
 }
 
-function handleSave() {
+async function handleSave() {
   const routine = {
     name: routineName.value,
     actions: actions.value,
@@ -150,14 +152,15 @@ function handleSave() {
       favorite: false
     }
   }
-  routineStore.addRoutine(routine);
-
+  console.log(actions.value)
+  await routineStore.addRoutine(routine);
   selectedDevices.value = []
   dialog.value = false
   routineName.value = ''
   actions.value = []
   devicesState.value = []
   selectedDevice.value = ''
+  console.log(actions.value)
 }
 
 const addSelectedDevice = (selected) => {
