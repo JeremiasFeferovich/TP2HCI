@@ -71,9 +71,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
-import AddBtn from './AddBtn.vue'
-import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
-import ImageSelect from './devices/ImageSelect.vue';
+import AddBtn from '@/components/AddBtn.vue'
+import CloseAndSaveBtns from '@/components/CloseAndSaveBtns.vue'
+import ImageSelect from '@/components/ImageSelect.vue';
 import { useRoutineStore } from '@/stores/routineStore';
 
 const routineStore = useRoutineStore();

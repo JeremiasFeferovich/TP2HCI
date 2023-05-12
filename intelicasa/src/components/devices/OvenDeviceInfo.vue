@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
-import ImageSelect from './ImageSelect.vue'
+import ImageSelect from '@/components/ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 //Image assets

@@ -24,7 +24,7 @@
     import { ref } from 'vue'
     import { useRoutineStore } from '@/stores/routineStore'
     import { useDeviceStore } from '@/stores/deviceStore'
-    import RoutineInfo from './RoutineInfo.vue'
+    import RoutineInfo from '@/components/routines/RoutineInfo.vue'
 
     const props = defineProps({
         routine: Object

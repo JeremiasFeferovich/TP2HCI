@@ -85,14 +85,14 @@
 </template>
   
 <script setup>
-import DevicesOptions from './devices/DevicesOptions.vue';
+import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import { ref, onUnmounted, computed } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
-import ConfirmationDialog from './ConfirmationDialog.vue';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 import { RoutineApi } from '@/api/routine';
-import ImageSelect from './devices/ImageSelect.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 const routineStore = useRoutineStore();
 
 console.log(routineStore.routinesDevicesStatus[routine.id])

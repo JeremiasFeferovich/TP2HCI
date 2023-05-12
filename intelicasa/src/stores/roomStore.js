@@ -18,6 +18,7 @@ export const useRoomStore = defineStore('room', () => {
 
     // Getters - computed
     const getRooms = computed(() => rooms.value)
+    const getRoom = computed(() => (id) => rooms.value.find(room => room.id === id))
     // Actions - funciones Javascript
     async function fetchRooms() {
         const fetchedRooms = await RoomApi.getAll()
@@ -75,7 +76,7 @@ export const useRoomStore = defineStore('room', () => {
 
     return {
         rooms,roomTypeImg,
-        getRooms,
+        getRooms, getRoom,
         fetchRoom,fetchRooms,addRoom,deleteRoom, removeDeviceFromRoom, addDeviceToRoom, updateRoom
     }
 

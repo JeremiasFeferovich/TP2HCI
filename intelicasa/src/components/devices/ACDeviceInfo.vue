@@ -61,7 +61,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-import ImageSelect from './ImageSelect.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 import acColdMode from '@/assets/ac/acColdMode.png'

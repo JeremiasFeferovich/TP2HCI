@@ -9,7 +9,7 @@
 
 <script setup>
     import { useRoutineStore } from '@/stores/routineStore'
-    import HomeRoutineCard from './HomeRoutineCard.vue'
+    import HomeRoutineCard from '@/components/HomeRoutineCard.vue'
 
     const routineStore = useRoutineStore()
 </script>
