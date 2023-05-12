@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import ImageSelect from './ImageSelect.vue'
 import { useDeviceStore } from '@/stores/deviceStore';
 
@@ -85,10 +85,12 @@ const localHeatSource = ref(heatModes.find(x => x.value === props.device.state.h
 const localGrillMode = ref(grillModes.find(x => x.value === props.device.state.grill))
 const localConvectionMode = ref(convectionModes.find(x => x.value === props.device.state.convection))
 
-const temperature = computed(() => deviceStore.getDevice(props.device.id).state.temperature)
-const heatSource = computed(() => heatModes.find(x => x.value === deviceStore.getDevice(props.device.id).state.heat))
-const grillMode = computed(() => grillModes.find(x => x.value === deviceStore.getDevice(props.device.id).state.grill))
-const convectionMode = computed(() => convectionModes.find(x => x.value === deviceStore.getDevice(props.device.id).state.convection))
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const temperature = computed(() => storeDevice.value && storeDevice.value.state.temperature)
+const heatSource = computed(() => storeDevice.value && heatModes.find(x => x.value === storeDevice.value.state.heat))
+const grillMode = computed(() => storeDevice.value && grillModes.find(x => x.value === storeDevice.value.state.grill))
+const convectionMode = computed(() => storeDevice.value && convectionModes.find(x => x.value === storeDevice.value.state.convection))
 
 watch(temperature, (newVal) => {
     if (!props.returnAction) localTemperature.value = newVal;
@@ -106,7 +108,6 @@ watch(convectionMode, (newVal) => {
     if (!props.returnAction) localConvectionMode.value = newVal;
 })
 
-
 const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
@@ -116,21 +117,14 @@ onMounted(() => {
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setConvection', params: [localConvectionMode.value.value] })
 })
 
-
-onUnmounted(() => {
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setTemperature', params: [localTemperature.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setHeat', params: [localHeatSource.value.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setGrill', params: [localGrillMode.value.value] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setConvection', params: [localConvectionMode.value.value] })
-})
-
-
 async function setTemperature() {
     const action = { device: { id: props.device.id }, actionName: 'setTemperature', params: [localTemperature.value] }
     if (!props.returnAction) {
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
+    }else{
+        emit('actionSet', action)
     }
 }
 
@@ -143,6 +137,7 @@ async function setHeatSource(newHeatSource) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localHeatSource.value = newHeatSource;
         props.device.state.heat = newHeatSource.value;
     }
@@ -157,6 +152,7 @@ async function setGrillMode(newGrillMode) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localGrillMode.value = newGrillMode;
         props.device.state.grill = newGrillMode.value;
     }
@@ -171,6 +167,7 @@ async function setConvectionMode(newConvMode) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localConvectionMode.value = newConvMode;
         props.device.state.convection = newConvMode.value;
     }

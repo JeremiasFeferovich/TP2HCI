@@ -63,6 +63,7 @@ export const useDeviceStore = defineStore('device', () => {
     async function addDevice(device) {
         const addedDevice = await DeviceApi.add(device);
         fetchDevices()
+        return addedDevice;
     }
 
     async function fetchDevice(deviceId) {

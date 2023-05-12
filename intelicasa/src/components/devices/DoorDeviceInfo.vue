@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 
 const props = defineProps({
@@ -30,8 +30,10 @@ const deviceStore = useDeviceStore()
 const localStatus = ref(props.device.state.status)
 const localLock = ref(props.device.state.lock)
 
-const status = computed(() => deviceStore.getDevice(props.device.id).state.status)
-const lock = computed(() => deviceStore.getDevice(props.device.id).state.lock)
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const status = computed(() => storeDevice.value && storeDevice.value.state.status)
+const lock = computed(() => storeDevice.value && storeDevice.value.state.lock)
 
 watch(status, (newVal) => {
     if (!props.returnAction) localStatus.value = newVal;
@@ -84,14 +86,6 @@ onMounted(() => {
     }
 })
 
-onUnmounted(() => {
-    if (props.returnAction) {
-        emit('actionSet', { device: { id: props.device.id }, actionName: localStatus.value === "opened" ? "open" : "close", params: [] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: localLock.value === "locked" ? "lock" : "unlock", params: [] })
-    }
-})
-
-
 async function setDoorState() {
     const action = { device: { id: props.device.id }, actionName: localStatus.value === "opened" ? "close" : "open", params: [] }
     if (!props.returnAction) {
@@ -99,6 +93,7 @@ async function setDoorState() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         localStatus.value = localStatus.value === "opened" ? "closed" : "opened";
     }
 }
@@ -110,6 +105,7 @@ async function setLockState() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         localLock.value = localLock.value === "locked" ? "unlocked" : "locked";
     }
 }

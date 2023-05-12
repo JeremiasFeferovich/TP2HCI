@@ -28,9 +28,10 @@
       </v-row>
       <v-col justify="center" align="center">
         <v-row cols="12" class="fill-space">
-          <v-expansion-panels variant="inset">
+          <v-expansion-panels variant="inset" :model-value="opened" v-model="expansionPanelsValues">
             <v-expansion-panel mandatory v-for="(device, index) in routineStore.routinesDevicesStatus[routine.id]"
-              :key="index">
+              :key="index" :value="device.name">
+
               <v-expansion-panel-title>
                 <template v-slot:default="{ expanded }">
                   <v-row no-gutters>
@@ -110,6 +111,7 @@ const editingName = ref(false);
 const editRoutineForm = ref(null);
 const loadingFav = ref(false);
 const updatedName = ref(routine.name);
+const expansionPanelsValues = ref([])
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
@@ -179,8 +181,12 @@ onUnmounted(() => {
 
 
 const addDevice = (selected) => {
+  if (!expansionPanelsValues.value) {
+    expansionPanelsValues.value = []
+  }
+  expansionPanelsValues.value.push(selected.name)
   selectedDevice.value = allDevices.find(device => device.name === selected.name);
-  routineStore.routinesDevicesStatus[routine.id].push(selectedDevice.value)
+  routineStore.routinesDevicesStatus[routine.id].unshift(selectedDevice.value)
   selectedDevice.value = ''
   showSelector.value = false
 }
