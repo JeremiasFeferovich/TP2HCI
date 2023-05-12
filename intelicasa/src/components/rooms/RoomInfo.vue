@@ -34,9 +34,14 @@
           <v-divider />
         </v-row>
         <v-row cols="8" class="fill-space">
-          <DeviceSelect v-if="showSelector || !devicesShown.length" :label="'Dispositivos disponibles'"
-            :devices="availableDevices.filter(device => !devicesShown.includes(device))"
-            @update:selected-device="(item) => addSelectedDevice(item)" @update:menu="" />
+          <ImageSelect v-if="showSelector || !devicesShown.length" :items="availableDevices
+                                .filter((device) => !devicesShown.includes(device))
+                                .map((device) => ({
+                                    id: device.id,
+                                    name: device.name,
+                                    meta: device.meta,
+                                    img: device.meta.category.img,
+                                }))" label="Dispositivos disponibles" @update:selected-item="(item) => addSelectedDevice(item)"  @update:menu=""  />
         </v-row>
         <v-row>
           <v-col cols="12" class="text-center">
@@ -57,8 +62,8 @@ import DeviceCard from '@/components/devices/DeviceCard.vue';
 import { useRoomStore } from '@/stores/roomStore';
 import { useDeviceStore } from '@/stores/deviceStore'
 import { ref, computed } from 'vue';
-import ConfirmationDialog from '../ConfirmationDialog.vue';
-import DeviceSelect from './DeviceSelect.vue';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 import { onUnmounted } from 'vue';
 
 const roomStore = useRoomStore()
@@ -116,14 +121,14 @@ async function deleteRoom() {
 async function removeDevice(device) {
   loading.value = true
   await roomStore.removeDeviceFromRoom(device)
-  devicesShown.value = devicesShown.value.filter(dev => dev.id !== device.id)
   loading.value = false
 }
 
 async function addSelectedDevice(newDevice) {
+  const deviceToAdd = deviceStore.devices.find(device => device.name === newDevice.name);
+
   loading.value = true
-  await roomStore.addDeviceToRoom(room.value.id, newDevice)
-  devicesShown.value = [...devicesShown.value, newDevice]
+  await roomStore.addDeviceToRoom(room.value.id, deviceToAdd)
   loading.value = false
   showSelector.value = false
 }

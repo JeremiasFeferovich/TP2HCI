@@ -40,17 +40,19 @@
                                 <v-list-item-subtitle>Seleccione dispositivo a agregar</v-list-item-subtitle>
                             </v-col>
                         </v-row>
-
                         <v-row cols="12" class="fill-space">
-                            <ImageSelect v-if="showSelector" :items="availableDevices.filter((device) => !selectedDevices.includes(device)).
-                                map(({ id, name, meta }) => ({ id, name, meta, img: meta.category.img }))" 
-                                label="Dispositivo" @update:selected-item="(item) => addSelectedDevice(item)"/>
+                            <ImageSelect v-if="showSelector" :items="availableDevices
+                                .filter((device) => !selectedDevices.includes(device))
+                                .map((device) => ({
+                                    id: device.id,
+                                    name: device.name,
+                                    meta: device.meta,
+                                    img: device.meta.category.img,
+                                }))" label="Dispositivo" @update:selected-item="(item) => addSelectedDevice(item)" />
                         </v-row>
-
                         <v-row cols="12" class="plus-btn">
                             <v-btn class="mt-3" icon="mdi-plus" density="comfortable" @click="showSelector = true" />
                         </v-row>
-
                         <v-row cols="12" class="fill-space">
                             <ImageSelect :items="Object.keys(roomStore.roomTypeImg).reduce((acc, key) => {
                                 acc.push({ name: key, img: roomStore.roomTypeImg[key] });
@@ -80,7 +82,6 @@
 import { ref, computed } from 'vue'
 import { useRoomStore } from '@/stores/roomStore';
 import { useDeviceStore } from '@/stores/deviceStore';
-import DeviceSelect from '@/components/rooms/DeviceSelect.vue';
 import ImageSelect from '@/components/ImageSelect.vue';
 import { onMounted } from 'vue';
 import { onUnmounted } from 'vue';
@@ -155,12 +156,11 @@ function closeDialog() {
 }
 
 function addSelectedDevice(selectedDevice) {
-    if (selectedDevice.value !== '') {
-        selectedDevice.value = deviceStore.devices.find(device => device.name === selectedDevice.name);
-        selectedDevices.value.push(selectedDevice)
-        showSelector.value = false
-        /* delete selected device from availabledevicesnames*/
-    }
+    selectedDevice = deviceStore.devices.find(device => device.name === selectedDevice.name);
+    selectedDevices.value.push(selectedDevice)
+    showSelector.value = false
+    /* delete selected device from availabledevicesnames*/
+
 }
 
 function deleteSelectedDevice(selectedDevice) {
