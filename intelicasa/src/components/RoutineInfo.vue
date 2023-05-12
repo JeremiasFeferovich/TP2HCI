@@ -1,22 +1,27 @@
 <template>
   <v-card class="routine-card-info" flat>
-    <v-row>
-      <v-btn class="square-btn" v-model="routine.meta.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
-        size="large" variant="text" :loading="loadingFav" rounded="xl">
-        <img :src="favoriteBtnImg" alt="fav button" />
-      </v-btn>
-      <v-card-title v-if="!editingName" class="text-h4">{{ routine.name }}</v-card-title>
-      <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoutineForm">
-        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
-          @blur="validateForm($refs.editRoutineForm)" />
-        <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoutineForm)">
-          <v-icon icon="mdi-check" size="20px" />
-        </v-btn>
-      </v-form>
-      <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
-        <v-icon icon="mdi-pencil" size="20px" />
-      </v-btn>
-      <v-col class="mr-1" align="end">
+    <v-row class="title" align="center">
+      <v-col cols="2" />
+      <v-col cols="8">
+        <v-row justify="center">
+          <v-btn class="square-btn" v-model="routine.meta.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
+            size="large" variant="text" :loading="loadingFav" rounded="xl">
+            <img :src="favoriteBtnImg" alt="fav button" />
+          </v-btn>
+          <v-card-title v-if="!editingName" class="text-h4">{{ routine.name }}</v-card-title>
+          <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoutineForm">
+            <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
+              @blur="validateForm($refs.editRoutineForm)" />
+            <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoutineForm)">
+              <v-icon icon="mdi-check" size="20px" />
+            </v-btn>
+          </v-form>
+          <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
+            <v-icon icon="mdi-pencil" size="20px" />
+          </v-btn>
+        </v-row>
+      </v-col>
+      <v-col cols="2" justify="center" align="center">
         <v-icon end icon="mdi-delete" @click="openDialog = true" />
       </v-col>
     </v-row>
@@ -244,5 +249,10 @@ async function validateForm(form) {
 
 .subtitle-text {
   color: rgb(121, 121, 121);
+}
+
+.title {
+  min-height: 80px;
+  margin: 0 0;
 }
 </style>
