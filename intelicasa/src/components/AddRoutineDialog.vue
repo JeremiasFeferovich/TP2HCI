@@ -3,7 +3,7 @@
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
-    <v-card>
+    <v-card align="center">
       <v-card-title>
         <span class="text-h5">Agregar Rutina</span>
       </v-card-title>
