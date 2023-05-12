@@ -33,12 +33,14 @@
 import { ref, computed } from 'vue';
 import RoomInfo from '@/components/rooms/RoomInfo.vue';
 import { useRoomStore } from '@/stores/roomStore';
+import { useDeviceStore } from '@/stores/deviceStore';
 import dormitorio from '@/assets/dormitorio.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
+import { watch } from 'vue';
 
 const openDialog = ref(false);
 
@@ -47,12 +49,16 @@ const props = defineProps({
 })
 
 const roomStore = useRoomStore()
+const deviceStore = useDeviceStore()
 
 const room = computed(() => roomStore.getRoom(props.roomId), { default: null });
 
+watch(() => room.value.devices, () => {
+    console.log(room.value.devices)
+})
 
 const onDevices = computed(() => {
-    return room.value && room.value.devices ? room.value.devices.filter(device => device.state.status === 'on') : []
+    return room.value ? deviceStore.devices.filter(device => device.room && device.room.id === room.value.id && device.state.status === 'on') : []
 });
 
 const typeImg = computed(() => {
