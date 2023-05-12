@@ -81,11 +81,12 @@ export const useDeviceStore = defineStore('device', () => {
             routineStore.routines.forEach(routine => {
                 routine.actions = routine.actions.filter(action => action.device.id !== device.id);
                 // TODO preguntar sobre delete-create
-                routineStore.deleteRoutine(routine);
-                if (routine.actions.length > 0)
-                    routineStore.addRoutine(routine);
+                if (routine.actions.length > 0){
+                    routineStore.updateRoutine(routine);
+                }else{
+                    routineStore.deleteRoutine(routine);
+                }
             });
-            roomStore.removeDeviceFromRoom(device);
         }
         fetchDevices()
     }
