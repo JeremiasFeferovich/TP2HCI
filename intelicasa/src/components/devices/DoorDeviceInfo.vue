@@ -30,8 +30,10 @@ const deviceStore = useDeviceStore()
 const localStatus = ref(props.device.state.status)
 const localLock = ref(props.device.state.lock)
 
-const status = computed(() => deviceStore.getDevice(props.device.id).state.status)
-const lock = computed(() => deviceStore.getDevice(props.device.id).state.lock)
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const status = computed(() => storeDevice.value && storeDevice.value.state.status)
+const lock = computed(() => storeDevice.value && storeDevice.value.state.lock)
 
 watch(status, (newVal) => {
     if (!props.returnAction) localStatus.value = newVal;

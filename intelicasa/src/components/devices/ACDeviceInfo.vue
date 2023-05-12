@@ -89,11 +89,13 @@ const localFanSpeed = ref(props.device.state.fanSpeed !== 'auto' ? parseInt(prop
 const localVerticalSwing = ref(props.device.state.verticalSwing !== 'auto' ? parseInt(props.device.state.verticalSwing) : 0)
 const localHorizontalSwing = ref(props.device.state.horizontalSwing !== 'auto' ? parseInt(props.device.state.horizontalSwing) : -135)
 
-const temperature = computed(() => deviceStore.getDevice(props.device.id).state.temperature)
-const mode = computed(() => modeItems.value.find(x => x.value === deviceStore.getDevice(props.device.id).state.mode))
-const fanSpeed = computed(() => deviceStore.getDevice(props.device.id).state.fanSpeed)
-const verticalSwing = computed(() => deviceStore.getDevice(props.device.id).state.verticalSwing)
-const horizontalSwing = computed(() => deviceStore.getDevice(props.device.id).state.horizontalSwing)
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const temperature = computed(() => storeDevice.value && storeDevice.value.state.temperature)
+const mode = computed(() => modeItems.value.find(x => x.value === storeDevice.value && storeDevice.value.state.mode))
+const fanSpeed = computed(() => storeDevice.value && storeDevice.value.state.fanSpeed)
+const verticalSwing = computed(() => storeDevice.value && storeDevice.value.state.verticalSwing)
+const horizontalSwing = computed(() => storeDevice.value && storeDevice.value.state.horizontalSwing)
 
 watch(temperature, (newVal) => {
     if (!props.returnAction) localTemperature.value = newVal;

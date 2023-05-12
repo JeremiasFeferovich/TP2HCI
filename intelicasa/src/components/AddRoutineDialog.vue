@@ -83,10 +83,6 @@ const dialog = ref(false)
 
 const actions = ref([])
 
-watch(actions, (newActions) => {
-  console.log(newActions)
-})
-
 const routineName = ref('')
 const selectedDevice = ref('')
 const selectedDevices = ref([])
@@ -127,7 +123,6 @@ async function validateForm(form) {
 
 
 function addAction(action) {
-  console.log(action)
   const { device, actionName } = action
   if (actionName === "turnOn" || actionName === "turnOff") {
     actions.value = actions.value.filter(action => action.device.id !== device.id || (action.actionName !== "turnOn" && action.actionName !== "turnOff"))
@@ -152,7 +147,6 @@ async function handleSave() {
       favorite: false
     }
   }
-  console.log(actions.value)
   await routineStore.addRoutine(routine);
   selectedDevices.value = []
   dialog.value = false
@@ -160,7 +154,6 @@ async function handleSave() {
   actions.value = []
   devicesState.value = []
   selectedDevice.value = ''
-  console.log(actions.value)
 }
 
 const addSelectedDevice = (selected) => {

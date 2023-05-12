@@ -44,10 +44,10 @@ const props = defineProps({
     deviceId: String,
 })
 
-const categoryImg = computed(() => device.value.meta.category.img);
+const categoryImg = computed(() => device.value && device.value.meta.category.img);
 
 const powerBtnImg = computed(() => {
-    return device.value.state.status === 'on' ? powerOn : powerOff;
+    return device.value && device.value.state.status === 'on' ? powerOn : powerOff;
 })
 
 async function toggleButtonState() {
@@ -64,37 +64,40 @@ function deleteDevice() {
 }
 
 const doorImg = computed(() => {
-    if (device.value.state.status === 'opened') {
-        return 'mdi-door-open'
-    } else if (device.value.state.status === 'closed' && device.value.state.lock === 'locked') {
-        return 'mdi-door-closed-lock'
-    } else
-        return 'mdi-door-closed'
+    if (device.value) {
+        if (device.value.state.status === 'opened') {
+            return 'mdi-door-open'
+        } else if (device.value.state.status === 'closed' && device.value.state.lock === 'locked') {
+            return 'mdi-door-closed-lock'
+        } else
+            return 'mdi-door-closed'
+    }
 })
 
 const batteryImg = computed(() => {
-    if (device.value.state.batteryLevel < 10) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-10`
-    } else if (device.value.state.batteryLevel < 20) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-20`
-    } else if (device.value.state.batteryLevel < 30) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-30`
-    } else if (device.value.state.batteryLevel < 40) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-40`
-    } else if (device.value.state.batteryLevel < 50) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-50`
-    } else if (device.value.state.batteryLevel < 60) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-60`
-    } else if (device.value.state.batteryLevel < 70) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-70`
-    } else if (device.value.state.batteryLevel < 80) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-80`
-    } else if (device.value.state.batteryLevel < 90) {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-90`
-    } else {
-        return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}`
+    if (device.value) {
+        if (device.value.state.batteryLevel < 10) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-10`
+        } else if (device.value.state.batteryLevel < 20) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-20`
+        } else if (device.value.state.batteryLevel < 30) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-30`
+        } else if (device.value.state.batteryLevel < 40) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-40`
+        } else if (device.value.state.batteryLevel < 50) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-50`
+        } else if (device.value.state.batteryLevel < 60) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-60`
+        } else if (device.value.state.batteryLevel < 70) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-70`
+        } else if (device.value.state.batteryLevel < 80) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-80`
+        } else if (device.value.state.batteryLevel < 90) {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}-90`
+        } else {
+            return `mdi-battery${device.value.state.status === "docked" ? "-charging" : ""}`
+        }
     }
-
 })
 
 </script>

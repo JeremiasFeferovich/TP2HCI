@@ -47,8 +47,10 @@ const loading = ref(false);
 const localIntensity = ref(props.device.state.brightness)
 const localColor = ref(props.device.state.color)
 
-const intensity = computed(() => deviceStore.getDevice(props.device.id).state.brightness)
-const color = computed(() => deviceStore.getDevice(props.device.id).state.color)
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const intensity = computed(() => storeDevice.value && storeDevice.value.state.brightness)
+const color = computed(() => storeDevice.value && storeDevice.value.state.color)
 
 watch(intensity, (newVal) => {
     if (!props.returnAction) localIntensity.value = newVal;
@@ -95,7 +97,6 @@ async function updateIntensity() {
 }
 
 </script>
-
 
 <style scoped>
 .square-btn {
