@@ -1,8 +1,8 @@
 <template>
-    <TitleComponent title="Inicio" class="mb-5" />
+    <TitleComponent title="Inicio" />
     <v-container fluid>
         <v-sheet class="viewSheet" color="secondary">
-            <v-row justify="center" class="mb-5 text-h4">
+            <v-row justify="center" class="text-h4">
                 Rutinas destacadas
                 <v-divider />
             </v-row>
@@ -18,7 +18,7 @@
             <RoutinesList v-if="!loading" />
         </v-sheet>
         <v-sheet class="viewSheet" color="secondary">
-            <v-row justify="center" class="mb-5 text-h4">
+            <v-row justify="center" class="text-h4">
                 Dispositivos destacados
                 <v-divider />
             </v-row>
