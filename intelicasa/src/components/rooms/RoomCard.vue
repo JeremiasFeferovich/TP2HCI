@@ -40,7 +40,6 @@ import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
-import { watch } from 'vue';
 
 const openDialog = ref(false);
 
@@ -52,11 +51,6 @@ const roomStore = useRoomStore()
 const deviceStore = useDeviceStore()
 
 const room = computed(() => roomStore.getRoom(props.roomId), { default: null });
-
-const connectedDevices = computed(() => {
-    const idx = roomStore.rooms.findIndex(r => room.value.id === r.id)
-    return idx !== -1 && roomStore.rooms[idx] && roomStore.rooms[idx].devices ? roomStore.rooms[idx].devices.length : 0
-})
 
 const onDevices = computed(() => {
     return room.value ? deviceStore.devices.filter(device => device.room && device.room.id === room.value.id && device.state.status === 'on') : []
@@ -80,6 +74,11 @@ const typeImg = computed(() => {
         }
     }
 });
+
+const connectedDevices = computed(() => {
+    const idx = roomStore.rooms.findIndex(r => room.value.id === r.id)
+    return idx !== -1 && roomStore.rooms[idx] && roomStore.rooms[idx].devices ? roomStore.rooms[idx].devices.length : 0
+})
 
 </script>
 
