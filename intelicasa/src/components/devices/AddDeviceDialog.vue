@@ -22,7 +22,8 @@
                         <v-row class="mt-5">
                             <ImageSelect
                                 :items="rooms.concat({ name: 'Nueva habitacion', id: 'new', img: roomStore.roomTypeImg['Otro'] })"
-                                @update:selected-item="(item) => handleRoomSelection(item)" label="Habitación" />
+                                @update:selected-item="(item) => handleRoomSelection(item)" label="Habitación"
+                                :initial-item="selectedRoom" />
                             <v-dialog v-model="roomDialog" width="1024">
                                 <AddRoomInfo @close-dialog="() => handleCloseAddRoom()"
                                     @roomCreated="(room) => handleRoomCreated(room)" />
@@ -41,7 +42,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue'
-import ImageSelect from './ImageSelect.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 import AddBtn from '../AddBtn.vue';
 import CloseAndSaveBtns from '../CloseAndSaveBtns.vue';
 import { useDeviceStore } from '@/stores/deviceStore';

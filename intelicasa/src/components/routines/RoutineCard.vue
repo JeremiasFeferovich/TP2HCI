@@ -24,7 +24,7 @@
 
 import { ref, computed } from 'vue';
 
-import RoutineInfo from './RoutineInfo.vue';
+import RoutineInfo from '@/components/routines/RoutineInfo.vue'
 import { useRoutineStore } from '@/stores/routineStore';
 import { useDeviceStore } from '@/stores/deviceStore';
 

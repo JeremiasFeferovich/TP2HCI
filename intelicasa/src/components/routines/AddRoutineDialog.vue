@@ -19,7 +19,7 @@
                 <v-divider />
               </v-row>
               <v-row cols="12" class="fill-space">
-                <v-expansion-panels variant="inset" :model-value="opened" v-model="expansionPanelsValues">
+                <v-expansion-panels variant="inset" v-model="expansionPanelsValues">
                   <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index"
                     :value="device.name">
                     <v-expansion-panel-title>
@@ -51,7 +51,7 @@
               <v-row cols="12" class="fill-space">
                 <ImageSelect v-if="showSelector" :rules="deviceRules"
                   :items="devices.map(device => ({ name: device.name, img: device.meta.category.img }))"
-                  @update:selected-item="(device) => addSelectedDevice(device)" label="Select" hide-details="autos"/>
+                  @update:selected-item="(device) => addSelectedDevice(device)" label="Select" hide-details="autos" />
               </v-row>
             </v-form>
             <v-row cols="12" class="plus-btn mt-6">
@@ -71,9 +71,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
-import AddBtn from './AddBtn.vue'
-import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
-import ImageSelect from './devices/ImageSelect.vue';
+import AddBtn from '@/components/AddBtn.vue'
+import CloseAndSaveBtns from '@/components/CloseAndSaveBtns.vue'
+import ImageSelect from '@/components/ImageSelect.vue';
 import { useRoutineStore } from '@/stores/routineStore';
 
 const routineStore = useRoutineStore();
@@ -91,7 +91,6 @@ const routineName = ref('')
 const selectedDevice = ref('')
 const selectedDevices = ref([])
 const showSelector = ref(true)
-const opened = ref([0])
 const devicesState = ref([])
 const expansionPanelsValues = ref([])
 
@@ -135,7 +134,6 @@ watch(dialog, (value) => {
 
 
 function resetForm() {
-  console.log('reset')
   selectedDevices.value = []
   dialog.value = false
   routineName.value = ''

@@ -1,8 +1,8 @@
 <template>
-    <TitleComponent title="Inicio" class="mb-5" />
+    <TitleComponent title="Inicio" />
     <v-container fluid>
         <v-sheet class="viewSheet" color="secondary">
-            <v-row justify="center" class="mb-5 text-h4">
+            <v-row justify="center" class="text-h4">
                 Rutinas destacadas
                 <v-divider />
             </v-row>
@@ -18,7 +18,7 @@
             <RoutinesList v-if="!loading" />
         </v-sheet>
         <v-sheet class="viewSheet" color="secondary">
-            <v-row justify="center" class="mb-5 text-h4">
+            <v-row justify="center" class="text-h4">
                 Dispositivos destacados
                 <v-divider />
             </v-row>
@@ -46,7 +46,7 @@ import DevicesList from '@/components/devices/DevicesList.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { onMounted } from 'vue';
 import { useRoutineStore } from '@/stores/routineStore';
-import RoutinesList from '@/components/RoutinesList.vue';
+import RoutinesList from '@/components/routines/RoutinesList.vue';
 
 const loading = ref(false)
 const deviceStore = useDeviceStore();

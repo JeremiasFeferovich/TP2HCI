@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import ImageSelect from './ImageSelect.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { useRoomStore } from '@/stores/roomStore';
 

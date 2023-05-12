@@ -13,8 +13,8 @@
 
 <script setup>
 import TitleComponent from '@/components/TitleComponent.vue';
-import RoutineCard from '@/components/RoutineCard.vue';
-import AddRoutineDialog from '@/components/AddRoutineDialog.vue';
+import RoutineCard from '@/components/routines/RoutineCard.vue';
+import AddRoutineDialog from '@/components/routines/AddRoutineDialog.vue';
 import { ref, onMounted } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { useRoutineStore } from '@/stores/routineStore'

@@ -42,9 +42,9 @@
                         </v-row>
 
                         <v-row cols="12" class="fill-space">
-                            <DeviceSelect v-if="showSelector"
-                                :devices="availableDevices.filter((device) => !selectedDevices.includes(device))"
-                                label="Dispositivo" @update:selectedDevice="(item) => addSelectedDevice(item)" />
+                            <ImageSelect v-if="showSelector" :items="availableDevices.filter((device) => !selectedDevices.includes(device)).
+                                map(({ id, name, meta }) => ({ id, name, meta, img: meta.category.img }))" 
+                                label="Dispositivo" @update:selected-item="(item) => addSelectedDevice(item)"/>
                         </v-row>
 
                         <v-row cols="12" class="plus-btn">
@@ -55,8 +55,8 @@
                             <ImageSelect :items="Object.keys(roomStore.roomTypeImg).reduce((acc, key) => {
                                 acc.push({ name: key, img: roomStore.roomTypeImg[key] });
                                 return acc;
-                            }, [])" :rules="roomTypeRules" v-model="roomType" 
-                            @update:selected-item="(item) => roomType = item"    label="Tipo de habitación*"
+                            }, [])" :rules="roomTypeRules" v-model="roomType"
+                                @update:selected-item="(item) => roomType = item" label="Tipo de habitación*"
                                 hide-details="auto" />
                         </v-row>
                     </v-col>
@@ -77,12 +77,11 @@
 </template>
     
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoomStore } from '@/stores/roomStore';
 import { useDeviceStore } from '@/stores/deviceStore';
 import DeviceSelect from '@/components/rooms/DeviceSelect.vue';
-import ImageSelect from '@/components/devices/ImageSelect.vue';
-import AddBtn from '../AddBtn.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 import { onMounted } from 'vue';
 import { onUnmounted } from 'vue';
 
@@ -149,23 +148,10 @@ async function saveRoom() {
     const createdRoom = await roomStore.addRoom(newRoom);
     emit('roomCreated', createdRoom)
     emit('closeDialog')
-    // Reset form values;
-    roomName.value = '';
-    roomType.value = '';
-    deviceInputs.value = [null];
-    attemptSave.value = false
-    selectedDevices.value = []
 }
 
 function closeDialog() {
     emit('closeDialog')
-    showSelector.value = true
-    roomName.value = '';
-    roomType.value = '';
-    deviceInputs.value = [null];
-    attemptSave.value = false
-
-    selectedDevices.value = []
 }
 
 function addSelectedDevice(selectedDevice) {

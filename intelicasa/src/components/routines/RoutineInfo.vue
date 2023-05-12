@@ -1,22 +1,27 @@
 <template>
   <v-card class="routine-card-info" flat>
-    <v-row>
-      <v-btn class="square-btn" v-model="routine.meta.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
-        size="large" variant="text" :loading="loadingFav" rounded="xl">
-        <img :src="favoriteBtnImg" alt="fav button" />
-      </v-btn>
-      <v-card-title v-if="!editingName" class="text-h4">{{ routine.name }}</v-card-title>
-      <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoutineForm">
-        <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
-          @blur="validateForm($refs.editRoutineForm)" />
-        <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoutineForm)">
-          <v-icon icon="mdi-check" size="20px" />
-        </v-btn>
-      </v-form>
-      <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
-        <v-icon icon="mdi-pencil" size="20px" />
-      </v-btn>
-      <v-col class="mr-1" align="end">
+    <v-row class="title" align="center">
+      <v-col cols="2" />
+      <v-col cols="8">
+        <v-row justify="center">
+          <v-btn class="square-btn" v-model="routine.meta.favorite" @click="toggleButtonFavorite" toggle :ripple="false"
+            size="large" variant="text" :loading="loadingFav" rounded="xl">
+            <img :src="favoriteBtnImg" alt="fav button" />
+          </v-btn>
+          <v-card-title v-if="!editingName" class="text-h4">{{ routine.name }}</v-card-title>
+          <v-form v-if="editingName" class="d-flex" @submit.prevent validate-on="input" ref="editRoutineForm">
+            <v-text-field v-model="updatedName" class="editName" :rules="nameRules" variant="outlined" hide-details="auto"
+              @blur="validateForm($refs.editRoutineForm)" />
+            <v-btn class="square-btn" variant="text" @click="validateForm($refs.editRoutineForm)">
+              <v-icon icon="mdi-check" size="20px" />
+            </v-btn>
+          </v-form>
+          <v-btn v-if="!editingName" class="square-btn" variant="text" @click="editingName = true">
+            <v-icon icon="mdi-pencil" size="20px" />
+          </v-btn>
+        </v-row>
+      </v-col>
+      <v-col cols="2" justify="center" align="center">
         <v-icon end icon="mdi-delete" @click="openDialog = true" />
       </v-col>
     </v-row>
@@ -28,7 +33,7 @@
       </v-row>
       <v-col justify="center" align="center">
         <v-row cols="12" class="fill-space">
-          <v-expansion-panels variant="inset" :model-value="opened" v-model="expansionPanelsValues">
+          <v-expansion-panels variant="inset" v-model="expansionPanelsValues">
             <v-expansion-panel mandatory v-for="(device, index) in routineStore.routinesDevicesStatus[routine.id]"
               :key="index" :value="device.name">
 
@@ -42,7 +47,7 @@
                       {{ device.name }}
                     </v-col>
                     <v-col cols="3" class="d-flex justify-end pr-5">
-                      <v-btn icon size="small" @click="deleteDevice(device)">
+                      <v-btn icon size="small" @click="checkIfLastDevice(device)">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                     </v-col>
@@ -80,22 +85,21 @@
   </v-dialog>
   <v-dialog v-model="openDeleteDeviceDialog" width="auto">
     <ConfirmationDialog message="Si eliminas todos los dispositivos se borrará la rutina, ¿Deseas continuar?"
-      @cancelAction="openDialog = false" @confirmAction="deleteRoutine" />
+      @cancelAction="openDeleteDeviceDialog = false" @confirmAction="deleteRoutine" />
   </v-dialog>
 </template>
   
 <script setup>
-import DevicesOptions from './devices/DevicesOptions.vue';
+import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import { ref, onUnmounted, computed } from 'vue'
 import { useRoutineStore } from '@/stores/routineStore';
-import ConfirmationDialog from './ConfirmationDialog.vue';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 import favoriteYes from '@/assets/favoriteYes.svg'
 import favoriteNo from '@/assets/favoriteNo.svg'
 import { RoutineApi } from '@/api/routine';
-import ImageSelect from './devices/ImageSelect.vue';
+import ImageSelect from '@/components/ImageSelect.vue';
 const routineStore = useRoutineStore();
 
-console.log(routineStore.routinesDevicesStatus[routine.id])
 
 const { routine, allDevices } = defineProps({
   routine: Object,
@@ -121,15 +125,22 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 
 function deleteRoutine() {
   routineStore.deleteRoutine(routine)
+  routineStore.routinesDevicesStatus.splice(routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id), 1)
   emit('close-dialog');
 }
+
+function checkIfLastDevice(device) {
+  if (new Set(routine.actions.map(action => action.device.id)).size === 1) {
+    openDeleteDeviceDialog.value = true
+  } else {
+    deleteDevice(device)
+  }
+}
+
 
 function deleteDevice(device) {
   routineStore.routinesDevicesStatus[routine.id] = routineStore.routinesDevicesStatus[routine.id].filter(deviceState => deviceState.id !== device.id)
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
-  if (routine.actions.length === 0) {
-    openDeleteDeviceDialog.value = true
-  }
 }
 
 const favoriteBtnImg = computed(() => {
@@ -238,5 +249,10 @@ async function validateForm(form) {
 
 .subtitle-text {
   color: rgb(121, 121, 121);
+}
+
+.title {
+  min-height: 80px;
+  margin: 0 0;
 }
 </style>

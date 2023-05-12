@@ -26,51 +26,62 @@
             </v-col>
         </v-row>
     </v-card>
-    <RoomInfo v-model="openDialog" :room="room" @close-dialog="openDialog = false" />
+    <RoomInfo v-model="openDialog" :roomId="roomId" @close-dialog="openDialog = false" />
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import RoomInfo from '@/components/rooms/RoomInfo.vue';
 import { useRoomStore } from '@/stores/roomStore';
+import { useDeviceStore } from '@/stores/deviceStore';
 import dormitorio from '@/assets/dormitorio.svg';
 import cocina from '@/assets/cocina.svg';
 import living from '@/assets/living.svg';
 import baño from '@/assets/baño.svg';
 import patio from '@/assets/patio.svg';
 import otro from '@/assets/otro.svg';
+import { watch } from 'vue';
 
 const openDialog = ref(false);
 
-const roomStore = useRoomStore()
-
 const props = defineProps({
-    room: Object
+    roomId: String
+})
+
+const roomStore = useRoomStore()
+const deviceStore = useDeviceStore()
+
+const room = computed(() => roomStore.getRoom(props.roomId), { default: null });
+
+watch(() => room.value.devices, () => {
+    console.log(room.value.devices)
 })
 
 const onDevices = computed(() => {
-    return props.room.devices ? props.room.devices.filter(device => device.state.status === 'on') : []
+    return room.value ? deviceStore.devices.filter(device => device.room && device.room.id === room.value.id && device.state.status === 'on') : []
 });
 
 const typeImg = computed(() => {
-    switch (props.room.meta.type) {
-        case 'Dormitorio':
-            return dormitorio;
-        case 'Cocina':
-            return cocina;
-        case 'Living':
-            return living;
-        case 'Baño':
-            return baño;
-        case 'Patio':
-            return patio;
-        case 'Otro':
-            return otro;
+    if (room && room.value) {
+        switch (room.value.meta.type) {
+            case 'Dormitorio':
+                return dormitorio;
+            case 'Cocina':
+                return cocina;
+            case 'Living':
+                return living;
+            case 'Baño':
+                return baño;
+            case 'Patio':
+                return patio;
+            default /* Otro */:
+                return otro;
+        }
     }
 });
 
 const connectedDevices = computed(() => {
-    const idx = roomStore.rooms.findIndex(room => props.room.id === room.id)
+    const idx = roomStore.rooms.findIndex(r => room.value.id === r.id)
     return idx !== -1 && roomStore.rooms[idx] && roomStore.rooms[idx].devices ? roomStore.rooms[idx].devices.length : 0
 })
 
