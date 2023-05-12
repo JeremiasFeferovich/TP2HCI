@@ -19,8 +19,9 @@
                 <v-divider />
               </v-row>
               <v-row cols="12" class="fill-space">
-                <v-expansion-panels variant="inset" :model-value="opened">
-                  <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index">
+                <v-expansion-panels variant="inset" :model-value="opened" v-model="expansionPanelsValues">
+                  <v-expansion-panel mandatory v-for="(device, index) in selectedDevices" :key="index"
+                    :value="device.name">
                     <v-expansion-panel-title>
                       <template v-slot:default="{ expanded }">
                         <v-row no-gutters>
@@ -93,6 +94,7 @@ const selectedDevices = ref([])
 const showSelector = ref(true)
 const opened = ref([0])
 const devicesState = ref([])
+const expansionPanelsValues = ref([])
 
 const newRoutineForm = ref(null)
 
@@ -181,9 +183,12 @@ function handleSave() {
 }
 
 const addSelectedDevice = (selected) => {
-  console.log(selected)
+  if (!expansionPanelsValues.value) {
+    expansionPanelsValues.value = []
+  }
+  expansionPanelsValues.value.push(selected.name)
   selectedDevice.value = prop.devices.find(device => device.name === selected.name);
-  selectedDevices.value.push(selectedDevice.value)
+  selectedDevices.value.unshift(selectedDevice.value)
   selectedDevice.value = ''
   showSelector.value = false
 }
