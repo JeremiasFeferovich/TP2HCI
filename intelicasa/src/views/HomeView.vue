@@ -32,7 +32,7 @@
                 Aún no tienes dispositivos. Haga click aquí para agregar uno.
             </v-btn>
             <DevicesList v-if="!loading" :showSearchbar="false"
-                
+                :devices="deviceStore.devices && deviceStore.devices.filter(device => device.meta.favorite)"
                 @delete="(device) => deleteDevice(device)" />
         </v-sheet>
     </v-container>
