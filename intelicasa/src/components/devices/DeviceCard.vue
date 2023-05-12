@@ -5,12 +5,12 @@
                 <v-img class="categoryImg" :src="categoryImg" alt="categoryImg" contain />
             </v-col>
             <v-col cols="6" class="text-center" align-self="center">
-                <v-card-title class="text-h5">{{ device.name }}</v-card-title>
+                <v-card-title class="text-h5">{{ device && device.name }}</v-card-title>
             </v-col>
             <v-col cols="3">
-                <v-icon v-if="device.meta.category.name === 'Aspiradora'" :icon="batteryImg" size="35" />
-                <v-icon v-else-if="device.meta.category.name === 'Puerta'" :icon="doorImg" size="40" />
-                <v-btn v-else class="square-btn rounded-circle" v-model="device.state.status"
+                <v-icon v-if="device && device.meta.category.name === 'Aspiradora'" :icon="batteryImg" size="35" />
+                <v-icon v-else-if="device && device.meta.category.name === 'Puerta'" :icon="doorImg" size="40" />
+                <v-btn v-else-if="device" class="square-btn rounded-circle" v-model="device.state.status"
                     @click.stop="toggleButtonState" variant="text" :loading="loadingState">
                     <img :src="powerBtnImg" contain alt="powerState" />
                 </v-btn>
