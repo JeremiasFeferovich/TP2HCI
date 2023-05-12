@@ -24,7 +24,7 @@
       <v-container fluid>
         <v-row v-for="(device, index) in devicesShown" :key="index" align="center">
           <v-col cols="12" class="device-card ml-4">
-            <DeviceCard :device="device" />
+            <DeviceCard :deviceId="device.id" />
           </v-col>
           <v-col class="text-end mr-8">
             <v-btn icon size="small" @click="removeDevice(device)">
@@ -44,8 +44,6 @@
           </v-col>
         </v-row>
       </v-container>
-
-
     </v-card>
     <v-dialog v-model="openDialog" width="auto">
       <ConfirmationDialog message="¿Estás seguro que deseas eliminar esta habitación?" @cancelAction="openDialog = false"

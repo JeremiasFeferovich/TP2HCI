@@ -18,7 +18,7 @@
         </v-col>
         <v-col cols="6" align="center">
             <v-btn :disabled="disabled || loading" class="square-btn rounded-circle" variant="outlined"
-                @click="showColorPicker = true" :style="{ backgroundColor: color }"></v-btn>
+                @click="showColorPicker = true" :style="{ backgroundColor: localColor }"></v-btn>
             <v-dialog class="ma-0" v-model="showColorPicker" width="auto" align="centers">
                 <v-color-picker :disabled="loading" v-model="localColor" hide-inputs @update:model-value="updateColor"
                     class="ma-0 px-2 pt-2" mode="hex" />
@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted, onMounted, defineEmits, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, defineEmits } from 'vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { watch } from 'vue';
 
@@ -47,8 +47,10 @@ const loading = ref(false);
 const localIntensity = ref(props.device.state.brightness)
 const localColor = ref(props.device.state.color)
 
-const intensity = computed(() => deviceStore.getDevice(props.device.id).state.brightness)
-const color = computed(() => deviceStore.getDevice(props.device.id).state.color)
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const intensity = computed(() => storeDevice.value && storeDevice.value.state.brightness)
+const color = computed(() => storeDevice.value && storeDevice.value.state.color)
 
 watch(intensity, (newVal) => {
     if (!props.returnAction) localIntensity.value = newVal;
@@ -58,19 +60,11 @@ watch(color, (newVal) => {
     if (!props.returnAction) localColor.value = newVal;
 })
 
-
 const updateTimeout = ref(null);
 
 const emit = defineEmits(['actionSet']);
 
 onMounted(() => {
-    if (props.returnAction) {
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [localIntensity.value] })
-        emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [localColor.value] })
-    }
-})
-
-onUnmounted(() => {
     if (props.returnAction) {
         emit('actionSet', { device: { id: props.device.id }, actionName: 'setBrightness', params: [localIntensity.value] })
         emit('actionSet', { device: { id: props.device.id }, actionName: 'setColor', params: [localColor.value] })
@@ -85,6 +79,8 @@ async function updateColor() {
             loading.value = true;
             await deviceStore.triggerEvent(action)
             loading.value = false;
+        }else {
+            emit('actionSet', action)
         }
     }, 250); // wait for 250ms before sending the request
 }
@@ -95,11 +91,12 @@ async function updateIntensity() {
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
+    }else {
+        emit('actionSet', action)
     }
 }
 
 </script>
-
 
 <style scoped>
 .square-btn {

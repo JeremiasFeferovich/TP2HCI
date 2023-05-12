@@ -41,7 +41,6 @@ import { useRoomStore } from '@/stores/roomStore';
 import mopMode from '@/assets/vacuum/mopMode.png';
 import vacuumMode from '@/assets/vacuum/vacuumMode.png';
 import { watch } from 'vue';
-import { onBeforeMount } from 'vue';
 
 const modeItems = ref([
     { name: 'Aspirar', value: 'vacuum', img: vacuumMode },
@@ -62,35 +61,38 @@ const rooms = ref(roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomS
 const localMode = ref(modeItems.value.find(x => x.value === props.device.state.mode))
 const localLocation = ref(rooms.value.find(x => x.is = props.device.state.location))
 
-const mode = computed(() => deviceStore.getDevice(props.device.id).state.mode)
-const location = computed(() => deviceStore.getDevice(props.device.id).state.location)
+const storeDevice = computed(() => deviceStore.getDevice(props.device.id))
+
+const mode = computed(() => storeDevice.value && storeDevice.value.state.mode)
+const location = computed(() => storeDevice.value && storeDevice.value.state.location)
+const batteryLevel = computed(() => storeDevice.value && storeDevice.value.state.batteryLevel)
 
 watch(location, (newVal) => {
-    if (!props.returnAction) localLocation.value = rooms.value.find(x => x.id === newVal.id);
+    if (!props.returnAction && newVal) localLocation.value = rooms.value.find(x => x.id === newVal.id);
 })
 
 watch(mode, (newVal) => {
-    if (!props.returnAction) localMode.value = modeItems.value.find(x => x.value === newVal.value);
+    if (!props.returnAction && newVal) localMode.value = modeItems.value.find(x => x.value === newVal.value);
 })
 
 const batteryImg = computed(() => {
-    if (props.device.state.batteryLevel < 10) {
+    if (batteryLevel.value < 10) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-10`
-    } else if (props.device.state.batteryLevel < 20) {
+    } else if (batteryLevel.value < 20) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-20`
-    } else if (props.device.state.batteryLevel < 30) {
+    } else if (batteryLevel.value < 30) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-30`
-    } else if (props.device.state.batteryLevel < 40) {
+    } else if (batteryLevel.value < 40) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-40`
-    } else if (props.device.state.batteryLevel < 50) {
+    } else if (batteryLevel.value < 50) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-50`
-    } else if (props.device.state.batteryLevel < 60) {
+    } else if (batteryLevel.value < 60) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-60`
-    } else if (props.device.state.batteryLevel < 70) {
+    } else if (batteryLevel.value < 70) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-70`
-    } else if (props.device.state.batteryLevel < 80) {
+    } else if (batteryLevel.value < 80) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-80`
-    } else if (props.device.state.batteryLevel < 90) {
+    } else if (batteryLevel.value < 90) {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}-90`
     } else {
         return `mdi-battery${props.device.state.status === "docked" ? "-charging" : ""}`
@@ -112,23 +114,7 @@ const status = computed(() => {
 
 const emit = defineEmits(['actionSet']);
 
-onBeforeMount(async () => {
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
-    emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
-    switch (props.device.state.status) {
-        case "inactive":
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'pause', params: [] })
-            break
-        case "docked":
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'dock', params: [] })
-            break
-        case "active":
-            emit('actionSet', { device: { id: props.device.id }, actionName: 'start', params: [] })
-            break
-    }
-})
-
-onUnmounted(() => {
+onMounted(async () => {
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setMode', params: [props.device.state.mode] })
     emit('actionSet', { device: { id: props.device.id }, actionName: 'setLocation', params: [props.device.state.location ? props.device.state.location.id : null] })
     switch (props.device.state.status) {
@@ -153,6 +139,7 @@ async function setMode(newMode) {
         }
         loading.value = false
     } else {
+        emit('actionSet', action)
         localMode.value = newMode;
         props.device.state.mode = newMode.value;
     }
@@ -165,9 +152,11 @@ async function setLocation(newLocation) {
         //Location es por default null, no se puede hacer el if porque la primera vez no se actualizaria
         await deviceStore.triggerEvent(action)
         loading.value = false
+    } else {
+        emit('actionSet', action)
+        localLocation.value = newLocation;
+        props.device.state.location = newLocation.id;
     }
-    localLocation.value = newLocation;
-    props.device.state.location = newLocation.id;
 }
 
 async function startCleaning() {
@@ -177,6 +166,7 @@ async function startCleaning() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit
         props.device.state.status = 'active'
     }
 }
@@ -189,6 +179,7 @@ async function pauseCleaning() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.status = 'inactive'
     }
 }
@@ -200,6 +191,7 @@ async function dock() {
         await deviceStore.triggerEvent(action)
         loading.value = false
     } else {
+        emit('actionSet', action)
         props.device.state.status = 'docked'
     }
 }

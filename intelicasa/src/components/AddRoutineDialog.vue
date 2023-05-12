@@ -69,13 +69,12 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import DevicesOptions from '@/components/devices/DevicesOptions.vue';
 import AddBtn from './AddBtn.vue'
 import CloseAndSaveBtns from './CloseAndSaveBtns.vue'
 import ImageSelect from './devices/ImageSelect.vue';
 import { useRoutineStore } from '@/stores/routineStore';
-
 
 const routineStore = useRoutineStore();
 
@@ -103,8 +102,6 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length <= 60) || 'El nombre debe tener menos de 60 caracteres',
 (v) => /^[a-zA-Z0-9_ ]*$/.test(v) || 'El nombre solo puede contener letras, números, espacios y _',
 (v) => !routineStore.routines.find(routine => routine.name === v) || 'Ya existe una rutina con ese nombre']
-
-
 
 const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
 
@@ -163,7 +160,7 @@ function closeDialog() {
   resetForm()
 }
 
-function handleSave() {
+async function handleSave() {
   const routine = {
     name: routineName.value,
     actions: actions.value,
@@ -172,8 +169,7 @@ function handleSave() {
       favorite: false
     }
   }
-  routineStore.addRoutine(routine);
-
+  await routineStore.addRoutine(routine);
   selectedDevices.value = []
   dialog.value = false
   routineName.value = ''
