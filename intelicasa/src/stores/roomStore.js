@@ -2,12 +2,19 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { RoomApi } from "@/api/room";
 import { useDeviceStore } from "./deviceStore";
+import dormitorio from '@/assets/dormitorio.svg';
+import cocina from '@/assets/cocina.svg';
+import living from '@/assets/living.svg';
+import baño from '@/assets/baño.svg';
+import patio from '@/assets/patio.svg';
+import otro from '@/assets/otro.svg';
 
 export const useRoomStore = defineStore('room', () => {
 
     const deviceStore = useDeviceStore()
     // State - ref
     const rooms = ref([]);
+    const roomTypeImg = { ['Dormitorio']: dormitorio, ['Cocina']: cocina, ['Living']: living, ['Baño']: baño, ['Patio']: patio, ['Otro']: otro }
 
     // Getters - computed
     const getRooms = computed(() => rooms.value)
@@ -62,7 +69,7 @@ export const useRoomStore = defineStore('room', () => {
 
 
     return {
-        rooms,
+        rooms,roomTypeImg,
         getRooms,
         fetchRoom,fetchRooms,addRoom,deleteRoom, removeDeviceFromRoom, addDeviceToRoom, updateRoom
     }
