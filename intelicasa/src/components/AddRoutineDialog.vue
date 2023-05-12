@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="70%" v-click-outside="resetForm">
+  <v-dialog v-model="dialog" width="70%">
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
