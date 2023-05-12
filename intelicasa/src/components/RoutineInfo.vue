@@ -41,7 +41,9 @@
                       {{ device.name }}
                     </v-col>
                     <v-col cols="3" class="d-flex justify-end pr-5">
-                      <v-icon end icon="mdi-delete" @click.stop="deleteDevice(device)" />
+                      <v-btn icon size="small" @click="deleteDevice(device)">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
                     </v-col>
                   </v-row>
                 </template>

@@ -33,7 +33,7 @@
                           <v-list-item-title class="text-h5">{{ device.name }}</v-list-item-title>
                         </v-col>
                         <v-col cols="2" class="text-end">
-                          <v-btn icon size="small" color="error" @click="deleteSelectedDevice(device)">
+                          <v-btn icon size="small" @click="deleteSelectedDevice(device)">
                             <v-icon>mdi-close</v-icon>
                           </v-btn>
                         </v-col>
@@ -84,7 +84,7 @@
 </template>
   
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoomStore } from '@/stores/roomStore';
 import DeviceSelect from '@/components/rooms/DeviceSelect.vue';
 
@@ -118,6 +118,22 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 
 const deviceRules = [(v) => selectedDevices.value.length || 'Hace falta seleccionar al menos un dispositivo']
 const roomTypeRules = [(v) => !!v || 'El tipo de habitación es requerido']
+
+watch(dialog, (value) => {
+  if (!value) {
+    resetForm()
+  }
+})
+
+function resetForm() {
+  roomName.value = ''
+  roomType.value = ''
+  deviceInputs.value = [null]
+  attemptSave.value = false
+  selectedDevices.value = []
+  showSelector.value = true
+}
+
 
 async function validateForm(form) {
   const result = await form.validate()
