@@ -16,7 +16,7 @@
                 </v-row>
             </v-list-item>
         </template>
-        <template v-slot:no-data v-if="showSelectedOnly">
+        <template v-slot:no-data v-if="showSelectedOnly || props.items.length === 0">
             <p class="text-body1 py-2" align="center">No hay mas opciones disponibles</p>
         </template>
     </v-select>
