@@ -20,8 +20,13 @@
                                 @update:selected-item="(item) => selectedCategory = item" label="Tipo*" />
                         </v-row>
                         <v-row class="mt-5">
-                            <ImageSelect :items="rooms" @update:selected-item="(item) => selectedRoom = item"
-                                label="Habitación" />
+                            <ImageSelect
+                                :items="rooms.concat({ name: 'Nueva habitacion', id: 'new', img: roomStore.roomTypeImg['Otro'] })"
+                                @update:selected-item="(item) => handleRoomSelection(item)" label="Habitación" />
+                            <v-dialog v-model="roomDialog" width="1024">
+                                <AddRoomInfo @close-dialog="() => handleCloseAddRoom()"
+                                    @roomCreated="(room) => handleRoomCreated(room)" />
+                            </v-dialog>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -35,15 +40,23 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import ImageSelect from './ImageSelect.vue';
 import AddBtn from '../AddBtn.vue';
 import CloseAndSaveBtns from '../CloseAndSaveBtns.vue';
 import { useDeviceStore } from '@/stores/deviceStore';
 import { useRoomStore } from '@/stores/roomStore';
+import AddRoomInfo from '@/components/rooms/AddRoomInfo.vue';
+
+const prop = defineProps({
+    objectTitle: String,
+    categories: Array
+})
 
 const deviceStore = useDeviceStore();
 const roomStore = useRoomStore();
+
+const roomDialog = ref(false)
 
 const dialog = ref(false)
 const selectedCategory = ref(null)
@@ -52,7 +65,7 @@ const deviceName = ref('')
 
 const newDeviceForm = ref(null)
 
-const rooms = ref(roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomStore.roomTypeImg[x.meta.type] })))
+const rooms = computed(() => roomStore.rooms.map(x => ({ name: x.name, id: x.id, img: roomStore.roomTypeImg[x.meta.type] })))
 
 const nameRules = [(v) => !!v || 'El nombre es requerido',
 (v) => (v && v.length >= 3) || 'El nombre debe tener al menos 3 caracteres',
@@ -92,10 +105,27 @@ async function handleSave() {
     dialog.value = false
 }
 
-const prop = defineProps({
-    objectTitle: String,
-    categories: Array
-})
+function handleRoomSelection(item) {
+    if (item.id === 'new') {
+        roomDialog.value = true
+    } else {
+        selectedRoom.value = item
+    }
+}
+
+function handleCloseAddRoom() {
+    if (roomDialog.value) {
+        roomDialog.value = false
+        selectedRoom.value = null
+    }
+}
+
+function handleRoomCreated(room) {
+    selectedRoom.value = rooms.value.find(x => x.id === room.id)
+    roomDialog.value = false
+}
+
+
 </script>
 
 

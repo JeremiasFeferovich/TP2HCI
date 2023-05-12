@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="70%" v-click-outside="resetForm">
+  <v-dialog v-model="dialog" width="70%">
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
@@ -51,7 +51,7 @@
               <v-row cols="12" class="fill-space">
                 <ImageSelect v-if="showSelector" :rules="deviceRules"
                   :items="devices.map(device => ({ name: device.name, img: device.meta.category.img }))"
-                  @update:selected-item="(device) => addSelectedDevice(device)" label="Select" />
+                  @update:selected-item="(device) => addSelectedDevice(device)" label="Select" hide-details="autos"/>
               </v-row>
             </v-form>
             <v-row cols="12" class="plus-btn mt-6">
