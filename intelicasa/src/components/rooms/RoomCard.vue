@@ -6,7 +6,7 @@
             </v-col>
             <v-col>
                 <v-card-title>
-                    <p class="text-h4">{{ room.name }}</p>
+                    <p class="text-h4">{{ room && room.name }}</p>
                 </v-card-title>
             </v-col>
             <v-col>
@@ -53,8 +53,9 @@ const deviceStore = useDeviceStore()
 
 const room = computed(() => roomStore.getRoom(props.roomId), { default: null });
 
-watch(() => room.value.devices, () => {
-    console.log(room.value.devices)
+const connectedDevices = computed(() => {
+    const idx = roomStore.rooms.findIndex(r => room.value.id === r.id)
+    return idx !== -1 && roomStore.rooms[idx] && roomStore.rooms[idx].devices ? roomStore.rooms[idx].devices.length : 0
 })
 
 const onDevices = computed(() => {
@@ -80,15 +81,7 @@ const typeImg = computed(() => {
     }
 });
 
-const connectedDevices = computed(() => {
-    const idx = roomStore.rooms.findIndex(r => room.value.id === r.id)
-    return idx !== -1 && roomStore.rooms[idx] && roomStore.rooms[idx].devices ? roomStore.rooms[idx].devices.length : 0
-})
-
-const emit = defineEmits(['delete-room']);
-
 </script>
-
 
 <style scoped>
 .room-card {
