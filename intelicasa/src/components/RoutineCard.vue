@@ -1,5 +1,5 @@
 <template>
-    <v-card class="ma-2 pa-3 routine-card" @click="openDialog = true">
+    <v-card class="mx-auto pa-3 routine-card" @click="openDialog = true">
         <v-row align="center">
             <v-col cols="6" align="left" class="pl-5">
                 <p class="text-h4">{{ prop.name }}</p>
@@ -23,6 +23,7 @@
 <script setup>
 
 import { ref, computed } from 'vue';
+
 import RoutineInfo from './RoutineInfo.vue';
 import { useRoutineStore } from '@/stores/routineStore';
 import { useDeviceStore } from '@/stores/deviceStore';
@@ -67,7 +68,7 @@ function executeRoutine(routine) {
 .routine-card {
     margin-top: 5px;
     margin-bottom: 5px;
-    width: 100%;
+    width: 90%;
 }
 
 .routine-card:hover {

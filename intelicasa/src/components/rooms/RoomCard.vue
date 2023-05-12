@@ -26,7 +26,7 @@
             </v-col>
         </v-row>
     </v-card>
-    <RoomInfo v-model="openDialog" :room="room" :devices="devices" @close-dialog="openDialog = false" />
+    <RoomInfo v-model="openDialog" :room="room" @close-dialog="openDialog = false" />
 </template>
 
 <script setup>
@@ -45,11 +45,8 @@ const openDialog = ref(false);
 const roomStore = useRoomStore()
 
 const props = defineProps({
-    room: Object,
-    devices: Array
+    room: Object
 })
-
-const allDevices = ref(props.room.devices)
 
 const onDevices = computed(() => {
     return props.room.devices ? props.room.devices.filter(device => device.state.status === 'on') : []

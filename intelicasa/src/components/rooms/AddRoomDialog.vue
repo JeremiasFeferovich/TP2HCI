@@ -1,11 +1,8 @@
 <template>
-  <div class="add-btn">
-    <v-dialog v-model="dialog" width="1024">
+  <div>
+    <v-dialog v-if="!loading" v-model="dialog" width="1024">
       <template v-slot:activator="{ props }">
-        <v-btn color="primary" v-bind="props">
-          Agregar
-          <v-icon end icon="mdi-plus-circle"></v-icon>
-        </v-btn>
+        <AddBtn :activator="props" />
       </template>
       <v-card>
         <v-card-title align="center">
@@ -52,7 +49,7 @@
                 <v-row cols="12" class="fill-space">
                   <DeviceSelect v-if="showSelector" :rules="deviceRules"
                     :devices="availableDevices.filter((device) => !selectedDevices.includes(device))"
-                    :label="firstDevice ? 'Dispositivo*' : 'Dispositivo'"
+                    :label=" selectedDevices.length ? 'Dispositivo' : 'Dispositivo*' "
                     @update:selectedDevice="(item) => addSelectedDevice(item)" />
                 </v-row>
 
@@ -86,15 +83,23 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useRoomStore } from '@/stores/roomStore';
+import { useDeviceStore } from '@/stores/deviceStore';
 import DeviceSelect from '@/components/rooms/DeviceSelect.vue';
+import AddBtn from '../AddBtn.vue';
+import { onMounted } from 'vue';
 
-const roomStore = useRoomStore();
-const props = defineProps({
-  devices: Array,
-});
+const roomStore = useRoomStore()
+const deviceStore = useDeviceStore()
+const loading = ref(false)
+
+onMounted(() => {
+  loading.value = true
+  deviceStore.fetchDevices()
+  loading.value = false
+})
 
 const availableDevices = computed(() => {
-  return props.devices.filter(device => !device.room);
+  return deviceStore.devices.filter(device => !device.room);
 });
 
 
@@ -171,7 +176,7 @@ function closeDialog() {
 
 function addSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
-    selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
+    selectedDevice.value = deviceStore.devices.find(device => device.name === selectedDevice.name);
     selectedDevices.value.push(selectedDevice)
     showSelector.value = false
     /* delete selected device from availabledevicesnames*/
@@ -180,7 +185,7 @@ function addSelectedDevice(selectedDevice) {
 
 function deleteSelectedDevice(selectedDevice) {
   if (selectedDevice.value !== '') {
-    selectedDevice.value = props.devices.find(device => device.name === selectedDevice.name);
+    selectedDevice.value = deviceStore.devices.find(device => device.name === selectedDevice.name);
     /* remoce selected device from selected devices*/
     selectedDevices.value.splice(selectedDevices.value.indexOf(selectedDevice), 1)
     showSelector.value = false
@@ -191,15 +196,6 @@ function deleteSelectedDevice(selectedDevice) {
 
 
 <style scoped>
-.add-btn {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: right;
-  margin-right: 20%;
-
-}
-
 .fill-space {
   max-width: 60%;
 }
@@ -207,10 +203,6 @@ function deleteSelectedDevice(selectedDevice) {
 .plus-btn {
   justify-content: center;
   margin-bottom: 40px;
-}
-
-.required-info {
-  color: red;
 }
 
 .categoryImg {

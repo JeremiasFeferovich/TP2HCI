@@ -5,7 +5,6 @@
     <v-row v-else v-for="(room, index) in rooms" :key="index">
         <RoomCard 
             :room="room"
-            :devices="devices"
         />
     </v-row>
 </template>
@@ -14,7 +13,6 @@
     import RoomCard from '@/components/rooms/RoomCard.vue';
 
     const props = defineProps({
-        rooms: Array,
-        devices: Array
+        rooms: Array
     })
 </script>

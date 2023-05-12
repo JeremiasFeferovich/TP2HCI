@@ -60,17 +60,15 @@ import { useRoomStore } from '@/stores/roomStore';
 import { useDeviceStore } from '@/stores/deviceStore'
 import { ref, computed } from 'vue';
 import ConfirmationDialog from '../ConfirmationDialog.vue';
-import { watch } from 'vue';
-
-const deviceStore = useDeviceStore();
 import DeviceSelect from './DeviceSelect.vue';
 
 
+
 const roomsStore = useRoomStore()
+const deviceStore = useDeviceStore();
 
 const props = defineProps({
-  room: Object,
-  devices: Array
+  room: Object
 });
 
 const openDialog = ref(false);

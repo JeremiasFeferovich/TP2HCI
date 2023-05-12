@@ -1,9 +1,9 @@
 <template>
     <TitleComponent title="Habitaciones" />
     <v-sheet class="viewSheet" color="secondary">
-        <RoomsList v-if="!loading" :rooms="roomStore.rooms" :devices="deviceStore.devices" />
+        <RoomsList v-if="!loading" :rooms="roomStore.rooms" />
     </v-sheet>
-    <AddRoomDialog v-if="!loading" :devices="deviceStore.devices" />
+    <AddRoomDialog v-if="!loading" />
 </template>
 
 
@@ -22,7 +22,6 @@ const deviceStore = useDeviceStore();
 onMounted(async () => {
     loading.value = true;
     await roomStore.fetchRooms();
-    await deviceStore.fetchDevices();
     loading.value = false;
 })
 

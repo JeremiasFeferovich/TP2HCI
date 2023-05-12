@@ -7,7 +7,7 @@
         <DevicesList v-else v-if="!loading" :showSearchbar="true" :devices="deviceStore.devices"
             @delete="(device) => deleteDevice(device)" />
     </v-sheet>
-    <AddDeviceDialog v-if="!loading" objectTitle="Add Device" :categories="deviceStore.categories"
+    <AddDeviceDialog v-if="!loading" objectTitle="Nuevo dispositivo" :categories="deviceStore.categories"
         @addDevice="(newDevice) => addDevice(newDevice)" />
 </template>
 
