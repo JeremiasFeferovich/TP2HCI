@@ -34,9 +34,8 @@
       <v-col justify="center" align="center">
         <v-row cols="12" class="fill-space">
           <v-expansion-panels variant="inset" v-model="expansionPanelsValues">
-            <v-expansion-panel mandatory v-for="(device, index) in routineStore.routinesDevicesStatus[routine.id]"
-              :key="index" :value="device.name">
-
+            <v-expansion-panel v-if="thisRoutineStatus" mandatory v-for="(device, index) in thisRoutineStatus.deviceStatus" :key="index"
+              :value="device.name">
               <v-expansion-panel-title>
                 <template v-slot:default="{ expanded }">
                   <v-row no-gutters>
@@ -70,7 +69,7 @@
       <v-col>
         <v-row cols="12" class="fill-space">
           <ImageSelect v-if="showSelector"
-            :items="allDevices.filter(device => !routineStore.routinesDevicesStatus[routine.id].find(deviceState => deviceState.id === device.id)).map(device => ({ name: device.name, img: device.meta.category.img }))"
+            :items="allDevices.filter(device => !thisRoutineStatus.deviceStatus.find(deviceState => deviceState.id === device.id)).map(device => ({ name: device.name, img: device.meta.category.img }))"
             @update:selected-item="(device) => addDevice(device)" label="Select" />
         </v-row>
         <v-row cols="12" class="plus-btn">
@@ -100,6 +99,7 @@ import { RoutineApi } from '@/api/routine';
 import ImageSelect from '@/components/ImageSelect.vue';
 const routineStore = useRoutineStore();
 
+const thisRoutineStatus = computed(() => routineStore.routinesDevicesStatus[routine.id] && routineStore.routinesDevicesStatus[routine.id].id === routine.id ? routineStore.routinesDevicesStatus[routine.id] : null)
 
 const { routine, allDevices } = defineProps({
   routine: Object,
@@ -124,8 +124,13 @@ const nameRules = [(v) => !!v || 'El nombre es requerido',
 
 
 function deleteRoutine() {
-  routineStore.deleteRoutine(routine)
+  for (const key in routineStore.routinesDevicesStatus) {
+    const routineState = routineStore.routinesDevicesStatus[key];
+    console.log(routineState);
+    console.log(routineState.id, routine.id);
+  }
   routineStore.routinesDevicesStatus.splice(routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id), 1)
+  routineStore.deleteRoutine(routine)
   emit('close-dialog');
 }
 
@@ -139,9 +144,8 @@ function checkIfLastDevice(device) {
 
 
 function deleteDevice(device) {
-  const index = routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id)
-  if (index !== -1) {
-    routineStore.routinesDevicesStatus[index] = routineStore.routinesDevicesStatus[index].filter(deviceState => deviceState.id !== device.id)
+  if (thisRoutineStatus) {
+    thisRoutineStatus.value.deviceStatus = thisRoutineStatus.value.deviceStatus.filter(deviceState => deviceState.id !== device.id)
   }
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
 }
@@ -180,7 +184,7 @@ function addAction(newAction) {
   if (!found || deviceIndex === -1) {
     routine.actions.push(newAction)
   }
-  routineStore.routinesDevicesStatus[routine.id].forEach(device => {
+  thisRoutineStatus.value.deviceStatus.forEach(device => {
     if (device.id === newAction.device.id) {
       device.state = { ...device.state, ...routineStore.getStateFromAction(newAction) }
     }
@@ -188,8 +192,8 @@ function addAction(newAction) {
 }
 
 onUnmounted(() => {
-  const index = routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id)
-  if (index !== -1) {
+  console.log(thisRoutineStatus.value)
+  if (thisRoutineStatus.value) {
     handleUpdate()
   }
 })
@@ -201,7 +205,7 @@ const addDevice = (selected) => {
   }
   expansionPanelsValues.value.push(selected.name)
   selectedDevice.value = allDevices.find(device => device.name === selected.name);
-  routineStore.routinesDevicesStatus[routine.id].unshift(selectedDevice.value)
+  thisRoutineStatus.value.deviceStatus.unshift(selectedDevice.value)
   selectedDevice.value = ''
   showSelector.value = false
 }

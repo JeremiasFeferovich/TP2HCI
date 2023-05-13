@@ -139,6 +139,9 @@ async function setTemperature() {
         loading.value = true
         await deviceStore.triggerEvent(action)
         loading.value = false
+    } else{
+        emit('actionSet', action)
+        props.device.state.temperature = localTemperature.value;
     }
 }
 

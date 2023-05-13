@@ -159,8 +159,8 @@ async function setGrillMode(newGrillMode) {
 }
 
 async function setConvectionMode(newConvMode) {
+    const action = { device: { id: props.device.id }, actionName: 'setConvection', params: [newConvMode.value] }
     if (!props.returnAction) {
-        const action = { device: { id: props.device.id }, actionName: 'setConvection', params: [newConvMode.value] }
         loading.value = true
         if (await deviceStore.triggerEvent(action)) {
             localConvectionMode.value = newConvMode;

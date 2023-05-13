@@ -55,9 +55,9 @@ export const useRoutineStore = defineStore('routine', () => {
                 })
 
                 if (!routinesDevicesStatus[routine.id]) {
-                    routinesDevicesStatus[routine.id] = [deviceStatus];
+                    routinesDevicesStatus[routine.id] = {id: routine.id, deviceStatus:[deviceStatus]};
                 } else {
-                    routinesDevicesStatus[routine.id].push(deviceStatus);
+                    routinesDevicesStatus[routine.id].deviceStatus.push(deviceStatus);
                 }
             }
         });
@@ -129,6 +129,7 @@ export const useRoutineStore = defineStore('routine', () => {
     }
     async function deleteRoutine(routine) {
         const deletedRoutine = await RoutineApi.delete(routine)
+        routinesDevicesStatus.value = routinesDevicesStatus.value.filter(r => r.id !== routine.id)
         fetchRoutines()
     }
 
@@ -146,7 +147,6 @@ export const useRoutineStore = defineStore('routine', () => {
     return {
         routines, routinesDevicesStatus,
         fetchRoutines, addRoutine, deleteRoutine, executeRoutine, updateRoutine, getStateFromAction
-
     }
 
 })

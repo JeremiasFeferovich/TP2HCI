@@ -50,7 +50,7 @@
               </v-row>
               <v-row cols="12" class="fill-space">
                 <ImageSelect v-if="showSelector" :rules="deviceRules"
-                  :items="devices.map(device => ({ name: device.name, img: device.meta.category.img }))"
+                  :items="devices.filter(device => !selectedDevices.some(selectedDevice => selectedDevice.id === device.id)).map(device => ({ name: device.name, img: device.meta.category.img }))"
                   @update:selected-item="(device) => addSelectedDevice(device)" label="Select" hide-details="autos" />
               </v-row>
             </v-form>
@@ -130,8 +130,6 @@ watch(dialog, (value) => {
     resetForm()
   }
 })
-
-
 
 function resetForm() {
   selectedDevices.value = []

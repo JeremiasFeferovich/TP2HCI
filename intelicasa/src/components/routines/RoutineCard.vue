@@ -42,7 +42,7 @@ const categories = computed(() => {
     const index = routineStore.routines.findIndex(r => r.id === prop.routine.id);
     if (index === -1) return [];
 
-    const categoryNames = routineStore.routinesDevicesStatus[prop.routine.id].map(device => device.type.name);
+    const categoryNames = routineStore.routinesDevicesStatus[prop.routine.id] ? routineStore.routinesDevicesStatus[prop.routine.id].deviceStatus.map(device => device.type.name) : [];
     const cats = [];
 
     categoryNames.forEach(id => {
