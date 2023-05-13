@@ -132,6 +132,7 @@ export const useRoutineStore = defineStore('routine', () => {
 
     async function executeRoutine(routine) {
         const execute = await RoutineApi.execute(routine)
+        return execute
     }
 
 

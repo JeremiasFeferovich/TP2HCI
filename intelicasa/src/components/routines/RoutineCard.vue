@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto pa-3 routine-card" @click="openDialog = true">
+    <v-card :disabled="loading" class="mx-auto pa-3 routine-card" @click="openDialog = true">
         <v-row align="center">
             <v-col cols="6" align="left" class="pl-5">
                 <p class="text-h4">{{ prop.name }}</p>
@@ -18,6 +18,13 @@
     <v-dialog v-model="openDialog" width="40%">
         <RoutineInfo :routine="routine" :allDevices="allDevices" @close-dialog="openDialog = false;" />
     </v-dialog>
+    <v-snackbar v-model="snackbarOpen" location="bottom" timeout="3000" :color="snackbarColor" >{{ snackbarText }}
+        <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbarOpen = false">
+                Cerrar
+            </v-btn>
+        </template>
+    </v-snackbar>
 </template>
 
 <script setup>
@@ -46,8 +53,11 @@ const categories = computed(() => {
 
 const openDialog = ref(false);
 
-const buttonState = ref(false);
 const loading = ref(false);
+
+const snackbarOpen = ref(false);
+const snackbarText = ref('');
+const snackbarColor = ref('success');
 
 const prop = defineProps({
     name: String,
@@ -58,8 +68,18 @@ const prop = defineProps({
 const emit = defineEmits(['delete-routine', 'update-routine']);
 
 
-function executeRoutine(routine) {
-    routineStore.executeRoutine(routine);
+async function executeRoutine(routine) {
+    loading.value = true;
+    if (await routineStore.executeRoutine(routine)) {
+        snackbarText.value = 'Rutina ejecutada exitosamente';
+        snackbarColor.value = 'success';
+        snackbarOpen.value = true;
+    } else {
+        snackbarText.value = 'Error al ejecutar la rutina';
+        snackbarColor.value = 'error';
+        snackbarOpen.value = true;
+    }
+    loading.value = false;
 }
 
 </script>
