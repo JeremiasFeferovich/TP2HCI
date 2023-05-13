@@ -1,5 +1,5 @@
 <template>
-    <v-card class="ma-0 py-2 px-5" :disabled="loadingState" @click.stop="openDialog = true">
+    <v-card class="ma-0 py-2 px-5 device-card" :disabled="loadingState" @click.stop="openDialog = true">
         <v-row align="center">
             <v-col cols="3" align="center" class="py-3 px-0">
                 <v-img class="categoryImg" :src="categoryImg" alt="categoryImg" contain />
@@ -103,6 +103,11 @@ const batteryImg = computed(() => {
 </script>
   
 <style scoped>
+
+.device-card:hover {
+    background-color: rgba(220, 220, 220, 0.892);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
 .v-row {
     height: 100%;
 }
