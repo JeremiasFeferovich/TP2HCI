@@ -11,7 +11,7 @@
                 </div>
             </v-col>
             <v-col cols="2">
-                <v-btn icon="mdi-play" @click.stop="executeRoutine(routine)" />
+                <v-btn :loading="loading" icon="mdi-play" @click.stop="executeRoutine(routine)" />
             </v-col>
         </v-row>
     </v-card>

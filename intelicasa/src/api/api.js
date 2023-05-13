@@ -1,5 +1,9 @@
 
 class Api {
+    
+    static get baseUrl() {
+        return 'http://localhost:8080/api'
+    }
 
     static _isConnected = false;
   
@@ -11,10 +15,6 @@ class Api {
       this._isConnected = value;
       const event = new CustomEvent('api-connection-changed', { detail: value });
       window.dispatchEvent(event);
-    }
-
-    static get baseUrl() {
-        return 'http://localhost:8080/api'
     }
 
     static async fetchApi(url, init = {}) {
