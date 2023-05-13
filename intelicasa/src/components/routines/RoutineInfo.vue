@@ -139,7 +139,10 @@ function checkIfLastDevice(device) {
 
 
 function deleteDevice(device) {
-  routineStore.routinesDevicesStatus[routine.id] = routineStore.routinesDevicesStatus[routine.id].filter(deviceState => deviceState.id !== device.id)
+  const index = routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id)
+  if (index !== -1) {
+    routineStore.routinesDevicesStatus[index] = routineStore.routinesDevicesStatus[index].filter(deviceState => deviceState.id !== device.id)
+  }
   routine.actions = routine.actions.filter(action => action.device.id !== device.id)
 }
 
@@ -185,7 +188,8 @@ function addAction(newAction) {
 }
 
 onUnmounted(() => {
-  if (routineStore.routinesDevicesStatus[routine.id]) {
+  const index = routineStore.routinesDevicesStatus.findIndex(routineState => routineState.id === routine.id)
+  if (index !== -1) {
     handleUpdate()
   }
 })
