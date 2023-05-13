@@ -1,5 +1,5 @@
 <template>
-    <v-card :disabled="loading" class="ma-1 rounded-pill home-routine-card" @click="openDialog = true">
+    <v-card :disabled="loading" class="ma-1 rounded-pill" @click="openDialog = true">
         <v-row>
             <v-col cols="12">
                 <v-card-title>
@@ -63,10 +63,3 @@ async function executeRoutine(routine) {
 }
 
 </script>
-
-<style scoped>
-    .home-routine-card:hover {
-    background-color: rgba(220, 220, 220, 0.892);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-}
-</style>
