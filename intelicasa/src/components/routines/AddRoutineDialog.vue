@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="70%">
+  <v-dialog v-model="dialog" width="50%">
     <template v-slot:activator="{ props }">
       <AddBtn :activator="props" />
     </template>
@@ -128,6 +128,8 @@ async function validateForm(form) {
 watch(dialog, (value) => {
   if (!value) {
     resetForm()
+  }else{
+    showSelector.value = true
   }
 })
 
