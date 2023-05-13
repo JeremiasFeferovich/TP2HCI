@@ -1,24 +1,10 @@
 import { Api } from "./api.js"
-import lightbulb from '@/assets/lightbulb.svg'
-import oven from '@/assets/oven.svg'
-import airConditioner from '@/assets/airConditioner.svg'
-import door from '@/assets/door.svg'
-import vacuum from '@/assets/vacuumCleaner.svg'
 
 class DeviceApi {
-
 
     static allCategories = []
 
     static eventSource = null
-
-    static categories = [
-        { name: "Aire Acondicionado", value: "ac", img: airConditioner },
-        { name: "Luces", value: "lamp", img: lightbulb },
-        { name: "Horno", value: "oven", img: oven },
-        { name: "Aspiradora", value: "vacuum", img: vacuum },
-        { name: "Puerta", value: "door", img: door }
-    ]
 
     static getUrl(slug) {
         return `${Api.baseUrl}/devices${slug ? `/${slug}` : ''}`
@@ -50,8 +36,7 @@ class DeviceApi {
             },
             name: device.name,
             meta: {
-                favorite: false,
-                category: device.category
+                favorite: false
             }
         }
         return await Api.post(DeviceApi.getUrl(), body)
@@ -68,7 +53,6 @@ class DeviceApi {
 
     static async getDevice(id) {
         const device = await Api.get(DeviceApi.getUrl(id))
-        const category = this.categories.find(category => category.value === device.type.name);
         return device
     }
 

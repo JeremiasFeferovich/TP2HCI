@@ -41,11 +41,12 @@ const deviceStore = useDeviceStore();
 const categories = computed(() => {
     const index = routineStore.routines.findIndex(r => r.id === prop.routine.id);
     if (index === -1) return [];
-    const categoryIds = routineStore.routinesDevicesStatus[prop.routine.id].map(device => device.meta.category.id);
+
+    const categoryNames = routineStore.routinesDevicesStatus[prop.routine.id].map(device => device.type.name);
     const cats = [];
 
-    categoryIds.forEach(id => {
-        const category = deviceStore.categories.find(c => c.id === id);
+    categoryNames.forEach(id => {
+        const category = deviceStore.categories.find(c => c.value === id);
         if (category) {
             cats.push(category);
         }

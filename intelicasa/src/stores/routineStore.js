@@ -1,8 +1,11 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { RoutineApi } from "@/api/routine";
+import { useDeviceStore } from "./deviceStore";
 
 export const useRoutineStore = defineStore('routine', () => {
+
+    const deviceStore = useDeviceStore()
     // State - ref
     const routines = ref([]);
 
@@ -37,7 +40,11 @@ export const useRoutineStore = defineStore('routine', () => {
                 const deviceStatus = {
                     id: device.id,
                     name: device.name,
-                    meta: device.meta,
+                    type: device.type,
+                    meta: {
+                        ...device.meta,
+                        category: deviceStore.getCategory(device.type.name)
+                    },
                     state: {}
                 }
                 if (device.type.name === 'vacuum') {

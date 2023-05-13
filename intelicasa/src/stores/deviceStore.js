@@ -11,6 +11,7 @@ import door from '@/assets/door.svg'
 import vacuum from '@/assets/vacuumCleaner.svg'
 
 export const useDeviceStore = defineStore('device', () => {
+    
     // State - ref
     const devices = ref([]);
 
@@ -27,9 +28,14 @@ export const useDeviceStore = defineStore('device', () => {
 
     // Getters - computed
     const getDevice = computed(() => (deviceId) => devices.value.find(device => device.id === deviceId))
+    const getCategory = computed(() => (categoryName) => categories.value.find(category => category.value === categoryName))
     // Actions - funciones Javascript
     async function fetchDevices() {
+        if (categories.value.length === 0) {
+            await fetchCategories();
+        }
         const fetchedDevices = await DeviceApi.getAll()
+        fetchedDevices.forEach(device => {device.meta.category = categories.value.find(category => category.value === device.type.name)})
         devices.value = fetchedDevices
         return fetchedDevices
     }
@@ -68,6 +74,7 @@ export const useDeviceStore = defineStore('device', () => {
 
     async function fetchDevice(deviceId) {
         const fetchedDevice = await DeviceApi.getDevice(deviceId);
+        fetchedDevice.meta.category = categories.value.find(category => category.value === fetchedDevice.type.name)
         const index = devices.value.findIndex(device => device.id === deviceId);
         if (index !== -1) {
             devices.value[index] = fetchedDevice;
@@ -296,7 +303,7 @@ export const useDeviceStore = defineStore('device', () => {
 
     return {
         devices, categories,
-        getDevice,
+        getDevice, getCategory,
         fetchDevices, addDevice, fetchDevice, updateDevice, deleteDevice, fetchCategories, triggerEvent, startEventListeners, stopEventListeners
     }
 
