@@ -44,6 +44,7 @@ const props = defineProps({
 })
 
 const routineStore = useRoutineStore()
+const deviceStore = useDeviceStore()
 
 const openDialog = ref(false)
 
