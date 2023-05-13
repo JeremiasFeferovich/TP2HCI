@@ -12,10 +12,10 @@
                                 label="Nombre de la habitación*" required />
                         </v-row>
                         <v-list class="mb-3">
-                            <v-list-item-subtitle>Dispositivos seleccionados</v-list-item-subtitle>
-                            <v-divider length="75%" />
+                            <v-list-item-subtitle class="mb-2">Dispositivos seleccionados</v-list-item-subtitle>
+                            <v-divider length="62.5%" />
                             <v-list-item v-for="(device, index) in selectedDevices" :key="index">
-                                <v-card class="pa-2">
+                                <v-card class="pa-2 ma-1" max-width="62.5%">
                                     <v-row align="center">
                                         <v-col cols="3" class="py-3 px-0">
                                             <v-img class="categoryImg" :src="device.meta.category.img" alt="categoryImg"
@@ -32,7 +32,7 @@
                                     </v-row>
                                 </v-card>
                             </v-list-item>
-                            <v-divider length="75%" />
+                            <v-divider length="62.5%" />
                         </v-list>
 
                         <v-row cols="12">
