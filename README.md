@@ -1,3 +1,7 @@
+# Introducción
+
+Este trabajo es la segunda de tres entregas para la materia Interacción Hombre-Computadora (HCI) que consisten en diseñar e implementar parcialmente un sitio Web y una aplicación móvil (Android) que permitan administrar y controlar en forma remota dispositivos inteligentes que se encuentren presentes en un hogar. Esta entrega se enfoca en la implementación del sitio Web.
+
 # Archivos necesarios para el correcto funcionamiento del sitio Web 
 
 Para el funcionamiento del sitio web, son necesarios los archivos de la
